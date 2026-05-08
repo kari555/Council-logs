@@ -1449,17 +1449,12 @@ elif st.session_state.current_page == "attendance":
             .reset_index()
             .sort_values(["Date", "Report"], ascending=[False, True])
         )
-        session_options = session_counts["Session"].tolist()
-        selected_session = st.selectbox(
-            "Sesja raidowa",
-            session_options,
-            format_func=lambda s: f"{s.split(' | ')[0]} · {s.split(' | ')[1]}",
-            key="attendance_session",
-        )
+        night_dates = sorted(df_att["Date"].astype(str).str[:10].unique(), reverse=True)
+        selected_night = st.selectbox("Noc raidowa", night_dates, key="attendance_night")
 
         cards_html = ""
         for _, row in session_counts.iterrows():
-            active = " active" if row["Session"] == selected_session else ""
+            active = " active" if str(row["Date"])[:10] == selected_night else ""
             cards_html += (
                 f'<div class="session-card{active}">'
                 f'<div class="date">{str(row["Date"])[:10]}</div>'
@@ -1470,25 +1465,52 @@ elif st.session_state.current_page == "attendance":
         st.markdown(f'<div class="session-grid">{cards_html}</div>', unsafe_allow_html=True)
 
         roster = sorted(df_att["Player"].dropna().unique())
-        present_now = set(df_att[(df_att["Session"] == selected_session) & (df_att["Present"] == 1)]["Player"])
-        absent_now = [p for p in roster if p not in present_now]
         class_map = df_att.groupby("Player")["Class"].first().to_dict()
 
-        pcol, acol = st.columns([1, 1])
-        with pcol:
+        night_df = df_att[df_att["Date"].astype(str).str[:10] == selected_night]
+        night_sessions = (
+            night_df[["Session", "Report"]]
+            .drop_duplicates()
+            .sort_values("Report")
+            .to_dict("records")
+        )
+        present_that_night = set(night_df[night_df["Present"] == 1]["Player"])
+
+        split_cols = st.columns(max(1, len(night_sessions)))
+        for col, session in zip(split_cols, night_sessions):
+            session_players = sorted(
+                night_df[(night_df["Session"] == session["Session"]) & (night_df["Present"] == 1)]["Player"]
+            )
             pills = ""
-            for p in sorted(present_now):
-                cls = class_map.get(p, "")
+            for player in session_players:
+                cls = class_map.get(player, "")
                 color = CLASS_CLR.get(cls, clr["text"])
-                pills += f'<div class="roster-pill"><span style="color:{color};font-weight:700">{p}</span><span class="cls">{cls}</span></div>'
-            st.markdown(f'<div class="att-wrap"><div class="hm-header">Obecni · {len(present_now)}</div><div class="mini-roster">{pills}</div></div>', unsafe_allow_html=True)
-        with acol:
+                pills += (
+                    f'<div class="roster-pill"><span style="color:{color};font-weight:700">{player}</span>'
+                    f'<span class="cls">{cls}</span></div>'
+                )
+            with col:
+                st.markdown(
+                    f'<div class="att-wrap"><div class="hm-header">Grupa · {session["Report"]} · {len(session_players)}</div>'
+                    f'<div class="mini-roster">{pills}</div></div>',
+                    unsafe_allow_html=True,
+                )
+
+        no_log_players = [player for player in roster if player not in present_that_night]
+        if no_log_players:
             pills = ""
-            for p in absent_now:
-                cls = class_map.get(p, "")
+            for player in no_log_players:
+                cls = class_map.get(player, "")
                 color = CLASS_CLR.get(cls, clr["text"])
-                pills += f'<div class="roster-pill"><span style="color:{color};font-weight:700">{p}</span><span class="cls">{cls}</span></div>'
-            st.markdown(f'<div class="att-wrap"><div class="hm-header">Nieobecni · {len(absent_now)}</div><div class="mini-roster">{pills}</div></div>', unsafe_allow_html=True)
+                pills += (
+                    f'<div class="roster-pill"><span style="color:{color};font-weight:700">{player}</span>'
+                    f'<span class="cls">{cls}</span></div>'
+                )
+            st.markdown(
+                f'<div class="att-wrap" style="margin-top:12px"><div class="hm-header">Bez loga w tej nocy · {len(no_log_players)}</div>'
+                f'<div class="mini-roster">{pills}</div></div>',
+                unsafe_allow_html=True,
+            )
 
         # ── Compact matrix ───────────────────────────────────────────────
         pivot = {}
