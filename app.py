@@ -1520,7 +1520,6 @@ elif st.session_state.current_page == "attendance":
             )
         st.markdown(f'<div class="session-grid">{cards_html}</div>', unsafe_allow_html=True)
 
-        roster = sorted(df_att["Player"].dropna().unique())
         class_map = df_att.groupby("Player")["Class"].first().to_dict()
 
         night_df = df_att[df_att["Date"].astype(str).str[:10] == selected_night]
@@ -1530,8 +1529,6 @@ elif st.session_state.current_page == "attendance":
             .sort_values("Report")
             .to_dict("records")
         )
-        present_that_night = set(night_df[night_df["Present"] == 1]["Player"])
-
         split_cols = st.columns(max(1, len(night_sessions)))
         for col, session in zip(split_cols, night_sessions):
             session_players = sorted(
@@ -1551,22 +1548,6 @@ elif st.session_state.current_page == "attendance":
                     f'<div class="mini-roster">{pills}</div></div>',
                     unsafe_allow_html=True,
                 )
-
-        no_log_players = [player for player in roster if player not in present_that_night]
-        if no_log_players:
-            pills = ""
-            for player in no_log_players:
-                cls = class_map.get(player, "")
-                color = CLASS_CLR.get(cls, clr["text"])
-                pills += (
-                    f'<div class="roster-pill"><span style="color:{color};font-weight:700">{player}</span>'
-                    f'<span class="cls">{cls}</span></div>'
-                )
-            st.markdown(
-                f'<div class="att-wrap" style="margin-top:12px"><div class="hm-header">Bez loga w tej nocy · {len(no_log_players)}</div>'
-                f'<div class="mini-roster">{pills}</div></div>',
-                unsafe_allow_html=True,
-            )
 
         # ── Compact matrix ───────────────────────────────────────────────
         pivot = {}
