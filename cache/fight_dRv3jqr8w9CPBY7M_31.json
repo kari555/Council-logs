@@ -127704,12 +127704,13 @@
       "Class": "Druid",
       "Spec": "Guardian",
       "Role": "Tanks",
-      "Parse %": 71.0,
+      "Parse %": 72.0,
       "Median Parse %": 0.0,
       "Amount": 64191.2,
       "Item Level": 0.0,
-      "ilvl Parse %": 79.0,
-      "ilvl Bracket": 278.0
+      "ilvl Parse %": 80.0,
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127723,88 +127724,13 @@
       "Class": "Monk",
       "Spec": "Brewmaster",
       "Role": "Tanks",
-      "Parse %": 74.0,
+      "Parse %": 73.0,
       "Median Parse %": 0.0,
       "Amount": 58652.4,
       "Item Level": 0.0,
       "ilvl Parse %": 65.0,
-      "ilvl Bracket": 282.0
-    },
-    {
-      "Report": "dRv3jqr8w9CPBY7M",
-      "Date": "2026-04-27 19:58",
-      "Boss": "Fallen-King Salhadaar",
-      "Pull #": 29,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 355.5,
-      "Player": "Drubix",
-      "Class": "Druid",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 46.0,
-      "Median Parse %": 0.0,
-      "Amount": 2621.7,
-      "Item Level": 0.0,
-      "ilvl Parse %": 47.0,
-      "ilvl Bracket": 279.0
-    },
-    {
-      "Report": "dRv3jqr8w9CPBY7M",
-      "Date": "2026-04-27 19:58",
-      "Boss": "Fallen-King Salhadaar",
-      "Pull #": 29,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 355.5,
-      "Player": "Asseroth",
-      "Class": "Monk",
-      "Spec": "Mistweaver",
-      "Role": "Healers",
-      "Parse %": 38.0,
-      "Median Parse %": 0.0,
-      "Amount": 11500.8,
-      "Item Level": 0.0,
-      "ilvl Parse %": 39.0,
-      "ilvl Bracket": 278.0
-    },
-    {
-      "Report": "dRv3jqr8w9CPBY7M",
-      "Date": "2026-04-27 19:58",
-      "Boss": "Fallen-King Salhadaar",
-      "Pull #": 29,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 355.5,
-      "Player": "Priestington",
-      "Class": "Priest",
-      "Spec": "Discipline",
-      "Role": "Healers",
-      "Parse %": 19.0,
-      "Median Parse %": 0.0,
-      "Amount": 21874.1,
-      "Item Level": 0.0,
-      "ilvl Parse %": 22.0,
-      "ilvl Bracket": 280.0
-    },
-    {
-      "Report": "dRv3jqr8w9CPBY7M",
-      "Date": "2026-04-27 19:58",
-      "Boss": "Fallen-King Salhadaar",
-      "Pull #": 29,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 355.5,
-      "Player": "Varghgak",
-      "Class": "Shaman",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 72.0,
-      "Median Parse %": 0.0,
-      "Amount": 6330.2,
-      "Item Level": 0.0,
-      "ilvl Parse %": 75.0,
-      "ilvl Bracket": 277.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127818,12 +127744,13 @@
       "Class": "DeathKnight",
       "Spec": "Unholy",
       "Role": "Damage Dealers",
-      "Parse %": 31.0,
+      "Parse %": 29.0,
       "Median Parse %": 0.0,
       "Amount": 100625.1,
       "Item Level": 0.0,
       "ilvl Parse %": 46.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127837,12 +127764,13 @@
       "Class": "Hunter",
       "Spec": "BeastMastery",
       "Role": "Damage Dealers",
-      "Parse %": 21.0,
+      "Parse %": 19.0,
       "Median Parse %": 0.0,
       "Amount": 85356.0,
       "Item Level": 0.0,
-      "ilvl Parse %": 27.0,
-      "ilvl Bracket": 278.0
+      "ilvl Parse %": 26.0,
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127856,12 +127784,13 @@
       "Class": "Hunter",
       "Spec": "BeastMastery",
       "Role": "Damage Dealers",
-      "Parse %": 26.0,
+      "Parse %": 24.0,
       "Median Parse %": 0.0,
       "Amount": 87253.2,
       "Item Level": 0.0,
-      "ilvl Parse %": 33.0,
-      "ilvl Bracket": 278.0
+      "ilvl Parse %": 32.0,
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127875,12 +127804,13 @@
       "Class": "Mage",
       "Spec": "Frost",
       "Role": "Damage Dealers",
-      "Parse %": 30.0,
+      "Parse %": 32.0,
       "Median Parse %": 0.0,
       "Amount": 103704.3,
       "Item Level": 0.0,
       "ilvl Parse %": 43.0,
-      "ilvl Bracket": 278.0
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127898,8 +127828,9 @@
       "Median Parse %": 0.0,
       "Amount": 116937.3,
       "Item Level": 0.0,
-      "ilvl Parse %": 81.0,
-      "ilvl Bracket": 280.0
+      "ilvl Parse %": 82.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127913,12 +127844,13 @@
       "Class": "Paladin",
       "Spec": "Retribution",
       "Role": "Damage Dealers",
-      "Parse %": 58.0,
+      "Parse %": 57.0,
       "Median Parse %": 0.0,
       "Amount": 105296.5,
       "Item Level": 0.0,
       "ilvl Parse %": 68.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127932,12 +127864,13 @@
       "Class": "Paladin",
       "Spec": "Retribution",
       "Role": "Damage Dealers",
-      "Parse %": 7.0,
+      "Parse %": 6.0,
       "Median Parse %": 0.0,
       "Amount": 74951.1,
       "Item Level": 0.0,
       "ilvl Parse %": 8.0,
-      "ilvl Bracket": 279.0
+      "ilvl Bracket": 279.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127951,12 +127884,13 @@
       "Class": "Rogue",
       "Spec": "Subtlety",
       "Role": "Damage Dealers",
-      "Parse %": 19.0,
+      "Parse %": 17.0,
       "Median Parse %": 0.0,
       "Amount": 97469.4,
       "Item Level": 0.0,
-      "ilvl Parse %": 25.0,
-      "ilvl Bracket": 278.0
+      "ilvl Parse %": 24.0,
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127975,7 +127909,8 @@
       "Amount": 91759.0,
       "Item Level": 0.0,
       "ilvl Parse %": 39.0,
-      "ilvl Bracket": 279.0
+      "ilvl Bracket": 279.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -127989,12 +127924,13 @@
       "Class": "Warlock",
       "Spec": "Demonology",
       "Role": "Damage Dealers",
-      "Parse %": 26.0,
+      "Parse %": 25.0,
       "Median Parse %": 0.0,
       "Amount": 97098.3,
       "Item Level": 0.0,
       "ilvl Parse %": 24.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -128008,12 +127944,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 23.0,
+      "Parse %": 22.0,
       "Median Parse %": 0.0,
       "Amount": 94302.9,
       "Item Level": 0.0,
       "ilvl Parse %": 31.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -128027,12 +127964,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 63.0,
+      "Parse %": 60.0,
       "Median Parse %": 0.0,
       "Amount": 109261.5,
       "Item Level": 0.0,
       "ilvl Parse %": 74.0,
-      "ilvl Bracket": 278.0
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -128050,8 +127988,9 @@
       "Median Parse %": 0.0,
       "Amount": 104637.4,
       "Item Level": 0.0,
-      "ilvl Parse %": 57.0,
-      "ilvl Bracket": 276.0
+      "ilvl Parse %": 58.0,
+      "ilvl Bracket": 276.0,
+      "Metric": "Damage"
     },
     {
       "Report": "dRv3jqr8w9CPBY7M",
@@ -128070,7 +128009,88 @@
       "Amount": 83821.3,
       "Item Level": 0.0,
       "ilvl Parse %": 19.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
+    },
+    {
+      "Report": "dRv3jqr8w9CPBY7M",
+      "Date": "2026-04-27 19:58",
+      "Boss": "Fallen-King Salhadaar",
+      "Pull #": 29,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 355.5,
+      "Player": "Drubix",
+      "Class": "Druid",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 28.0,
+      "Median Parse %": 0.0,
+      "Amount": 143823.2,
+      "Item Level": 0.0,
+      "ilvl Parse %": 32.0,
+      "ilvl Bracket": 279.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "dRv3jqr8w9CPBY7M",
+      "Date": "2026-04-27 19:58",
+      "Boss": "Fallen-King Salhadaar",
+      "Pull #": 29,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 355.5,
+      "Player": "Asseroth",
+      "Class": "Monk",
+      "Spec": "Mistweaver",
+      "Role": "Healers",
+      "Parse %": 17.0,
+      "Median Parse %": 0.0,
+      "Amount": 128396.1,
+      "Item Level": 0.0,
+      "ilvl Parse %": 18.0,
+      "ilvl Bracket": 278.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "dRv3jqr8w9CPBY7M",
+      "Date": "2026-04-27 19:58",
+      "Boss": "Fallen-King Salhadaar",
+      "Pull #": 29,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 355.5,
+      "Player": "Priestington",
+      "Class": "Priest",
+      "Spec": "Discipline",
+      "Role": "Healers",
+      "Parse %": 38.0,
+      "Median Parse %": 0.0,
+      "Amount": 150646.9,
+      "Item Level": 0.0,
+      "ilvl Parse %": 46.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "dRv3jqr8w9CPBY7M",
+      "Date": "2026-04-27 19:58",
+      "Boss": "Fallen-King Salhadaar",
+      "Pull #": 29,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 355.5,
+      "Player": "Varghgak",
+      "Class": "Shaman",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 13.0,
+      "Median Parse %": 0.0,
+      "Amount": 116357.5,
+      "Item Level": 0.0,
+      "ilvl Parse %": 17.0,
+      "ilvl Bracket": 277.0,
+      "Metric": "Healing"
     }
   ]
 }

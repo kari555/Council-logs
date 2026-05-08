@@ -207,18 +207,22 @@ class WCLClient:
 
         return all_events
 
-    def get_report_rankings(self, report_code, fight_ids=None):
+    def get_report_rankings(self, report_code, fight_ids=None, player_metric=None):
         """Fetch per-player parse percentile and item level for given fights."""
         q = """
-        query ReportRankings($code: String!, $fightIDs: [Int]) {
+        query ReportRankings($code: String!, $fightIDs: [Int],
+                             $playerMetric: ReportRankingMetricType) {
             reportData {
                 report(code: $code) {
-                    rankings(fightIDs: $fightIDs)
+                    rankings(fightIDs: $fightIDs, playerMetric: $playerMetric)
                 }
             }
         }
         """
-        data = self.query(q, {"code": report_code, "fightIDs": fight_ids or []})
+        variables = {"code": report_code, "fightIDs": fight_ids or []}
+        if player_metric:
+            variables["playerMetric"] = player_metric
+        data = self.query(q, variables)
         return data["reportData"]["report"]["rankings"]
 
     def get_guild_members(self, guild_name, server_slug, region):

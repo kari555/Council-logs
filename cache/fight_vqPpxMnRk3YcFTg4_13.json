@@ -142149,12 +142149,13 @@
       "Class": "Druid",
       "Spec": "Guardian",
       "Role": "Tanks",
-      "Parse %": 81.0,
+      "Parse %": 82.0,
       "Median Parse %": 0.0,
       "Amount": 70301.7,
       "Item Level": 0.0,
-      "ilvl Parse %": 72.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 74.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142168,88 +142169,13 @@
       "Class": "Monk",
       "Spec": "Brewmaster",
       "Role": "Tanks",
-      "Parse %": 14.0,
+      "Parse %": 15.0,
       "Median Parse %": 0.0,
       "Amount": 41523.1,
       "Item Level": 0.0,
       "ilvl Parse %": 8.0,
-      "ilvl Bracket": 281.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 338.0,
-      "Player": "Davidqt",
-      "Class": "Druid",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 32.0,
-      "Median Parse %": 0.0,
-      "Amount": 1991.6,
-      "Item Level": 0.0,
-      "ilvl Parse %": 33.0,
-      "ilvl Bracket": 280.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 338.0,
-      "Player": "Merlopandzia",
-      "Class": "Monk",
-      "Spec": "Mistweaver",
-      "Role": "Healers",
-      "Parse %": 83.0,
-      "Median Parse %": 0.0,
-      "Amount": 14754.2,
-      "Item Level": 0.0,
-      "ilvl Parse %": 86.0,
-      "ilvl Bracket": 280.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 338.0,
-      "Player": "Priestington",
-      "Class": "Priest",
-      "Spec": "Discipline",
-      "Role": "Healers",
-      "Parse %": 53.0,
-      "Median Parse %": 0.0,
-      "Amount": 22689.8,
-      "Item Level": 0.0,
-      "ilvl Parse %": 47.0,
-      "ilvl Bracket": 282.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 338.0,
-      "Player": "Bartekbialy",
-      "Class": "Shaman",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 56.0,
-      "Median Parse %": 0.0,
-      "Amount": 4619.6,
-      "Item Level": 0.0,
-      "ilvl Parse %": 57.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142263,12 +142189,13 @@
       "Class": "DeathKnight",
       "Spec": "Unholy",
       "Role": "Damage Dealers",
-      "Parse %": 69.0,
+      "Parse %": 68.0,
       "Median Parse %": 0.0,
       "Amount": 104939.3,
       "Item Level": 0.0,
-      "ilvl Parse %": 58.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 57.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142287,7 +142214,8 @@
       "Amount": 69710.4,
       "Item Level": 0.0,
       "ilvl Parse %": 9.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142301,12 +142229,13 @@
       "Class": "Hunter",
       "Spec": "BeastMastery",
       "Role": "Damage Dealers",
-      "Parse %": 96.0,
+      "Parse %": 98.0,
       "Median Parse %": 0.0,
       "Amount": 108982.5,
       "Item Level": 0.0,
-      "ilvl Parse %": 95.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 94.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142320,12 +142249,13 @@
       "Class": "Mage",
       "Spec": "Frost",
       "Role": "Damage Dealers",
-      "Parse %": 28.0,
+      "Parse %": 27.0,
       "Median Parse %": 0.0,
       "Amount": 86519.4,
       "Item Level": 0.0,
       "ilvl Parse %": 20.0,
-      "ilvl Bracket": 283.0
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142339,12 +142269,13 @@
       "Class": "Monk",
       "Spec": "Windwalker",
       "Role": "Damage Dealers",
-      "Parse %": 46.0,
+      "Parse %": 45.0,
       "Median Parse %": 0.0,
       "Amount": 88201.9,
       "Item Level": 0.0,
       "ilvl Parse %": 52.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142358,12 +142289,13 @@
       "Class": "Paladin",
       "Spec": "Retribution",
       "Role": "Damage Dealers",
-      "Parse %": 36.0,
+      "Parse %": 35.0,
       "Median Parse %": 0.0,
       "Amount": 89981.9,
       "Item Level": 0.0,
       "ilvl Parse %": 26.0,
-      "ilvl Bracket": 283.0
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142377,12 +142309,13 @@
       "Class": "Shaman",
       "Spec": "Elemental",
       "Role": "Damage Dealers",
-      "Parse %": 30.0,
+      "Parse %": 32.0,
       "Median Parse %": 0.0,
       "Amount": 82891.5,
       "Item Level": 0.0,
       "ilvl Parse %": 18.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142396,12 +142329,13 @@
       "Class": "Shaman",
       "Spec": "Enhancement",
       "Role": "Damage Dealers",
-      "Parse %": 29.0,
+      "Parse %": 35.0,
       "Median Parse %": 0.0,
       "Amount": 83808.8,
       "Item Level": 0.0,
       "ilvl Parse %": 14.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142415,12 +142349,13 @@
       "Class": "Warlock",
       "Spec": "Demonology",
       "Role": "Damage Dealers",
-      "Parse %": 30.0,
+      "Parse %": 29.0,
       "Median Parse %": 0.0,
       "Amount": 76320.1,
       "Item Level": 0.0,
       "ilvl Parse %": 24.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142434,12 +142369,13 @@
       "Class": "Warlock",
       "Spec": "Demonology",
       "Role": "Damage Dealers",
-      "Parse %": 41.0,
+      "Parse %": 40.0,
       "Median Parse %": 0.0,
       "Amount": 79650.4,
       "Item Level": 0.0,
       "ilvl Parse %": 50.0,
-      "ilvl Bracket": 278.0
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142458,7 +142394,8 @@
       "Amount": 57919.8,
       "Item Level": 0.0,
       "ilvl Parse %": 4.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142472,12 +142409,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 69.0,
+      "Parse %": 64.0,
       "Median Parse %": 0.0,
       "Amount": 89604.5,
       "Item Level": 0.0,
-      "ilvl Parse %": 62.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 57.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142495,8 +142433,9 @@
       "Median Parse %": 0.0,
       "Amount": 84097.8,
       "Item Level": 0.0,
-      "ilvl Parse %": 23.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 25.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -142514,8 +142453,89 @@
       "Median Parse %": 0.0,
       "Amount": 81215.2,
       "Item Level": 0.0,
-      "ilvl Parse %": 17.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 18.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 338.0,
+      "Player": "Davidqt",
+      "Class": "Druid",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 54.0,
+      "Median Parse %": 0.0,
+      "Amount": 130460.6,
+      "Item Level": 0.0,
+      "ilvl Parse %": 62.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 338.0,
+      "Player": "Merlopandzia",
+      "Class": "Monk",
+      "Spec": "Mistweaver",
+      "Role": "Healers",
+      "Parse %": 21.0,
+      "Median Parse %": 0.0,
+      "Amount": 113992.7,
+      "Item Level": 0.0,
+      "ilvl Parse %": 23.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 338.0,
+      "Player": "Priestington",
+      "Class": "Priest",
+      "Spec": "Discipline",
+      "Role": "Healers",
+      "Parse %": 61.0,
+      "Median Parse %": 0.0,
+      "Amount": 148370.1,
+      "Item Level": 0.0,
+      "ilvl Parse %": 59.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 338.0,
+      "Player": "Bartekbialy",
+      "Class": "Shaman",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 41.0,
+      "Median Parse %": 0.0,
+      "Amount": 123300.8,
+      "Item Level": 0.0,
+      "ilvl Parse %": 42.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Healing"
     }
   ]
 }

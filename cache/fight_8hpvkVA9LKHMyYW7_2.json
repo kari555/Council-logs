@@ -134746,12 +134746,13 @@
       "Class": "Monk",
       "Spec": "Brewmaster",
       "Role": "Tanks",
-      "Parse %": 59.0,
+      "Parse %": 58.0,
       "Median Parse %": 0.0,
       "Amount": 55429.8,
       "Item Level": 0.0,
       "ilvl Parse %": 50.0,
-      "ilvl Bracket": 283.0
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134765,88 +134766,13 @@
       "Class": "Warrior",
       "Spec": "Protection",
       "Role": "Tanks",
-      "Parse %": 94.0,
+      "Parse %": 93.0,
       "Median Parse %": 0.0,
       "Amount": 65073.6,
       "Item Level": 0.0,
-      "ilvl Parse %": 90.0,
-      "ilvl Bracket": 282.0
-    },
-    {
-      "Report": "8hpvkVA9LKHMyYW7",
-      "Date": "2026-05-07 19:38",
-      "Boss": "Imperator Averzian",
-      "Pull #": 1,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 379.0,
-      "Player": "Drubix",
-      "Class": "Druid",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 58.0,
-      "Median Parse %": 0.0,
-      "Amount": 3323.7,
-      "Item Level": 0.0,
-      "ilvl Parse %": 62.0,
-      "ilvl Bracket": 282.0
-    },
-    {
-      "Report": "8hpvkVA9LKHMyYW7",
-      "Date": "2026-05-07 19:38",
-      "Boss": "Imperator Averzian",
-      "Pull #": 1,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 379.0,
-      "Player": "Asseroth",
-      "Class": "Monk",
-      "Spec": "Mistweaver",
-      "Role": "Healers",
-      "Parse %": 40.0,
-      "Median Parse %": 0.0,
-      "Amount": 9609.7,
-      "Item Level": 0.0,
-      "ilvl Parse %": 28.0,
-      "ilvl Bracket": 283.0
-    },
-    {
-      "Report": "8hpvkVA9LKHMyYW7",
-      "Date": "2026-05-07 19:38",
-      "Boss": "Imperator Averzian",
-      "Pull #": 1,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 379.0,
-      "Player": "Já",
-      "Class": "Priest",
-      "Spec": "Discipline",
-      "Role": "Healers",
-      "Parse %": 18.0,
-      "Median Parse %": 0.0,
-      "Amount": 18031.1,
-      "Item Level": 0.0,
-      "ilvl Parse %": 20.0,
-      "ilvl Bracket": 278.0
-    },
-    {
-      "Report": "8hpvkVA9LKHMyYW7",
-      "Date": "2026-05-07 19:38",
-      "Boss": "Imperator Averzian",
-      "Pull #": 1,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 379.0,
-      "Player": "Kuranashi",
-      "Class": "Shaman",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 64.0,
-      "Median Parse %": 0.0,
-      "Amount": 4113.5,
-      "Item Level": 0.0,
-      "ilvl Parse %": 68.0,
-      "ilvl Bracket": 280.0
+      "ilvl Parse %": 89.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134864,8 +134790,9 @@
       "Median Parse %": 0.0,
       "Amount": 90257.8,
       "Item Level": 0.0,
-      "ilvl Parse %": 21.0,
-      "ilvl Bracket": 279.0
+      "ilvl Parse %": 20.0,
+      "ilvl Bracket": 279.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134879,12 +134806,13 @@
       "Class": "DeathKnight",
       "Spec": "Unholy",
       "Role": "Damage Dealers",
-      "Parse %": 35.0,
+      "Parse %": 33.0,
       "Median Parse %": 0.0,
       "Amount": 98585.1,
       "Item Level": 0.0,
-      "ilvl Parse %": 21.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 20.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134898,12 +134826,13 @@
       "Class": "Hunter",
       "Spec": "BeastMastery",
       "Role": "Damage Dealers",
-      "Parse %": 88.0,
+      "Parse %": 84.0,
       "Median Parse %": 0.0,
       "Amount": 108268.6,
       "Item Level": 0.0,
-      "ilvl Parse %": 83.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 79.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134917,12 +134846,13 @@
       "Class": "Mage",
       "Spec": "Frost",
       "Role": "Damage Dealers",
-      "Parse %": 30.0,
+      "Parse %": 31.0,
       "Median Parse %": 0.0,
       "Amount": 101873.9,
       "Item Level": 0.0,
       "ilvl Parse %": 20.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134936,12 +134866,13 @@
       "Class": "Monk",
       "Spec": "Windwalker",
       "Role": "Damage Dealers",
-      "Parse %": 83.0,
+      "Parse %": 82.0,
       "Median Parse %": 0.0,
       "Amount": 119031.4,
       "Item Level": 0.0,
       "ilvl Parse %": 75.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134960,7 +134891,8 @@
       "Amount": 123722.1,
       "Item Level": 0.0,
       "ilvl Parse %": 97.0,
-      "ilvl Bracket": 283.0
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134974,12 +134906,13 @@
       "Class": "Paladin",
       "Spec": "Retribution",
       "Role": "Damage Dealers",
-      "Parse %": 89.0,
+      "Parse %": 88.0,
       "Median Parse %": 0.0,
       "Amount": 114627.3,
       "Item Level": 0.0,
       "ilvl Parse %": 85.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -134993,12 +134926,13 @@
       "Class": "Shaman",
       "Spec": "Elemental",
       "Role": "Damage Dealers",
-      "Parse %": 35.0,
+      "Parse %": 34.0,
       "Median Parse %": 0.0,
       "Amount": 93915.7,
       "Item Level": 0.0,
       "ilvl Parse %": 22.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -135017,7 +134951,8 @@
       "Amount": 89051.4,
       "Item Level": 0.0,
       "ilvl Parse %": 6.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -135031,12 +134966,13 @@
       "Class": "Warlock",
       "Spec": "Destruction",
       "Role": "Damage Dealers",
-      "Parse %": 5.0,
+      "Parse %": 4.0,
       "Median Parse %": 0.0,
       "Amount": 68497.7,
       "Item Level": 0.0,
-      "ilvl Parse %": 2.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 3.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -135055,7 +134991,8 @@
       "Amount": 54173.4,
       "Item Level": 0.0,
       "ilvl Parse %": 9.0,
-      "ilvl Bracket": 271.0
+      "ilvl Bracket": 271.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -135069,12 +135006,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 96.0,
+      "Parse %": 93.0,
       "Median Parse %": 0.0,
       "Amount": 115136.1,
       "Item Level": 0.0,
-      "ilvl Parse %": 95.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 93.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -135093,7 +135031,8 @@
       "Amount": 93448.4,
       "Item Level": 0.0,
       "ilvl Parse %": 26.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "8hpvkVA9LKHMyYW7",
@@ -135112,7 +135051,88 @@
       "Amount": 63242.5,
       "Item Level": 0.0,
       "ilvl Parse %": 1.0,
-      "ilvl Bracket": 278.0
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
+    },
+    {
+      "Report": "8hpvkVA9LKHMyYW7",
+      "Date": "2026-05-07 19:38",
+      "Boss": "Imperator Averzian",
+      "Pull #": 1,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 379.0,
+      "Player": "Drubix",
+      "Class": "Druid",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 27.0,
+      "Median Parse %": 0.0,
+      "Amount": 114649.2,
+      "Item Level": 0.0,
+      "ilvl Parse %": 21.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "8hpvkVA9LKHMyYW7",
+      "Date": "2026-05-07 19:38",
+      "Boss": "Imperator Averzian",
+      "Pull #": 1,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 379.0,
+      "Player": "Asseroth",
+      "Class": "Monk",
+      "Spec": "Mistweaver",
+      "Role": "Healers",
+      "Parse %": 56.0,
+      "Median Parse %": 0.0,
+      "Amount": 133874.9,
+      "Item Level": 0.0,
+      "ilvl Parse %": 48.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "8hpvkVA9LKHMyYW7",
+      "Date": "2026-05-07 19:38",
+      "Boss": "Imperator Averzian",
+      "Pull #": 1,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 379.0,
+      "Player": "Já",
+      "Class": "Priest",
+      "Spec": "Discipline",
+      "Role": "Healers",
+      "Parse %": 9.0,
+      "Median Parse %": 0.0,
+      "Amount": 111099.2,
+      "Item Level": 0.0,
+      "ilvl Parse %": 10.0,
+      "ilvl Bracket": 278.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "8hpvkVA9LKHMyYW7",
+      "Date": "2026-05-07 19:38",
+      "Boss": "Imperator Averzian",
+      "Pull #": 1,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 379.0,
+      "Player": "Kuranashi",
+      "Class": "Shaman",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 16.0,
+      "Median Parse %": 0.0,
+      "Amount": 98419.5,
+      "Item Level": 0.0,
+      "ilvl Parse %": 15.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Healing"
     }
   ]
 }

@@ -569,7 +569,7 @@ ATTENDANCE_HEADERS = [
 # Rankings (parse percentile + item level per player per fight)
 # ---------------------------------------------------------------------------
 
-def process_rankings(report_info, fight, rankings_raw):
+def process_rankings(report_info, fight, rankings_raw, metric="Damage"):
     """Extract per-player parse % and item level from WCL fight rankings JSON."""
     rows = []
     common = fight_common_cols(report_info, fight)
@@ -603,6 +603,7 @@ def process_rankings(report_info, fight, rankings_raw):
                 round(float(char.get("itemLevel") or 0), 1),
                 round(float(char.get("bracketPercent") or 0), 1),
                 round(float(char.get("bracketData") or 0), 1),
+                metric,
             ])
     return rows
 
@@ -610,5 +611,5 @@ def process_rankings(report_info, fight, rankings_raw):
 RANKINGS_HEADERS = COMMON_HEADERS + [
     "Player", "Class", "Spec", "Role",
     "Parse %", "Median Parse %", "Amount", "Item Level",
-    "ilvl Parse %", "ilvl Bracket",
+    "ilvl Parse %", "ilvl Bracket", "Metric",
 ]

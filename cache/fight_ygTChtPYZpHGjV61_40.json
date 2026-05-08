@@ -90332,12 +90332,13 @@
       "Class": "DeathKnight",
       "Spec": "Blood",
       "Role": "Tanks",
-      "Parse %": 39.0,
+      "Parse %": 41.0,
       "Median Parse %": 0.0,
       "Amount": 45709.9,
       "Item Level": 0.0,
       "ilvl Parse %": 31.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90356,83 +90357,8 @@
       "Amount": 47241.9,
       "Item Level": 0.0,
       "ilvl Parse %": 48.0,
-      "ilvl Bracket": 280.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 23,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 388.2,
-      "Player": "Drubix",
-      "Class": "Druid",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 61.0,
-      "Median Parse %": 0.0,
-      "Amount": 4073.5,
-      "Item Level": 0.0,
-      "ilvl Parse %": 68.0,
-      "ilvl Bracket": 282.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 23,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 388.2,
-      "Player": "Asseroth",
-      "Class": "Monk",
-      "Spec": "Mistweaver",
-      "Role": "Healers",
-      "Parse %": 60.0,
-      "Median Parse %": 0.0,
-      "Amount": 10795.0,
-      "Item Level": 0.0,
-      "ilvl Parse %": 52.0,
-      "ilvl Bracket": 281.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 23,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 388.2,
-      "Player": "Priestington",
-      "Class": "Priest",
-      "Spec": "Discipline",
-      "Role": "Healers",
-      "Parse %": 48.0,
-      "Median Parse %": 0.0,
-      "Amount": 22628.5,
-      "Item Level": 0.0,
-      "ilvl Parse %": 45.0,
-      "ilvl Bracket": 281.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 23,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 388.2,
-      "Player": "Varghgak",
-      "Class": "Shaman",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 57.0,
-      "Median Parse %": 0.0,
-      "Amount": 3970.6,
-      "Item Level": 0.0,
-      "ilvl Parse %": 62.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90446,12 +90372,13 @@
       "Class": "DeathKnight",
       "Spec": "Unholy",
       "Role": "Damage Dealers",
-      "Parse %": 84.0,
+      "Parse %": 83.0,
       "Median Parse %": 0.0,
       "Amount": 104105.2,
       "Item Level": 0.0,
       "ilvl Parse %": 80.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90465,12 +90392,13 @@
       "Class": "Druid",
       "Spec": "Balance",
       "Role": "Damage Dealers",
-      "Parse %": 51.0,
+      "Parse %": 50.0,
       "Median Parse %": 0.0,
       "Amount": 98692.1,
       "Item Level": 0.0,
-      "ilvl Parse %": 42.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 41.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90484,12 +90412,13 @@
       "Class": "Hunter",
       "Spec": "BeastMastery",
       "Role": "Damage Dealers",
-      "Parse %": 38.0,
+      "Parse %": 35.0,
       "Median Parse %": 0.0,
       "Amount": 93629.4,
       "Item Level": 0.0,
-      "ilvl Parse %": 30.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 27.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90503,12 +90432,13 @@
       "Class": "Mage",
       "Spec": "Frost",
       "Role": "Damage Dealers",
-      "Parse %": 34.0,
+      "Parse %": 33.0,
       "Median Parse %": 0.0,
       "Amount": 100465.8,
       "Item Level": 0.0,
       "ilvl Parse %": 43.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90527,7 +90457,8 @@
       "Amount": 90155.3,
       "Item Level": 0.0,
       "ilvl Parse %": 45.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90541,12 +90472,13 @@
       "Class": "Paladin",
       "Spec": "Retribution",
       "Role": "Damage Dealers",
-      "Parse %": 53.0,
+      "Parse %": 52.0,
       "Median Parse %": 0.0,
       "Amount": 97985.0,
       "Item Level": 0.0,
       "ilvl Parse %": 46.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90565,7 +90497,8 @@
       "Amount": 69824.8,
       "Item Level": 0.0,
       "ilvl Parse %": 1.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90579,12 +90512,13 @@
       "Class": "Paladin",
       "Spec": "Retribution",
       "Role": "Damage Dealers",
-      "Parse %": 27.0,
+      "Parse %": 26.0,
       "Median Parse %": 0.0,
       "Amount": 90708.8,
       "Item Level": 0.0,
-      "ilvl Parse %": 21.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 20.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90598,12 +90532,13 @@
       "Class": "Rogue",
       "Spec": "Subtlety",
       "Role": "Damage Dealers",
-      "Parse %": 19.0,
+      "Parse %": 21.0,
       "Median Parse %": 0.0,
       "Amount": 88000.2,
       "Item Level": 0.0,
-      "ilvl Parse %": 21.0,
-      "ilvl Bracket": 280.0
+      "ilvl Parse %": 20.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90617,12 +90552,13 @@
       "Class": "Shaman",
       "Spec": "Elemental",
       "Role": "Damage Dealers",
-      "Parse %": 32.0,
+      "Parse %": 33.0,
       "Median Parse %": 0.0,
       "Amount": 90308.8,
       "Item Level": 0.0,
-      "ilvl Parse %": 23.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 24.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90636,12 +90572,13 @@
       "Class": "Warlock",
       "Spec": "Demonology",
       "Role": "Damage Dealers",
-      "Parse %": 30.0,
+      "Parse %": 29.0,
       "Median Parse %": 0.0,
       "Amount": 97577.4,
       "Item Level": 0.0,
-      "ilvl Parse %": 25.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 24.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90655,12 +90592,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 36.0,
+      "Parse %": 33.0,
       "Median Parse %": 0.0,
       "Amount": 88044.7,
       "Item Level": 0.0,
-      "ilvl Parse %": 29.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 27.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90674,12 +90612,13 @@
       "Class": "DemonHunter",
       "Spec": "Devourer",
       "Role": "Damage Dealers",
-      "Parse %": 38.0,
+      "Parse %": 39.0,
       "Median Parse %": 0.0,
       "Amount": 100499.0,
       "Item Level": 0.0,
-      "ilvl Parse %": 40.0,
-      "ilvl Bracket": 280.0
+      "ilvl Parse %": 41.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -90697,8 +90636,89 @@
       "Median Parse %": 0.0,
       "Amount": 87092.1,
       "Item Level": 0.0,
-      "ilvl Parse %": 17.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 18.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 23,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 388.2,
+      "Player": "Drubix",
+      "Class": "Druid",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 58.0,
+      "Median Parse %": 0.0,
+      "Amount": 133893.6,
+      "Item Level": 0.0,
+      "ilvl Parse %": 54.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 23,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 388.2,
+      "Player": "Asseroth",
+      "Class": "Monk",
+      "Spec": "Mistweaver",
+      "Role": "Healers",
+      "Parse %": 27.0,
+      "Median Parse %": 0.0,
+      "Amount": 106348.9,
+      "Item Level": 0.0,
+      "ilvl Parse %": 19.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 23,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 388.2,
+      "Player": "Priestington",
+      "Class": "Priest",
+      "Spec": "Discipline",
+      "Role": "Healers",
+      "Parse %": 78.0,
+      "Median Parse %": 0.0,
+      "Amount": 144142.0,
+      "Item Level": 0.0,
+      "ilvl Parse %": 75.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 23,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 388.2,
+      "Player": "Varghgak",
+      "Class": "Shaman",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 17.0,
+      "Median Parse %": 0.0,
+      "Amount": 100311.7,
+      "Item Level": 0.0,
+      "ilvl Parse %": 18.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Healing"
     }
   ]
 }

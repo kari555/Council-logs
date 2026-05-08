@@ -1766,6 +1766,9 @@ elif st.session_state.current_page == "parsy":
         for col in ("Parse %", "ilvl Parse %", "Item Level", "ilvl Bracket", "Median Parse %", "Amount"):
             if col in df_parses.columns:
                 df_parses[col] = pd.to_numeric(df_parses[col], errors="coerce")
+        if "Metric" not in df_parses.columns:
+            role_series = df_parses["Role"] if "Role" in df_parses.columns else pd.Series("", index=df_parses.index)
+            df_parses["Metric"] = np.where(role_series.eq("Healers"), "Healing", "Damage")
         df_parses["Date"] = pd.to_datetime(df_parses["Date"], errors="coerce")
         df_parses["Raid Date"] = df_parses["Date"].dt.strftime("%Y-%m-%d")
 
@@ -1826,6 +1829,8 @@ elif st.session_state.current_page == "parsy":
             group_cols = ["Player", "Class", "Spec"]
             if "Role" in df_f.columns:
                 group_cols.append("Role")
+            if "Metric" in df_f.columns:
+                group_cols.append("Metric")
             agg_spec = {
                 "Avg Parse": ("Parse %", "mean"),
                 "Best": ("Parse %", "max"),
@@ -1941,6 +1946,8 @@ elif st.session_state.current_page == "parsy":
                 table_cols = ["Player", "Class", "Spec"]
                 if "Role" in summary.columns:
                     table_cols.append("Role")
+                if "Metric" in summary.columns:
+                    table_cols.append("Metric")
                 table_cols += ["Avg Parse", "Best", "Worst", "Latest", "Trend", "Parses"]
                 if "Avg ilvl Parse" in summary.columns:
                     table_cols.append("Avg ilvl Parse")

@@ -51,6 +51,23 @@ def rows_to_dicts(headers, rows):
     return [dict(zip(headers, row)) for row in rows]
 
 
+def merge_role_rankings(default_rows, healer_rows):
+    """Use healing rankings for healers while keeping default rankings for other roles."""
+    merged = [row for row in default_rows if len(row) > 10 and row[10] != "Healers"]
+    healer_keys = set()
+    for row in healer_rows:
+        if len(row) <= 10 or row[10] != "Healers":
+            continue
+        key = (row[0], row[2], row[3], row[7])
+        healer_keys.add(key)
+        merged.append(row)
+
+    if not healer_keys:
+        merged.extend(row for row in default_rows if len(row) > 10 and row[10] == "Healers")
+
+    return merged
+
+
 def fetch_fight(wcl, report_code, fight, report_info, actor_map, ability_map,
                 consumable_config, defensive_config):
     """Fetch all data for a single fight. Returns dict with all sections."""
@@ -175,7 +192,20 @@ def fetch_fight(wcl, report_code, fight, report_info, actor_map, ability_map,
     # Rankings (parse %, item level)
     try:
         rankings_raw = wcl.get_report_rankings(report_code, fight_ids=[fight_id])
-        ranking_rows.extend(process_rankings(report_info, fight, rankings_raw))
+        default_rows = process_rankings(report_info, fight, rankings_raw, metric="Damage")
+
+        healer_rows = []
+        try:
+            healer_rankings_raw = wcl.get_report_rankings(
+                report_code, fight_ids=[fight_id], player_metric="hps",
+            )
+            healer_rows = process_rankings(
+                report_info, fight, healer_rankings_raw, metric="Healing",
+            )
+        except Exception as e:
+            print(f"      Warning: Healer rankings: {e}")
+
+        ranking_rows.extend(merge_role_rankings(default_rows, healer_rows))
     except Exception as e:
         print(f"      Warning: Rankings: {e}")
 

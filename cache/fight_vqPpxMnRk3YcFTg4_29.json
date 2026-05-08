@@ -92236,8 +92236,9 @@
       "Median Parse %": 0.0,
       "Amount": 63354.5,
       "Item Level": 0.0,
-      "ilvl Parse %": 82.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 83.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92256,83 +92257,8 @@
       "Amount": 40352.7,
       "Item Level": 0.0,
       "ilvl Parse %": 8.0,
-      "ilvl Bracket": 281.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 13,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 396.6,
-      "Player": "Davidqt",
-      "Class": "Druid",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 45.0,
-      "Median Parse %": 0.0,
-      "Amount": 2858.1,
-      "Item Level": 0.0,
-      "ilvl Parse %": 51.0,
-      "ilvl Bracket": 281.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 13,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 396.6,
-      "Player": "Merlopandzia",
-      "Class": "Monk",
-      "Spec": "Mistweaver",
-      "Role": "Healers",
-      "Parse %": 89.0,
-      "Median Parse %": 0.0,
-      "Amount": 14269.7,
-      "Item Level": 0.0,
-      "ilvl Parse %": 90.0,
-      "ilvl Bracket": 280.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 13,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 396.6,
-      "Player": "Priestington",
-      "Class": "Priest",
-      "Spec": "Discipline",
-      "Role": "Healers",
-      "Parse %": 26.0,
-      "Median Parse %": 0.0,
-      "Amount": 20502.0,
-      "Item Level": 0.0,
-      "ilvl Parse %": 23.0,
-      "ilvl Bracket": 283.0
-    },
-    {
-      "Report": "vqPpxMnRk3YcFTg4",
-      "Date": "2026-05-07 19:37",
-      "Boss": "Chimaerus, the Undreamt God",
-      "Pull #": 13,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 396.6,
-      "Player": "Bartekbialy",
-      "Class": "Shaman",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 43.0,
-      "Median Parse %": 0.0,
-      "Amount": 2706.4,
-      "Item Level": 0.0,
-      "ilvl Parse %": 45.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92346,12 +92272,13 @@
       "Class": "DeathKnight",
       "Spec": "Unholy",
       "Role": "Damage Dealers",
-      "Parse %": 76.0,
+      "Parse %": 75.0,
       "Median Parse %": 0.0,
       "Amount": 101167.2,
       "Item Level": 0.0,
       "ilvl Parse %": 69.0,
-      "ilvl Bracket": 283.0
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92365,12 +92292,13 @@
       "Class": "Druid",
       "Spec": "Balance",
       "Role": "Damage Dealers",
-      "Parse %": 9.0,
+      "Parse %": 10.0,
       "Median Parse %": 0.0,
       "Amount": 80716.3,
       "Item Level": 0.0,
       "ilvl Parse %": 9.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92384,12 +92312,13 @@
       "Class": "Hunter",
       "Spec": "BeastMastery",
       "Role": "Damage Dealers",
-      "Parse %": 67.0,
+      "Parse %": 63.0,
       "Median Parse %": 0.0,
       "Amount": 101118.8,
       "Item Level": 0.0,
-      "ilvl Parse %": 61.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 56.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92408,7 +92337,8 @@
       "Amount": 99624.1,
       "Item Level": 0.0,
       "ilvl Parse %": 25.0,
-      "ilvl Bracket": 283.0
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92427,7 +92357,8 @@
       "Amount": 102765.9,
       "Item Level": 0.0,
       "ilvl Parse %": 64.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92446,7 +92377,8 @@
       "Amount": 86441.2,
       "Item Level": 0.0,
       "ilvl Parse %": 12.0,
-      "ilvl Bracket": 283.0
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92465,7 +92397,8 @@
       "Amount": 80922.1,
       "Item Level": 0.0,
       "ilvl Parse %": 6.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92479,12 +92412,13 @@
       "Class": "Shaman",
       "Spec": "Enhancement",
       "Role": "Damage Dealers",
-      "Parse %": 18.0,
+      "Parse %": 17.0,
       "Median Parse %": 0.0,
       "Amount": 82484.8,
       "Item Level": 0.0,
       "ilvl Parse %": 8.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92502,8 +92436,9 @@
       "Median Parse %": 0.0,
       "Amount": 91001.6,
       "Item Level": 0.0,
-      "ilvl Parse %": 12.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 11.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92517,12 +92452,13 @@
       "Class": "Warlock",
       "Spec": "Demonology",
       "Role": "Damage Dealers",
-      "Parse %": 70.0,
+      "Parse %": 68.0,
       "Median Parse %": 0.0,
       "Amount": 109341.7,
       "Item Level": 0.0,
       "ilvl Parse %": 79.0,
-      "ilvl Bracket": 278.0
+      "ilvl Bracket": 278.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92541,7 +92477,8 @@
       "Amount": 72465.4,
       "Item Level": 0.0,
       "ilvl Parse %": 1.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92555,12 +92492,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 12.0,
+      "Parse %": 11.0,
       "Median Parse %": 0.0,
       "Amount": 78202.3,
       "Item Level": 0.0,
-      "ilvl Parse %": 8.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 7.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92578,8 +92516,9 @@
       "Median Parse %": 0.0,
       "Amount": 92578.5,
       "Item Level": 0.0,
-      "ilvl Parse %": 14.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 15.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "vqPpxMnRk3YcFTg4",
@@ -92597,8 +92536,89 @@
       "Median Parse %": 0.0,
       "Amount": 82214.9,
       "Item Level": 0.0,
-      "ilvl Parse %": 9.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 10.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 13,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 396.6,
+      "Player": "Davidqt",
+      "Class": "Druid",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 61.0,
+      "Median Parse %": 0.0,
+      "Amount": 135512.0,
+      "Item Level": 0.0,
+      "ilvl Parse %": 57.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 13,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 396.6,
+      "Player": "Merlopandzia",
+      "Class": "Monk",
+      "Spec": "Mistweaver",
+      "Role": "Healers",
+      "Parse %": 12.0,
+      "Median Parse %": 0.0,
+      "Amount": 96208.6,
+      "Item Level": 0.0,
+      "ilvl Parse %": 11.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 13,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 396.6,
+      "Player": "Priestington",
+      "Class": "Priest",
+      "Spec": "Discipline",
+      "Role": "Healers",
+      "Parse %": 71.0,
+      "Median Parse %": 0.0,
+      "Amount": 140953.5,
+      "Item Level": 0.0,
+      "ilvl Parse %": 67.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "vqPpxMnRk3YcFTg4",
+      "Date": "2026-05-07 19:37",
+      "Boss": "Chimaerus, the Undreamt God",
+      "Pull #": 13,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 396.6,
+      "Player": "Bartekbialy",
+      "Class": "Shaman",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 89.0,
+      "Median Parse %": 0.0,
+      "Amount": 129486.1,
+      "Item Level": 0.0,
+      "ilvl Parse %": 86.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Healing"
     }
   ]
 }

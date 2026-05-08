@@ -139037,12 +139037,13 @@
       "Class": "DeathKnight",
       "Spec": "Blood",
       "Role": "Tanks",
-      "Parse %": 51.0,
+      "Parse %": 48.0,
       "Median Parse %": 0.0,
       "Amount": 46706.9,
       "Item Level": 0.0,
       "ilvl Parse %": 38.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139056,88 +139057,13 @@
       "Class": "Druid",
       "Spec": "Guardian",
       "Role": "Tanks",
-      "Parse %": 43.0,
+      "Parse %": 46.0,
       "Median Parse %": 0.0,
       "Amount": 55944.9,
       "Item Level": 0.0,
-      "ilvl Parse %": 47.0,
-      "ilvl Bracket": 280.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 320.9,
-      "Player": "Drubix",
-      "Class": "Druid",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 56.0,
-      "Median Parse %": 0.0,
-      "Amount": 3548.2,
-      "Item Level": 0.0,
-      "ilvl Parse %": 62.0,
-      "ilvl Bracket": 282.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 320.9,
-      "Player": "Asseroth",
-      "Class": "Monk",
-      "Spec": "Mistweaver",
-      "Role": "Healers",
-      "Parse %": 30.0,
-      "Median Parse %": 0.0,
-      "Amount": 10263.5,
-      "Item Level": 0.0,
-      "ilvl Parse %": 19.0,
-      "ilvl Bracket": 281.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 320.9,
-      "Player": "Priestington",
-      "Class": "Priest",
-      "Spec": "Discipline",
-      "Role": "Healers",
-      "Parse %": 46.0,
-      "Median Parse %": 0.0,
-      "Amount": 22090.0,
-      "Item Level": 0.0,
-      "ilvl Parse %": 40.0,
-      "ilvl Bracket": 281.0
-    },
-    {
-      "Report": "ygTChtPYZpHGjV61",
-      "Date": "2026-05-04 19:33",
-      "Boss": "Vorasius",
-      "Pull #": 2,
-      "Result": "Kill",
-      "Boss HP %": 0,
-      "Duration (s)": 320.9,
-      "Player": "Varghgak",
-      "Class": "Shaman",
-      "Spec": "Restoration",
-      "Role": "Healers",
-      "Parse %": 59.0,
-      "Median Parse %": 0.0,
-      "Amount": 4921.4,
-      "Item Level": 0.0,
-      "ilvl Parse %": 63.0,
-      "ilvl Bracket": 280.0
+      "ilvl Parse %": 48.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139151,12 +139077,13 @@
       "Class": "DeathKnight",
       "Spec": "Unholy",
       "Role": "Damage Dealers",
-      "Parse %": 68.0,
+      "Parse %": 66.0,
       "Median Parse %": 0.0,
       "Amount": 104477.9,
       "Item Level": 0.0,
-      "ilvl Parse %": 56.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 55.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139175,7 +139102,8 @@
       "Amount": 75877.3,
       "Item Level": 0.0,
       "ilvl Parse %": 9.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139189,12 +139117,13 @@
       "Class": "Hunter",
       "Spec": "BeastMastery",
       "Role": "Damage Dealers",
-      "Parse %": 41.0,
+      "Parse %": 45.0,
       "Median Parse %": 0.0,
       "Amount": 91213.3,
       "Item Level": 0.0,
-      "ilvl Parse %": 30.0,
-      "ilvl Bracket": 282.0
+      "ilvl Parse %": 28.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139208,12 +139137,13 @@
       "Class": "Mage",
       "Spec": "Frost",
       "Role": "Damage Dealers",
-      "Parse %": 49.0,
+      "Parse %": 48.0,
       "Median Parse %": 0.0,
       "Amount": 92131.1,
       "Item Level": 0.0,
-      "ilvl Parse %": 60.0,
-      "ilvl Bracket": 280.0
+      "ilvl Parse %": 59.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139227,12 +139157,13 @@
       "Class": "Monk",
       "Spec": "Windwalker",
       "Role": "Damage Dealers",
-      "Parse %": 69.0,
+      "Parse %": 68.0,
       "Median Parse %": 0.0,
       "Amount": 95689.1,
       "Item Level": 0.0,
       "ilvl Parse %": 80.0,
-      "ilvl Bracket": 280.0
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139250,8 +139181,9 @@
       "Median Parse %": 0.0,
       "Amount": 104545.5,
       "Item Level": 0.0,
-      "ilvl Parse %": 80.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 79.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139265,12 +139197,13 @@
       "Class": "Paladin",
       "Spec": "Retribution",
       "Role": "Damage Dealers",
-      "Parse %": 72.0,
+      "Parse %": 71.0,
       "Median Parse %": 0.0,
       "Amount": 100151.9,
       "Item Level": 0.0,
-      "ilvl Parse %": 64.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 63.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139284,12 +139217,13 @@
       "Class": "Rogue",
       "Spec": "Subtlety",
       "Role": "Damage Dealers",
-      "Parse %": 60.0,
+      "Parse %": 54.0,
       "Median Parse %": 0.0,
       "Amount": 95979.7,
       "Item Level": 0.0,
-      "ilvl Parse %": 72.0,
-      "ilvl Bracket": 279.0
+      "ilvl Parse %": 71.0,
+      "ilvl Bracket": 279.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139303,12 +139237,13 @@
       "Class": "Shaman",
       "Spec": "Elemental",
       "Role": "Damage Dealers",
-      "Parse %": 46.0,
+      "Parse %": 48.0,
       "Median Parse %": 0.0,
       "Amount": 88094.5,
       "Item Level": 0.0,
       "ilvl Parse %": 31.0,
-      "ilvl Bracket": 281.0
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139327,7 +139262,8 @@
       "Amount": 77165.7,
       "Item Level": 0.0,
       "ilvl Parse %": 26.0,
-      "ilvl Bracket": 282.0
+      "ilvl Bracket": 282.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139341,12 +139277,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 62.0,
+      "Parse %": 57.0,
       "Median Parse %": 0.0,
       "Amount": 87915.6,
       "Item Level": 0.0,
-      "ilvl Parse %": 54.0,
-      "ilvl Bracket": 283.0
+      "ilvl Parse %": 49.0,
+      "ilvl Bracket": 283.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139360,12 +139297,13 @@
       "Class": "Warrior",
       "Spec": "Fury",
       "Role": "Damage Dealers",
-      "Parse %": 15.0,
+      "Parse %": 14.0,
       "Median Parse %": 0.0,
       "Amount": 73388.9,
       "Item Level": 0.0,
-      "ilvl Parse %": 10.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 9.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139383,8 +139321,9 @@
       "Median Parse %": 0.0,
       "Amount": 82999.3,
       "Item Level": 0.0,
-      "ilvl Parse %": 34.0,
-      "ilvl Bracket": 280.0
+      "ilvl Parse %": 35.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Damage"
     },
     {
       "Report": "ygTChtPYZpHGjV61",
@@ -139402,8 +139341,89 @@
       "Median Parse %": 0.0,
       "Amount": 85517.9,
       "Item Level": 0.0,
-      "ilvl Parse %": 27.0,
-      "ilvl Bracket": 281.0
+      "ilvl Parse %": 28.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Damage"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 320.9,
+      "Player": "Drubix",
+      "Class": "Druid",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 35.0,
+      "Median Parse %": 0.0,
+      "Amount": 120105.2,
+      "Item Level": 0.0,
+      "ilvl Parse %": 33.0,
+      "ilvl Bracket": 282.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 320.9,
+      "Player": "Asseroth",
+      "Class": "Monk",
+      "Spec": "Mistweaver",
+      "Role": "Healers",
+      "Parse %": 43.0,
+      "Median Parse %": 0.0,
+      "Amount": 127211.1,
+      "Item Level": 0.0,
+      "ilvl Parse %": 36.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 320.9,
+      "Player": "Priestington",
+      "Class": "Priest",
+      "Spec": "Discipline",
+      "Role": "Healers",
+      "Parse %": 64.0,
+      "Median Parse %": 0.0,
+      "Amount": 149458.7,
+      "Item Level": 0.0,
+      "ilvl Parse %": 62.0,
+      "ilvl Bracket": 281.0,
+      "Metric": "Healing"
+    },
+    {
+      "Report": "ygTChtPYZpHGjV61",
+      "Date": "2026-05-04 19:33",
+      "Boss": "Vorasius",
+      "Pull #": 2,
+      "Result": "Kill",
+      "Boss HP %": 0,
+      "Duration (s)": 320.9,
+      "Player": "Varghgak",
+      "Class": "Shaman",
+      "Spec": "Restoration",
+      "Role": "Healers",
+      "Parse %": 22.0,
+      "Median Parse %": 0.0,
+      "Amount": 114360.2,
+      "Item Level": 0.0,
+      "ilvl Parse %": 23.0,
+      "ilvl Bracket": 280.0,
+      "Metric": "Healing"
     }
   ]
 }
