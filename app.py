@@ -32,6 +32,7 @@ st.set_page_config(
 for _k, _v in [
     ("selected_player", None),
     ("open_dialog", False),
+    ("perf_chart_nonce", 0),
     ("theme", "gold"),
     ("current_page", "walki"),
 ]:
@@ -1057,7 +1058,10 @@ if st.session_state.current_page == "walki":
                     )
                     event = st.plotly_chart(
                         fig, use_container_width=True,
-                        key=f"perf_{data_type}",
+                        key=(
+                            f"perf_{data_type}_{meta['report']}_{meta['fight_id']}_"
+                            f"{st.session_state.perf_chart_nonce}"
+                        ),
                         on_select="rerun",
                         selection_mode="points",
                     )
@@ -1074,6 +1078,8 @@ if st.session_state.current_page == "walki":
                             st.session_state.pop("dlg_report_sel", None)
                             st.session_state.pop("dlg_boss_sel", None)
                             st.session_state.pop("dlg_pull_sel", None)
+                            st.session_state.perf_chart_nonce += 1
+                            st.rerun()
                     display_df = df.sort_values("Per Second", ascending=False)[
                         ["Player", "Class", "Spec", "Per Second", "Total", "Active %"]].copy()
                     display_df["Per Second"] = display_df["Per Second"].apply(lambda x: f"{x:,.0f}")
