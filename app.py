@@ -798,24 +798,52 @@ def render_nav_bar() -> None:
     clr = c()
     current = st.session_state.current_page
 
+    items_html = ""
+    for key, label in PAGES:
+        active = ' class="nav-active"' if key == current else ""
+        items_html += f'<a href="?page={key}" target="_self"{active}>{label}</a>'
+
     st.markdown(f"""
 <style>
-.nav-logo-inline {{
-    color: {clr["gold"]}; font-weight: 800; font-size: 15px;
-    padding-top: 0.45rem; white-space: nowrap;
+#prz-nav {{
+    position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important;
+    display: flex !important; align-items: stretch !important;
+    background: linear-gradient(180deg, #1c1f2b 0%, {clr["bg2"]} 100%) !important;
+    border-bottom: 1px solid {clr["border"]} !important;
+    z-index: 999999 !important;
+    font-family: "Source Sans Pro", "Segoe UI", system-ui, sans-serif;
+    box-sizing: border-box;
 }}
-.main .block-container {{ padding-top: 1rem !important; }}
-[data-testid="stSidebar"] > div:first-child {{ padding-top: 1rem !important; }}
+#prz-nav .nav-logo {{
+    display: flex; align-items: center;
+    padding: 0 20px; border-right: 1px solid {clr["border"]};
+    font-weight: 700; font-size: 14px;
+    color: {clr["gold"]}; white-space: nowrap; flex-shrink: 0;
+}}
+#prz-nav a {{
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 28px; font-size: 12.5px; font-weight: 500;
+    color: {clr["text_dim"]}; text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}}
+#prz-nav a:hover {{ color: {clr["text"]}; border-bottom-color: {clr["border"]}; }}
+#prz-nav a.nav-active {{
+    color: {clr["gold"]} !important;
+    border-bottom-color: {clr["gold"]} !important;
+    font-weight: 700 !important;
+}}
+.main .block-container {{ padding-top: 60px !important; }}
+[data-testid="stSidebar"] > div:first-child {{ padding-top: 60px !important; }}
 </style>
+<div id="prz-nav">
+    <div class="nav-logo">⚔️ Council</div>
+    {items_html}
+</div>
 """, unsafe_allow_html=True)
-
-    nav_cols = st.columns([1.2, 1, 1.25, 1, 5])
-    nav_cols[0].markdown('<div class="nav-logo-inline">⚔️ Council</div>', unsafe_allow_html=True)
-    for col, (key, label) in zip(nav_cols[1:4], PAGES):
-        if col.button(label, key=f"nav_{key}", type="primary" if key == current else "secondary"):
-            st.session_state.current_page = key
-            st.query_params["page"] = key
-            st.rerun()
 
 
 def _secret_value(name: str, default: str = "") -> str:
@@ -856,7 +884,7 @@ def render_admin_panel() -> None:
     admin_password = _secret_value("ADMIN_PASSWORD")
     with st.expander("Admin"):
         if not admin_password:
-            st.info("Ustaw `ADMIN_PASSWORD` w Streamlit Secrets, żeby włączyć odświeżanie danych.")
+            st.caption("Ustaw `ADMIN_PASSWORD` w Streamlit Secrets, żeby włączyć odświeżanie danych.")
             return
 
         password = st.text_input("Hasło admina", type="password", key="admin_password")
