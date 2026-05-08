@@ -1361,6 +1361,7 @@ elif st.session_state.current_page == "attendance":
     .session-card .date {{ color: {clr["gold"]}; font-weight: 700; font-size: 13px; }}
     .session-card .code {{ color: {clr["text_dim"]}; font-size: 11px; margin-top: 2px; }}
     .session-card .count {{ color: {clr["text"]}; font-size: 20px; font-weight: 800; margin-top: 8px; }}
+    .session-card .guests {{ color: {clr["red"]}; font-size: 12px; font-weight: 700; margin-top: 4px; }}
     .mini-roster {{
         display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 6px; margin-top: 8px;
@@ -1477,17 +1478,44 @@ elif st.session_state.current_page == "attendance":
             .reset_index()
             .sort_values(["Date", "Report"], ascending=[False, True])
         )
+        guild_members = set(df_att["Player"].dropna())
+        guest_counts = {}
+        guest_names = {}
+        for report in index:
+            report_code = report.get("report_code")
+            session_key = f'{report.get("date")} | {report_code}'
+            participants = {}
+            for fight in report.get("fights", []):
+                fight_path = CACHE_DIR / f"fight_{report_code}_{fight['fight_id']}.json"
+                fight_data = load_fight(report_code, fight["fight_id"]) if fight_path.exists() else None
+                if not fight_data:
+                    continue
+                for perf_row in fight_data.get("performance", []):
+                    player = perf_row.get("Player")
+                    player_class = perf_row.get("Class")
+                    if player and player_class in CLASS_CLR:
+                        participants[player] = player_class
+            guests = sorted(player for player in participants if player not in guild_members)
+            guest_counts[session_key] = len(guests)
+            guest_names[session_key] = guests
         night_dates = sorted(df_att["Date"].astype(str).str[:10].unique(), reverse=True)
         selected_night = st.selectbox("Noc raidowa", night_dates, key="attendance_night")
 
         cards_html = ""
         for _, row in session_counts.iterrows():
             active = " active" if str(row["Date"])[:10] == selected_night else ""
+            guests = guest_counts.get(row["Session"], 0)
+            guest_title = ", ".join(guest_names.get(row["Session"], []))
+            guest_html = (
+                f'<div class="guests" title="{guest_title}">+ {guests} spoza gildii</div>'
+                if guests else ""
+            )
             cards_html += (
                 f'<div class="session-card{active}">'
                 f'<div class="date">{str(row["Date"])[:10]}</div>'
                 f'<div class="code">{row["Report"]}</div>'
                 f'<div class="count">{int(row["Present"])} obecnych</div>'
+                f'{guest_html}'
                 f'</div>'
             )
         st.markdown(f'<div class="session-grid">{cards_html}</div>', unsafe_allow_html=True)
