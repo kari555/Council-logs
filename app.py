@@ -1484,7 +1484,13 @@ elif st.session_state.current_page == "attendance":
             .reset_index()
             .sort_values(["Date", "Report"], ascending=[False, True])
         )
-        guild_members = set(df_att["Player"].dropna())
+        guild_members_path = CACHE_DIR / "guild_members.json"
+        if guild_members_path.exists():
+            guild_members_raw = json.loads(guild_members_path.read_text(encoding="utf-8"))
+            guild_members = {member.get("name") for member in guild_members_raw if member.get("name")}
+        else:
+            guild_members = set(df_att["Player"].dropna())
+
         guest_counts = {}
         guest_names = {}
         for report in index:
@@ -1504,6 +1510,7 @@ elif st.session_state.current_page == "attendance":
             guests = sorted(player for player in participants if player not in guild_members)
             guest_counts[session_key] = len(guests)
             guest_names[session_key] = guests
+
         night_dates = sorted(df_att["Date"].astype(str).str[:10].unique(), reverse=True)
         selected_night = st.selectbox("Noc raidowa", night_dates, key="attendance_night")
 
