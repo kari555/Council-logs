@@ -224,10 +224,13 @@ class WCLClient:
     def get_guild_members(self, guild_name, server_slug, region):
         """Fetch guild member roster."""
         q = """
-        query GuildMembers($name: String!, $server: String!, $region: String!) {
+        query GuildMembers($name: String!, $server: String!, $region: String!,
+                           $page: Int, $limit: Int) {
             guildData {
                 guild(name: $name, serverSlug: $server, serverRegion: $region) {
-                    members {
+                    members(page: $page, limit: $limit) {
+                        current_page
+                        has_more_pages
                         data {
                             name
                         }
@@ -236,8 +239,22 @@ class WCLClient:
             }
         }
         """
-        data = self.query(q, {"name": guild_name, "server": server_slug, "region": region})
-        return data["guildData"]["guild"]["members"]["data"]
+        all_members = []
+        page = 1
+        while True:
+            data = self.query(q, {
+                "name": guild_name,
+                "server": server_slug,
+                "region": region,
+                "page": page,
+                "limit": 100,
+            })
+            members = data["guildData"]["guild"]["members"]
+            all_members.extend(members["data"])
+            if not members.get("has_more_pages"):
+                break
+            page += 1
+        return all_members
 
     def get_guild_attendance(self, guild_name, server_slug, region, zone_id=None, page=1):
         """Fetch guild attendance data."""
