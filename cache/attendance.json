@@ -1,0 +1,695 @@
+[
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Gokupal",
+    "Class": "Paladin",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Grubo",
+    "Class": "Paladin",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Já",
+    "Class": "Priest",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Figâ",
+    "Class": "Warlock",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Prokset",
+    "Class": "DeathKnight",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Drubix",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Dhaczor",
+    "Class": "DemonHunter",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Miroslavv",
+    "Class": "Warrior",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Fadëmonk",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Beliaren",
+    "Class": "Warlock",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Asseroth",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Kuranashi",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Dortiena",
+    "Class": "Mage",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Brtmdk",
+    "Class": "DeathKnight",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Krasnalud",
+    "Class": "Warrior",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Therali",
+    "Class": "Monk",
+    "Presence": 0.3333,
+    "Presence %": "33%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Shackles",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Mirabéla",
+    "Class": "Hunter",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Brewmasterka",
+    "Class": "Monk",
+    "Presence": 0.6667,
+    "Presence %": "67%"
+  },
+  {
+    "Report": "8hpvkVA9LKHMyYW7",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Izzodnam",
+    "Class": "Mage",
+    "Presence": 0.6667,
+    "Presence %": "67%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Miaugusiante",
+    "Class": "DemonHunter",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Cptsmolbol",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Bartekbialy",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Rogiba",
+    "Class": "Mage",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Davidqt",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Vicard",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Blazore",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Vesimir",
+    "Class": "Warrior",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Lipczy",
+    "Class": "DeathKnight",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Hornyelement",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Bedlin",
+    "Class": "Warlock",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Paladussia",
+    "Class": "Paladin",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Jaszczurnax",
+    "Class": "Evoker",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Priestington",
+    "Class": "Priest",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Varghgak",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Tyridelka",
+    "Class": "Warlock",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "vqPpxMnRk3YcFTg4",
+    "Date": "2026-05-07",
+    "Zone": "VS / DR / MQD",
+    "Player": "Kostunioo",
+    "Class": "Hunter",
+    "Presence": 0.963,
+    "Presence %": "96%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Boczi",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Gokupal",
+    "Class": "Paladin",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Miaugusia",
+    "Class": "DeathKnight",
+    "Presence": 0.963,
+    "Presence %": "96%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Paladussia",
+    "Class": "Paladin",
+    "Presence": 0.8519,
+    "Presence %": "85%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Lipczy",
+    "Class": "DeathKnight",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Asseroth",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Priestington",
+    "Class": "Priest",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Varghgak",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Lidhi",
+    "Class": "Rogue",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Grubo",
+    "Class": "Paladin",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Vicard",
+    "Class": "Druid",
+    "Presence": 0.963,
+    "Presence %": "96%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Fadëmonk",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Krasnalud",
+    "Class": "Warrior",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Beliaren",
+    "Class": "Warlock",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Shackles",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Mirabéla",
+    "Class": "Hunter",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Drubix",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Izzodnam",
+    "Class": "Mage",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Jaszczurnax",
+    "Class": "Evoker",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "ygTChtPYZpHGjV61",
+    "Date": "2026-05-04",
+    "Zone": "VS / DR / MQD",
+    "Player": "Vesimir",
+    "Class": "Warrior",
+    "Presence": 0.1481,
+    "Presence %": "15%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Miaugusiante",
+    "Class": "DemonHunter",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Grubo",
+    "Class": "Paladin",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Rogiba",
+    "Class": "Mage",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Vicard",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Kostunioo",
+    "Class": "Hunter",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Shackles",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Drubix",
+    "Class": "Druid",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Fadëmonk",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Paladussia",
+    "Class": "Paladin",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Vesimir",
+    "Class": "Warrior",
+    "Presence": 0.3448,
+    "Presence %": "34%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Asseroth",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Krasnalud",
+    "Class": "Warrior",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Therali",
+    "Class": "Monk",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Jaszczurnax",
+    "Class": "Evoker",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Lipczy",
+    "Class": "DeathKnight",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Mirabéla",
+    "Class": "Hunter",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Priestington",
+    "Class": "Priest",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Varghgak",
+    "Class": "Shaman",
+    "Presence": 1.0,
+    "Presence %": "100%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Lidhi",
+    "Class": "Rogue",
+    "Presence": 0.6552,
+    "Presence %": "66%"
+  },
+  {
+    "Report": "dRv3jqr8w9CPBY7M",
+    "Date": "2026-04-27",
+    "Zone": "VS / DR / MQD",
+    "Player": "Beliaren",
+    "Class": "Warlock",
+    "Presence": 0.6552,
+    "Presence %": "66%"
+  }
+]

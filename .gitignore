@@ -1,0 +1,11 @@
+.DS_Store
+.claude/
+.env
+.streamlit/secrets.toml
+credentials.json
+token.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+cache/archive-*/

@@ -1,0 +1,967 @@
+[
+  {
+    "date": "2026-05-07",
+    "report_code": "8hpvkVA9LKHMyYW7",
+    "title": "VS / DR / MQD",
+    "startTime": 1778175503104,
+    "fights": [
+      {
+        "fight_id": 2,
+        "boss": "Imperator Averzian",
+        "pull": 1,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 379.0,
+        "result": "Kill"
+      },
+      {
+        "fight_id": 4,
+        "boss": "Vorasius",
+        "pull": 1,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 340.2,
+        "result": "Kill"
+      },
+      {
+        "fight_id": 6,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 41.29,
+        "duration_s": 247.3,
+        "result": "Wipe (41.29%)"
+      },
+      {
+        "fight_id": 7,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 2,
+        "kill": false,
+        "boss_hp": 70.24,
+        "duration_s": 100.3,
+        "result": "Wipe (70.24%)"
+      },
+      {
+        "fight_id": 8,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 3,
+        "kill": false,
+        "boss_hp": 65.92,
+        "duration_s": 117.9,
+        "result": "Wipe (65.92%)"
+      },
+      {
+        "fight_id": 9,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 4,
+        "kill": false,
+        "boss_hp": 31.93,
+        "duration_s": 272.4,
+        "result": "Wipe (31.93%)"
+      },
+      {
+        "fight_id": 10,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 5,
+        "kill": false,
+        "boss_hp": 9.28,
+        "duration_s": 385.3,
+        "result": "Wipe (9.28%)"
+      },
+      {
+        "fight_id": 11,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 86.86,
+        "duration_s": 252.4,
+        "result": "Wipe (86.86%)"
+      },
+      {
+        "fight_id": 12,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 2,
+        "kill": false,
+        "boss_hp": 46.02,
+        "duration_s": 223.3,
+        "result": "Wipe (46.02%)"
+      },
+      {
+        "fight_id": 13,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 3,
+        "kill": false,
+        "boss_hp": 41.69,
+        "duration_s": 221.9,
+        "result": "Wipe (41.69%)"
+      },
+      {
+        "fight_id": 14,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 4,
+        "kill": false,
+        "boss_hp": 68.57,
+        "duration_s": 77.8,
+        "result": "Wipe (68.57%)"
+      },
+      {
+        "fight_id": 15,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 5,
+        "kill": false,
+        "boss_hp": 45.85,
+        "duration_s": 228.3,
+        "result": "Wipe (45.85%)"
+      },
+      {
+        "fight_id": 16,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 6,
+        "kill": false,
+        "boss_hp": 61.71,
+        "duration_s": 154.3,
+        "result": "Wipe (61.71%)"
+      },
+      {
+        "fight_id": 17,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 7,
+        "kill": false,
+        "boss_hp": 71,
+        "duration_s": 74.1,
+        "result": "Wipe (71%)"
+      },
+      {
+        "fight_id": 18,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 8,
+        "kill": false,
+        "boss_hp": 50.36,
+        "duration_s": 343.0,
+        "result": "Wipe (50.36%)"
+      },
+      {
+        "fight_id": 20,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 9,
+        "kill": false,
+        "boss_hp": 67.36,
+        "duration_s": 81.0,
+        "result": "Wipe (67.36%)"
+      },
+      {
+        "fight_id": 21,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 10,
+        "kill": false,
+        "boss_hp": 43.95,
+        "duration_s": 235.2,
+        "result": "Wipe (43.95%)"
+      },
+      {
+        "fight_id": 22,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 11,
+        "kill": false,
+        "boss_hp": 56.26,
+        "duration_s": 250.2,
+        "result": "Wipe (56.26%)"
+      },
+      {
+        "fight_id": 23,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 12,
+        "kill": false,
+        "boss_hp": 40.73,
+        "duration_s": 241.1,
+        "result": "Wipe (40.73%)"
+      },
+      {
+        "fight_id": 24,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 13,
+        "kill": false,
+        "boss_hp": 52.37,
+        "duration_s": 251.2,
+        "result": "Wipe (52.37%)"
+      },
+      {
+        "fight_id": 25,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 14,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 382.4,
+        "result": "Kill"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-07",
+    "report_code": "vqPpxMnRk3YcFTg4",
+    "title": "VS / DR / MQD",
+    "fights": [
+      {
+        "fight_id": 3,
+        "boss": "Imperator Averzian",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 71.88,
+        "duration_s": 59.7,
+        "result": "Wipe (71.88%)"
+      },
+      {
+        "fight_id": 5,
+        "boss": "Imperator Averzian",
+        "pull": 2,
+        "kill": false,
+        "boss_hp": 49.4,
+        "duration_s": 139.5,
+        "result": "Wipe (49.4%)"
+      },
+      {
+        "fight_id": 6,
+        "boss": "Imperator Averzian",
+        "pull": 3,
+        "kill": false,
+        "boss_hp": 20.65,
+        "duration_s": 249.3,
+        "result": "Wipe (20.65%)"
+      },
+      {
+        "fight_id": 8,
+        "boss": "Imperator Averzian",
+        "pull": 4,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 314.6,
+        "result": "Kill"
+      },
+      {
+        "fight_id": 12,
+        "boss": "Vorasius",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 99.97,
+        "duration_s": 22.7,
+        "result": "Wipe (99.97%)"
+      },
+      {
+        "fight_id": 13,
+        "boss": "Vorasius",
+        "pull": 2,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 338.0,
+        "result": "Kill"
+      },
+      {
+        "fight_id": 16,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 76.2,
+        "duration_s": 75.2,
+        "result": "Wipe (76.2%)"
+      },
+      {
+        "fight_id": 17,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 2,
+        "kill": false,
+        "boss_hp": 59.67,
+        "duration_s": 150.1,
+        "result": "Wipe (59.67%)"
+      },
+      {
+        "fight_id": 18,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 3,
+        "kill": false,
+        "boss_hp": 76.74,
+        "duration_s": 51.9,
+        "result": "Wipe (76.74%)"
+      },
+      {
+        "fight_id": 20,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 4,
+        "kill": false,
+        "boss_hp": 48.74,
+        "duration_s": 206.4,
+        "result": "Wipe (48.74%)"
+      },
+      {
+        "fight_id": 21,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 5,
+        "kill": false,
+        "boss_hp": 66.39,
+        "duration_s": 250.1,
+        "result": "Wipe (66.39%)"
+      },
+      {
+        "fight_id": 22,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 6,
+        "kill": false,
+        "boss_hp": 47.28,
+        "duration_s": 146.5,
+        "result": "Wipe (47.28%)"
+      },
+      {
+        "fight_id": 23,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 7,
+        "kill": false,
+        "boss_hp": 44.47,
+        "duration_s": 214.6,
+        "result": "Wipe (44.47%)"
+      },
+      {
+        "fight_id": 24,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 8,
+        "kill": false,
+        "boss_hp": 45.31,
+        "duration_s": 204.2,
+        "result": "Wipe (45.31%)"
+      },
+      {
+        "fight_id": 25,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 9,
+        "kill": false,
+        "boss_hp": 44.2,
+        "duration_s": 225.8,
+        "result": "Wipe (44.2%)"
+      },
+      {
+        "fight_id": 26,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 10,
+        "kill": false,
+        "boss_hp": 64.52,
+        "duration_s": 255.1,
+        "result": "Wipe (64.52%)"
+      },
+      {
+        "fight_id": 27,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 11,
+        "kill": false,
+        "boss_hp": 42.05,
+        "duration_s": 242.3,
+        "result": "Wipe (42.05%)"
+      },
+      {
+        "fight_id": 28,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 12,
+        "kill": false,
+        "boss_hp": 42.31,
+        "duration_s": 225.0,
+        "result": "Wipe (42.31%)"
+      },
+      {
+        "fight_id": 29,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 13,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 396.6,
+        "result": "Kill"
+      },
+      {
+        "fight_id": 35,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 52.53,
+        "duration_s": 173.1,
+        "result": "Wipe (52.53%)"
+      },
+      {
+        "fight_id": 36,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 2,
+        "kill": false,
+        "boss_hp": 72.51,
+        "duration_s": 66.9,
+        "result": "Wipe (72.51%)"
+      },
+      {
+        "fight_id": 37,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 3,
+        "kill": false,
+        "boss_hp": 72.73,
+        "duration_s": 62.9,
+        "result": "Wipe (72.73%)"
+      },
+      {
+        "fight_id": 38,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 4,
+        "kill": false,
+        "boss_hp": 68.32,
+        "duration_s": 97.0,
+        "result": "Wipe (68.32%)"
+      },
+      {
+        "fight_id": 39,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 5,
+        "kill": false,
+        "boss_hp": 54.49,
+        "duration_s": 139.1,
+        "result": "Wipe (54.49%)"
+      },
+      {
+        "fight_id": 40,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 6,
+        "kill": false,
+        "boss_hp": 49.03,
+        "duration_s": 172.7,
+        "result": "Wipe (49.03%)"
+      },
+      {
+        "fight_id": 41,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 7,
+        "kill": false,
+        "boss_hp": 45.72,
+        "duration_s": 193.7,
+        "result": "Wipe (45.72%)"
+      },
+      {
+        "fight_id": 42,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 8,
+        "kill": false,
+        "boss_hp": 32.7,
+        "duration_s": 284.1,
+        "result": "Wipe (32.7%)"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-04",
+    "report_code": "ygTChtPYZpHGjV61",
+    "title": "VS / DR / MQD",
+    "fights": [
+      {
+        "fight_id": 5,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 72.18,
+        "duration_s": 97.1,
+        "result": "Wipe (72.18%)"
+      },
+      {
+        "fight_id": 6,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 2,
+        "kill": false,
+        "boss_hp": 91.55,
+        "duration_s": 62.1,
+        "result": "Wipe (91.55%)"
+      },
+      {
+        "fight_id": 7,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 3,
+        "kill": false,
+        "boss_hp": 53.95,
+        "duration_s": 175.2,
+        "result": "Wipe (53.95%)"
+      },
+      {
+        "fight_id": 8,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 4,
+        "kill": false,
+        "boss_hp": 69.84,
+        "duration_s": 91.0,
+        "result": "Wipe (69.84%)"
+      },
+      {
+        "fight_id": 9,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 5,
+        "kill": false,
+        "boss_hp": 49.62,
+        "duration_s": 232.1,
+        "result": "Wipe (49.62%)"
+      },
+      {
+        "fight_id": 10,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 6,
+        "kill": false,
+        "boss_hp": 48.37,
+        "duration_s": 207.6,
+        "result": "Wipe (48.37%)"
+      },
+      {
+        "fight_id": 11,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 7,
+        "kill": false,
+        "boss_hp": 79.95,
+        "duration_s": 60.8,
+        "result": "Wipe (79.95%)"
+      },
+      {
+        "fight_id": 12,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 8,
+        "kill": false,
+        "boss_hp": 70.24,
+        "duration_s": 97.1,
+        "result": "Wipe (70.24%)"
+      },
+      {
+        "fight_id": 13,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 9,
+        "kill": false,
+        "boss_hp": 82.85,
+        "duration_s": 65.4,
+        "result": "Wipe (82.85%)"
+      },
+      {
+        "fight_id": 14,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 10,
+        "kill": false,
+        "boss_hp": 78.17,
+        "duration_s": 55.7,
+        "result": "Wipe (78.17%)"
+      },
+      {
+        "fight_id": 15,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 11,
+        "kill": false,
+        "boss_hp": 65.08,
+        "duration_s": 152.3,
+        "result": "Wipe (65.08%)"
+      },
+      {
+        "fight_id": 16,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 12,
+        "kill": false,
+        "boss_hp": 74.86,
+        "duration_s": 82.4,
+        "result": "Wipe (74.86%)"
+      },
+      {
+        "fight_id": 17,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 13,
+        "kill": false,
+        "boss_hp": 44.68,
+        "duration_s": 232.1,
+        "result": "Wipe (44.68%)"
+      },
+      {
+        "fight_id": 18,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 14,
+        "kill": false,
+        "boss_hp": 45.72,
+        "duration_s": 201.9,
+        "result": "Wipe (45.72%)"
+      },
+      {
+        "fight_id": 19,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 15,
+        "kill": false,
+        "boss_hp": 51.65,
+        "duration_s": 247.5,
+        "result": "Wipe (51.65%)"
+      },
+      {
+        "fight_id": 20,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 16,
+        "kill": false,
+        "boss_hp": 75.07,
+        "duration_s": 55.0,
+        "result": "Wipe (75.07%)"
+      },
+      {
+        "fight_id": 21,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 17,
+        "kill": false,
+        "boss_hp": 52.49,
+        "duration_s": 332.4,
+        "result": "Wipe (52.49%)"
+      },
+      {
+        "fight_id": 22,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 18,
+        "kill": false,
+        "boss_hp": 27.42,
+        "duration_s": 409.0,
+        "result": "Wipe (27.42%)"
+      },
+      {
+        "fight_id": 23,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 19,
+        "kill": false,
+        "boss_hp": 37.55,
+        "duration_s": 343.7,
+        "result": "Wipe (37.55%)"
+      },
+      {
+        "fight_id": 24,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 20,
+        "kill": false,
+        "boss_hp": 45.58,
+        "duration_s": 229.8,
+        "result": "Wipe (45.58%)"
+      },
+      {
+        "fight_id": 27,
+        "boss": "Imperator Averzian",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 73.8,
+        "duration_s": 53.9,
+        "result": "Wipe (73.8%)"
+      },
+      {
+        "fight_id": 28,
+        "boss": "Imperator Averzian",
+        "pull": 2,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 397.3,
+        "result": "Kill"
+      },
+      {
+        "fight_id": 31,
+        "boss": "Vorasius",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 99.97,
+        "duration_s": 22.8,
+        "result": "Wipe (99.97%)"
+      },
+      {
+        "fight_id": 33,
+        "boss": "Vorasius",
+        "pull": 2,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 320.9,
+        "result": "Kill"
+      },
+      {
+        "fight_id": 38,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 21,
+        "kill": false,
+        "boss_hp": 47.1,
+        "duration_s": 405.7,
+        "result": "Wipe (47.1%)"
+      },
+      {
+        "fight_id": 39,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 22,
+        "kill": false,
+        "boss_hp": 37.53,
+        "duration_s": 337.9,
+        "result": "Wipe (37.53%)"
+      },
+      {
+        "fight_id": 40,
+        "boss": "Chimaerus, the Undreamt God",
+        "pull": 23,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 388.2,
+        "result": "Kill"
+      }
+    ]
+  },
+  {
+    "date": "2026-04-27",
+    "report_code": "dRv3jqr8w9CPBY7M",
+    "title": "VS / DR / MQD",
+    "fights": [
+      {
+        "fight_id": 1,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 1,
+        "kill": false,
+        "boss_hp": 79.67,
+        "duration_s": 93.3,
+        "result": "Wipe (79.67%)"
+      },
+      {
+        "fight_id": 2,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 2,
+        "kill": false,
+        "boss_hp": 76.56,
+        "duration_s": 98.5,
+        "result": "Wipe (76.56%)"
+      },
+      {
+        "fight_id": 3,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 3,
+        "kill": false,
+        "boss_hp": 53.35,
+        "duration_s": 185.5,
+        "result": "Wipe (53.35%)"
+      },
+      {
+        "fight_id": 4,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 4,
+        "kill": false,
+        "boss_hp": 42.79,
+        "duration_s": 276.9,
+        "result": "Wipe (42.79%)"
+      },
+      {
+        "fight_id": 5,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 5,
+        "kill": false,
+        "boss_hp": 57.34,
+        "duration_s": 163.0,
+        "result": "Wipe (57.34%)"
+      },
+      {
+        "fight_id": 6,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 6,
+        "kill": false,
+        "boss_hp": 41.98,
+        "duration_s": 262.0,
+        "result": "Wipe (41.98%)"
+      },
+      {
+        "fight_id": 7,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 7,
+        "kill": false,
+        "boss_hp": 33.81,
+        "duration_s": 298.2,
+        "result": "Wipe (33.81%)"
+      },
+      {
+        "fight_id": 8,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 8,
+        "kill": false,
+        "boss_hp": 44.76,
+        "duration_s": 263.7,
+        "result": "Wipe (44.76%)"
+      },
+      {
+        "fight_id": 9,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 9,
+        "kill": false,
+        "boss_hp": 73.09,
+        "duration_s": 115.5,
+        "result": "Wipe (73.09%)"
+      },
+      {
+        "fight_id": 10,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 10,
+        "kill": false,
+        "boss_hp": 56.5,
+        "duration_s": 163.1,
+        "result": "Wipe (56.5%)"
+      },
+      {
+        "fight_id": 11,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 11,
+        "kill": false,
+        "boss_hp": 52.33,
+        "duration_s": 173.9,
+        "result": "Wipe (52.33%)"
+      },
+      {
+        "fight_id": 12,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 12,
+        "kill": false,
+        "boss_hp": 80.11,
+        "duration_s": 41.4,
+        "result": "Wipe (80.11%)"
+      },
+      {
+        "fight_id": 13,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 13,
+        "kill": false,
+        "boss_hp": 41.85,
+        "duration_s": 224.0,
+        "result": "Wipe (41.85%)"
+      },
+      {
+        "fight_id": 14,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 14,
+        "kill": false,
+        "boss_hp": 43.88,
+        "duration_s": 240.1,
+        "result": "Wipe (43.88%)"
+      },
+      {
+        "fight_id": 15,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 15,
+        "kill": false,
+        "boss_hp": 46.32,
+        "duration_s": 215.5,
+        "result": "Wipe (46.32%)"
+      },
+      {
+        "fight_id": 16,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 16,
+        "kill": false,
+        "boss_hp": 74.03,
+        "duration_s": 68.2,
+        "result": "Wipe (74.03%)"
+      },
+      {
+        "fight_id": 17,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 17,
+        "kill": false,
+        "boss_hp": 65.88,
+        "duration_s": 116.5,
+        "result": "Wipe (65.88%)"
+      },
+      {
+        "fight_id": 18,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 18,
+        "kill": false,
+        "boss_hp": 70.71,
+        "duration_s": 95.5,
+        "result": "Wipe (70.71%)"
+      },
+      {
+        "fight_id": 19,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 19,
+        "kill": false,
+        "boss_hp": 45,
+        "duration_s": 218.8,
+        "result": "Wipe (45%)"
+      },
+      {
+        "fight_id": 20,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 20,
+        "kill": false,
+        "boss_hp": 33.67,
+        "duration_s": 298.4,
+        "result": "Wipe (33.67%)"
+      },
+      {
+        "fight_id": 21,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 21,
+        "kill": false,
+        "boss_hp": 61.63,
+        "duration_s": 128.4,
+        "result": "Wipe (61.63%)"
+      },
+      {
+        "fight_id": 24,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 22,
+        "kill": false,
+        "boss_hp": 4.42,
+        "duration_s": 386.2,
+        "result": "Wipe (4.42%)"
+      },
+      {
+        "fight_id": 25,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 23,
+        "kill": false,
+        "boss_hp": 45.39,
+        "duration_s": 184.8,
+        "result": "Wipe (45.39%)"
+      },
+      {
+        "fight_id": 26,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 24,
+        "kill": false,
+        "boss_hp": 71.97,
+        "duration_s": 70.4,
+        "result": "Wipe (71.97%)"
+      },
+      {
+        "fight_id": 27,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 25,
+        "kill": false,
+        "boss_hp": 1.45,
+        "duration_s": 383.9,
+        "result": "Wipe (1.45%)"
+      },
+      {
+        "fight_id": 28,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 26,
+        "kill": false,
+        "boss_hp": 65.02,
+        "duration_s": 116.1,
+        "result": "Wipe (65.02%)"
+      },
+      {
+        "fight_id": 29,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 27,
+        "kill": false,
+        "boss_hp": 69.58,
+        "duration_s": 94.7,
+        "result": "Wipe (69.58%)"
+      },
+      {
+        "fight_id": 30,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 28,
+        "kill": false,
+        "boss_hp": 66.47,
+        "duration_s": 101.4,
+        "result": "Wipe (66.47%)"
+      },
+      {
+        "fight_id": 31,
+        "boss": "Fallen-King Salhadaar",
+        "pull": 29,
+        "kill": true,
+        "boss_hp": 0,
+        "duration_s": 355.5,
+        "result": "Kill"
+      }
+    ]
+  }
+]

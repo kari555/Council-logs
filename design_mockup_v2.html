@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Przemielimy — Design Mockup v2</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #0d0f14;
+    --bg2:          #161920;
+    --bg3:          #1e2130;
+    --border:       #2e3347;
+    --gold:         #c89b3c;
+    --gold-light:   #f0c060;
+    --gold-dim:     #7a5e22;
+    --text:         #d4cbb8;
+    --text-dim:     #7a8099;
+    --red:          #e74c3c;
+    --green:        #2ecc71;
+    --sidebar-w:    260px;
+    --radius:       6px;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    font-size: 13px;
+  }
+
+  /* ── Top Nav Bar ── */
+  .page-nav {
+    display: flex;
+    align-items: stretch;
+    background: linear-gradient(180deg, #1a1d26 0%, var(--bg2) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    flex-shrink: 0;
+    height: 44px;
+    gap: 0;
+  }
+
+  .page-nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 24px;
+    border-right: 1px solid var(--border);
+    margin-right: 8px;
+  }
+
+  .page-nav-logo .icon { font-size: 18px; }
+  .page-nav-logo .title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+
+  .page-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 18px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+    white-space: nowrap;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .page-nav-btn:hover { color: var(--text); }
+
+  .page-nav-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* ── App Body ── */
+  .app-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-section {
+    padding: 12px 16px 6px;
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--gold-dim);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 10px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .sidebar-select:focus { border-color: var(--gold-dim); }
+
+  /* Pull list */
+  .pull-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .pull-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.12s;
+  }
+
+  .pull-item:hover { background: var(--bg3); }
+  .pull-item.active { background: var(--bg3); border-color: var(--gold-dim); }
+
+  .pull-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .pull-badge.kill { background: #1a3d25; color: #4ade80; border: 1px solid #2d6040; }
+  .pull-badge.wipe { background: #3d1a1a; color: #f87171; border: 1px solid #6b2828; }
+
+  .pull-info { flex: 1; }
+  .pull-name { font-size: 12px; font-weight: 500; color: var(--text); }
+  .pull-meta { font-size: 10px; color: var(--text-dim); }
+
+  .sidebar-divider { height: 1px; background: var(--border); margin: 8px 16px; }
+
+  .player-select-section {
+    padding: 10px 16px 12px;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Main area ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Top bar (fight header) ── */
+  .topbar {
+    background: linear-gradient(180deg, #1a1d26 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px 0;
+    flex-shrink: 0;
+  }
+
+  .topbar-row1 {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .boss-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(200,155,60,0.3);
+  }
+
+  .result-kill {
+    background: #1a3d25; color: #4ade80; border: 1px solid #2d6040;
+    padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;
+  }
+
+  .result-wipe {
+    background: #3d1a1a; color: #f87171; border: 1px solid #6b2828;
+    padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;
+  }
+
+  .kpi-row { display: flex; gap: 24px; margin-bottom: 14px; }
+  .kpi { display: flex; flex-direction: column; }
+  .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 2px; }
+  .kpi-value { font-size: 18px; font-weight: 700; color: var(--text); }
+  .kpi-value.gold { color: var(--gold); }
+  .kpi-value.red { color: var(--red); }
+  .kpi-value.green { color: var(--green); }
+
+  .tabs {
+    display: flex;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  .tab {
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
+
+  /* ── Content ── */
+  .content { padding: 20px 24px; flex: 1; }
+
+  .click-hint { font-size: 10px; color: var(--text-dim); padding: 0 0 12px; opacity: 0.7; }
+
+  .perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .card-header {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text-dim);
+  }
+
+  .bar-chart { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+
+  .bar-row {
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.1s;
+  }
+  .bar-row:hover { background: var(--bg3); }
+
+  .bar-player { width: 90px; font-size: 11px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 18px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; }
+  .bar-value { width: 60px; font-size: 11px; color: var(--text-dim); text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+  .c-DemonHunter { background: #A330C9; }
+  .c-Mage        { background: #3FC7EB; }
+  .c-DeathKnight { background: #C41E3A; }
+  .c-Evoker      { background: #33937F; }
+  .c-Monk        { background: #00FF98; }
+  .c-Warlock     { background: #8788EE; }
+  .c-Shaman      { background: #0070DD; }
+  .c-Paladin     { background: #F48CBA; }
+  .c-Hunter      { background: #AAD372; }
+  .c-Warrior     { background: #C69B3A; }
+  .c-Priest      { background: #e0e0e0; }
+  .c-Druid       { background: #FF7C0A; }
+
+  /* ── Full-page (Attendance / Parsy) ── */
+  .full-page { padding: 28px 32px; flex: 1; overflow-y: auto; }
+
+  .page-header { margin-bottom: 24px; }
+  .page-title { font-size: 22px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+  .page-subtitle { font-size: 12px; color: var(--text-dim); }
+
+  .stats-row { display: flex; gap: 16px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 20px; flex: 1;
+  }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px; }
+  .stat-value { font-size: 24px; font-weight: 700; color: var(--gold); }
+
+  /* Heatmap placeholder */
+  .heatmap-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 20px; }
+  .heatmap-header { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); }
+  .heatmap-grid { padding: 14px; overflow-x: auto; }
+  .heatmap-table { border-collapse: collapse; font-size: 10px; }
+  .heatmap-table th { color: var(--text-dim); padding: 3px 6px; text-align: center; font-weight: 400; white-space: nowrap; }
+  .heatmap-table td { padding: 2px 4px; text-align: center; }
+  .heatmap-cell {
+    width: 22px; height: 22px; border-radius: 3px; display: inline-block;
+  }
+  .hm-absent  { background: #1a1d26; border: 1px solid var(--border); }
+  .hm-present { background: #7a5e22; border: 1px solid #c89b3c44; }
+  .hm-bright  { background: #c89b3c; border: 1px solid #f0c060; }
+  .hm-player  { color: var(--text); text-align: right; padding-right: 10px; font-size: 11px; white-space: nowrap; }
+
+  /* Attendance summary table */
+  .att-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .att-table th { padding: 8px 12px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .att-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .att-table tr:hover td { background: var(--bg3); }
+  .att-pct { font-weight: 700; }
+  .att-pct.high { color: var(--green); }
+  .att-pct.mid  { color: var(--gold); }
+  .att-pct.low  { color: var(--red); }
+
+  /* Parsy filters */
+  .filters-row { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-group { display: flex; flex-direction: column; gap: 4px; }
+  .filter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); }
+  .filter-select {
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--text); padding: 6px 10px; border-radius: var(--radius);
+    font-size: 12px; appearance: none; cursor: pointer; outline: none; min-width: 140px;
+  }
+  .filter-toggle {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: var(--radius); cursor: pointer;
+    font-size: 12px; color: var(--text); user-select: none;
+  }
+  .toggle-dot { width: 14px; height: 14px; border-radius: 3px; background: var(--gold); flex-shrink: 0; }
+
+  /* Line chart placeholder */
+  .chart-placeholder {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+    margin-bottom: 20px; overflow: hidden;
+  }
+  .chart-ph-header { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); }
+  .chart-ph-body { padding: 16px 14px; height: 200px; display: flex; align-items: flex-end; gap: 2px; position: relative; }
+  .chart-ph-axis { position: absolute; left: 14px; right: 14px; }
+  .chart-ph-axis-line { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--border); }
+  .ref-line { position: absolute; left: 0; right: 0; border-top: 1px dashed; opacity: 0.4; font-size: 9px; color: var(--text-dim); }
+
+  /* SVG chart */
+  .chart-svg { width: 100%; height: 180px; }
+
+  /* Player pill selector — collapsible dropdown */
+  .player-pills-wrap { position: relative; min-width: 200px; }
+  .player-pills-trigger {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 6px 10px; border-radius: var(--radius);
+    cursor: pointer; user-select: none;
+    transition: border-color 0.15s;
+  }
+  .player-pills-trigger:hover { border-color: var(--gold-dim); }
+  .player-pills-trigger.open { border-color: var(--gold-dim); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .pills-trigger-dots { display: flex; gap: 3px; flex-wrap: nowrap; overflow: hidden; max-width: 120px; }
+  .pills-trigger-label { font-size: 12px; color: var(--text-dim); flex: 1; white-space: nowrap; }
+  .pills-trigger-count {
+    font-size: 10px; font-weight: 700; color: var(--bg);
+    background: var(--gold); border-radius: 10px; padding: 1px 6px; flex-shrink: 0;
+  }
+  .pills-trigger-arrow { font-size: 10px; color: var(--text-dim); flex-shrink: 0; transition: transform 0.15s; }
+  .player-pills-trigger.open .pills-trigger-arrow { transform: rotate(180deg); }
+
+  .player-pills-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+    background: var(--bg2); border: 1px solid var(--gold-dim);
+    border-top: none; border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    display: none;
+  }
+  .player-pills-dropdown.open { display: block; }
+  .pills-dropdown-actions {
+    display: flex; justify-content: space-between; padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .player-pills-list { display: flex; flex-direction: column; max-height: 220px; overflow-y: auto; padding: 4px 0; }
+  .player-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; cursor: pointer;
+    transition: background 0.1s; user-select: none;
+  }
+  .player-pill:hover { background: var(--bg3); }
+  .pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pill-name { font-size: 12px; color: var(--text); flex: 1; }
+  .pill-check {
+    width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+    border: 1px solid var(--border); background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; color: #000; font-weight: 900;
+  }
+  .player-pill.selected .pill-check { background: var(--gold); border-color: var(--gold); }
+  .pills-action {
+    font-size: 10px; color: var(--text-dim); cursor: pointer; text-decoration: underline;
+    background: none; border: none; padding: 0;
+  }
+  .pills-action:hover { color: var(--gold); }
+
+  /* Parse summary table */
+  .parse-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .parse-table th { padding: 8px 12px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .parse-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .parse-table tr:hover td { background: var(--bg3); }
+
+  .parse-pct {
+    font-weight: 700; padding: 2px 8px; border-radius: 3px; font-size: 11px;
+    display: inline-block; min-width: 38px; text-align: center;
+  }
+  .parse-legendary { background: #332200; color: #ff8000; border: 1px solid #ff800044; }
+  .parse-epic      { background: #1a0a2e; color: #a335ee; border: 1px solid #a335ee44; }
+  .parse-rare      { background: #001a33; color: #0070dd; border: 1px solid #0070dd44; }
+  .parse-common    { background: #1e2130; color: #9d9d9d; border: 1px solid #9d9d9d44; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--gold-dim); border-radius: 8px;
+    width: 680px; max-width: 95vw; max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 40px rgba(200,155,60,0.1);
+  }
+  .modal-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(180deg, #1e2235 0%, var(--bg2) 100%);
+    position: sticky; top: 0;
+  }
+  .modal-player-info { display: flex; align-items: center; gap: 12px; }
+  .class-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .modal-player-name { font-size: 17px; font-weight: 700; color: var(--gold); }
+  .modal-player-class { font-size: 12px; color: var(--text-dim); margin-top: 1px; }
+  .modal-close {
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; cursor: pointer; color: var(--text-dim); font-size: 16px;
+    background: transparent; border: 1px solid transparent; transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--bg3); border-color: var(--border); color: var(--text); }
+  .modal-body { padding: 16px 20px; }
+  .modal-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 18px; }
+  .modal-kpi { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; text-align: center; }
+  .modal-kpi-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px; }
+  .modal-kpi-value { font-size: 18px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .modal-kpi-value.gold { color: var(--gold); }
+  .modal-kpi-value.red { color: var(--red); }
+  .modal-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gold-dim); font-weight: 700; margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+  .modal-timeline { background: var(--bg3); border-radius: var(--radius); border: 1px solid var(--border); padding: 10px 12px; margin-bottom: 14px; height: 80px; position: relative; overflow: hidden; }
+  .tl-line { position: absolute; left: 20px; right: 20px; top: 50%; height: 1px; background: var(--border); }
+  .tl-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; transform: translateY(-50%); top: 50%; }
+  .tl-label { position: absolute; font-size: 9px; color: var(--text-dim); top: 50%; transform: translateY(-100%) translateX(-50%); margin-top: -6px; white-space: nowrap; }
+  .modal-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .mini-table { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .mini-table-row { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 11px; border-bottom: 1px solid var(--border); }
+  .mini-table-row:last-child { border-bottom: none; }
+  .mini-table-key { color: var(--text-dim); }
+  .mini-table-val { color: var(--text); font-weight: 600; }
+  .mini-table-val.green { color: var(--green); }
+  .mini-table-val.red { color: var(--red); }
+
+  /* ── Theme switcher ── */
+  .design-nav { position: fixed; bottom: 16px; right: 16px; display: flex; gap: 8px; z-index: 200; }
+  .design-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; transition: all 0.15s; }
+  .design-btn:hover, .design-btn.active { border-color: var(--gold); color: var(--gold); }
+
+  /* Themes */
+  body.theme-b {
+    --bg: #0a0c0a; --bg2: #111411; --bg3: #181c18; --border: #2a342a;
+    --gold: #7cba4a; --gold-light: #a0e070; --gold-dim: #4a7a2a;
+    --text: #c8d4c0; --text-dim: #5a7050;
+  }
+  body.theme-c {
+    --bg: #080c14; --bg2: #0d1422; --bg3: #131e30; --border: #1e2e44;
+    --gold: #60aaee; --gold-light: #90ccff; --gold-dim: #304466;
+    --text: #b8cce0; --text-dim: #446080;
+  }
+
+  .hidden { display: none !important; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<!-- ══ TOP NAVIGATION ══════════════════════════════════════════════════ -->
+<nav class="page-nav">
+  <div class="page-nav-logo">
+    <span class="icon">⚔️</span>
+    <span class="title">Przemielimy</span>
+  </div>
+  <button class="page-nav-btn active" onclick="showPage('walki', this)">⚔️ Walki</button>
+  <button class="page-nav-btn" onclick="showPage('attendance', this)">📅 Attendance</button>
+  <button class="page-nav-btn" onclick="showPage('parsy', this)">📈 Parsy</button>
+</nav>
+
+<!-- ══ APP BODY ═════════════════════════════════════════════════════════ -->
+<div class="app-body">
+
+  <!-- ── SIDEBAR (only on Walki) ───────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">📅 Noc raidowa</div>
+      <select class="sidebar-select">
+        <option>2026-04-20</option>
+        <option>2026-04-15</option>
+        <option>2026-04-13</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">👹 Boss</div>
+      <select class="sidebar-select">
+        <option>Vorasius</option>
+        <option>Imperator Averzian</option>
+        <option>Chimaerus, the Undreamt God</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">🗡️ Pull</div>
+      <div class="pull-list">
+        <div class="pull-item" onclick="selectPull(this)">
+          <span class="pull-badge wipe">Wipe</span>
+          <div class="pull-info">
+            <div class="pull-name">Pull #1</div>
+            <div class="pull-meta">67.3% • 2:25</div>
+          </div>
+        </div>
+        <div class="pull-item" onclick="selectPull(this)">
+          <span class="pull-badge wipe">Wipe</span>
+          <div class="pull-info">
+            <div class="pull-name">Pull #2</div>
+            <div class="pull-meta">34.1% • 3:47</div>
+          </div>
+        </div>
+        <div class="pull-item active" onclick="selectPull(this)">
+          <span class="pull-badge wipe">Wipe</span>
+          <div class="pull-info">
+            <div class="pull-name">Pull #3</div>
+            <div class="pull-meta">12.8% • 4:52</div>
+          </div>
+        </div>
+        <div class="pull-item" onclick="selectPull(this)">
+          <span class="pull-badge kill">Kill</span>
+          <div class="pull-info">
+            <div class="pull-name">Pull #4</div>
+            <div class="pull-meta">0.0% • 5:11</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">🎨 Motyw</div>
+      <select class="sidebar-select" onchange="setThemeFromSelect(this.value)">
+        <option value="a">🔥 WoW Gold</option>
+        <option value="b">🌿 Military</option>
+        <option value="c">🔮 Arcane</option>
+      </select>
+    </div>
+
+  </aside>
+
+  <!-- ── PAGE: WALKI ─────────────────────────────────────────────────── -->
+  <div class="main" id="page-walki">
+    <div class="topbar">
+      <div class="topbar-row1">
+        <div><div class="boss-name">⚔️ Vorasius</div></div>
+        <span class="result-wipe">WIPE 12.8%</span>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Pull</div><div class="kpi-value gold">#3</div></div>
+        <div class="kpi"><div class="kpi-label">Czas walki</div><div class="kpi-value">4:52</div></div>
+        <div class="kpi"><div class="kpi-label">Boss HP</div><div class="kpi-value red">12.8%</div></div>
+        <div class="kpi"><div class="kpi-label">Zgony</div><div class="kpi-value">3</div></div>
+        <div class="kpi"><div class="kpi-label">Raport</div><div class="kpi-value" style="font-size:12px;color:var(--text-dim)">Yq7Cj2a4…</div></div>
+      </div>
+      <div class="tabs">
+        <div class="tab active">📊 Performance</div>
+        <div class="tab">⏱️ Timeline</div>
+        <div class="tab">💀 Deaths</div>
+        <div class="tab">⚡ Interrupts</div>
+        <div class="tab">🧹 Dispels</div>
+        <div class="tab">🧪 Consumables</div>
+        <div class="tab">🛡️ Defensives</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="click-hint">💡 Kliknij gracza na wykresie lub wybierz z listy w sidebarze aby otworzyć profil</div>
+      <div class="perf-grid">
+        <div class="card">
+          <div class="card-header">⚔️ DPS</div>
+          <div class="bar-chart">
+            <div class="bar-row" onclick="openModal('Miaugusiante')"><div class="bar-player">Miaugusiante</div><div class="bar-track"><div class="bar-fill c-DemonHunter" style="width:100%"></div></div><div class="bar-value">111,298</div></div>
+            <div class="bar-row" onclick="openModal('Rogiba')"><div class="bar-player">Rogiba</div><div class="bar-track"><div class="bar-fill c-Mage" style="width:94%"></div></div><div class="bar-value">104,763</div></div>
+            <div class="bar-row" onclick="openModal('Lipczy')"><div class="bar-player">Lipczy</div><div class="bar-track"><div class="bar-fill c-DeathKnight" style="width:93%"></div></div><div class="bar-value">104,047</div></div>
+            <div class="bar-row" onclick="openModal('Jaszczurnax')"><div class="bar-player">Jaszczurnax</div><div class="bar-track"><div class="bar-fill c-Evoker" style="width:89%"></div></div><div class="bar-value">99,602</div></div>
+            <div class="bar-row" onclick="openModal('Brtmdk')"><div class="bar-player">Brtmdk</div><div class="bar-track"><div class="bar-fill c-DeathKnight" style="width:85%"></div></div><div class="bar-value">94,174</div></div>
+            <div class="bar-row" onclick="openModal('Fademonk')"><div class="bar-player">Fadēmonk</div><div class="bar-track"><div class="bar-fill c-Monk" style="width:81%"></div></div><div class="bar-value">90,279</div></div>
+            <div class="bar-row" onclick="openModal('Beliaren')"><div class="bar-player">Beliaren</div><div class="bar-track"><div class="bar-fill c-Warlock" style="width:79%"></div></div><div class="bar-value">88,412</div></div>
+            <div class="bar-row" onclick="openModal('Shackles')"><div class="bar-player">Shackles</div><div class="bar-track"><div class="bar-fill c-Shaman" style="width:78%"></div></div><div class="bar-value">86,670</div></div>
+            <div class="bar-row" onclick="openModal('Paladussia')"><div class="bar-player">Paladussia</div><div class="bar-track"><div class="bar-fill c-Paladin" style="width:77%"></div></div><div class="bar-value">86,388</div></div>
+            <div class="bar-row" onclick="openModal('Kostunioo')"><div class="bar-player">Kostunioo</div><div class="bar-track"><div class="bar-fill c-Hunter" style="width:75%"></div></div><div class="bar-value">84,056</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">💚 HPS</div>
+          <div class="bar-chart">
+            <div class="bar-row" onclick="openModal('Asseroth')"><div class="bar-player">Asseroth</div><div class="bar-track"><div class="bar-fill c-Monk" style="width:100%"></div></div><div class="bar-value">94,602</div></div>
+            <div class="bar-row" onclick="openModal('Priestington')"><div class="bar-player">Priestington</div><div class="bar-track"><div class="bar-fill c-Priest" style="width:93%"></div></div><div class="bar-value">88,175</div></div>
+            <div class="bar-row" onclick="openModal('Misericordi')"><div class="bar-player">Misericordi</div><div class="bar-track"><div class="bar-fill c-Paladin" style="width:79%"></div></div><div class="bar-value">74,330</div></div>
+            <div class="bar-row" onclick="openModal('Bartekbialy')"><div class="bar-player">Bartekbialy</div><div class="bar-track"><div class="bar-fill c-Shaman" style="width:51%"></div></div><div class="bar-value">48,328</div></div>
+            <div class="bar-row" onclick="openModal('Vicard')"><div class="bar-player">Vicard</div><div class="bar-track"><div class="bar-fill c-Druid" style="width:34%"></div></div><div class="bar-value">32,088</div></div>
+            <div class="bar-row" onclick="openModal('Therali')"><div class="bar-player">Therali</div><div class="bar-track"><div class="bar-fill c-Monk" style="width:31%"></div></div><div class="bar-value">29,740</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: ATTENDANCE ────────────────────────────────────────────── -->
+  <div class="main hidden" id="page-attendance">
+    <div class="full-page">
+      <div class="page-header">
+        <div class="page-title">📅 Attendance</div>
+        <div class="page-subtitle">Frekwencja — dane z całej historii raidów gildi</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Gracze</div><div class="stat-value">20</div></div>
+        <div class="stat-card"><div class="stat-label">Noce raidowe</div><div class="stat-value">12</div></div>
+        <div class="stat-card"><div class="stat-label">Śr. frekwencja</div><div class="stat-value" style="color:var(--green)">84%</div></div>
+      </div>
+
+      <div class="heatmap-wrap">
+        <div class="heatmap-header">🗓️ Heatmapa obecności</div>
+        <div class="heatmap-grid">
+          <table class="heatmap-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>04-01</th><th>04-03</th><th>04-06</th><th>04-08</th>
+                <th>04-10</th><th>04-13</th><th>04-15</th><th>04-17</th>
+                <th>04-20</th><th>04-22</th><th>04-24</th><th>04-27</th>
+              </tr>
+            </thead>
+            <tbody id="heatmap-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📊 Podsumowanie graczy</div>
+        <div style="padding:0">
+          <table class="att-table">
+            <thead>
+              <tr>
+                <th>Gracz</th><th>Klasa</th><th>Obecny</th><th>Razem</th><th>Frekwencja %</th>
+              </tr>
+            </thead>
+            <tbody id="att-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: PARSY ─────────────────────────────────────────────────── -->
+  <div class="main hidden" id="page-parsy">
+    <div class="full-page">
+      <div class="page-header">
+        <div class="page-title">📈 Parsy</div>
+        <div class="page-subtitle">Parse history — percentyle z Warcraft Logs</div>
+      </div>
+
+      <div class="filters-row">
+        <div class="filter-group">
+          <div class="filter-label">Boss</div>
+          <select class="filter-select">
+            <option>— wszystkie —</option>
+            <option>Vorasius</option>
+            <option>Imperator Averzian</option>
+            <option>Chimaerus, the Undreamt God</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Wynik</div>
+          <div class="filter-toggle">
+            <div class="toggle-dot"></div>
+            Tylko kille
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label" style="margin-bottom:6px">Gracze</div>
+          <div class="player-pills-wrap" id="pills-wrap">
+            <div class="player-pills-trigger" id="pills-trigger" onclick="togglePillsDropdown()">
+              <div class="pills-trigger-dots" id="pills-trigger-dots"></div>
+              <span class="pills-trigger-label" id="pills-trigger-label">wszyscy</span>
+              <span class="pills-trigger-count" id="pills-trigger-count">11</span>
+              <span class="pills-trigger-arrow">▼</span>
+            </div>
+            <div class="player-pills-dropdown" id="pills-dropdown">
+              <div class="pills-dropdown-actions">
+                <button class="pills-action" onclick="toggleAllPills(true)">Wszyscy</button>
+                <button class="pills-action" onclick="toggleAllPills(false)">Żaden</button>
+              </div>
+              <div class="player-pills-list" id="player-pills"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-placeholder">
+        <div class="chart-ph-header">📊 Parse % w czasie</div>
+        <div style="padding:16px 20px 12px; position:relative; height:220px">
+          <!-- Reference lines -->
+          <div style="position:absolute;left:20px;right:20px;top:16px;bottom:32px;pointer-events:none">
+            <div style="position:absolute;width:100%;top:5%;border-top:1px dashed #ff800033;"><span style="font-size:9px;color:#ff8000;opacity:0.6;padding-left:4px">95</span></div>
+            <div style="position:absolute;width:100%;top:25%;border-top:1px dashed #a335ee33;"><span style="font-size:9px;color:#a335ee;opacity:0.6;padding-left:4px">75</span></div>
+            <div style="position:absolute;width:100%;top:50%;border-top:1px dashed #0070dd33;"><span style="font-size:9px;color:#0070dd;opacity:0.6;padding-left:4px">50</span></div>
+            <div style="position:absolute;width:100%;top:75%;border-top:1px dashed #9d9d9d33;"><span style="font-size:9px;color:#9d9d9d;opacity:0.6;padding-left:4px">25</span></div>
+          </div>
+          <svg class="chart-svg" viewBox="0 0 800 180" preserveAspectRatio="none">
+            <!-- Miaugusiante — DH purple -->
+            <polyline points="50,20 150,35 250,15 350,25 450,10 550,30 650,18 750,22" fill="none" stroke="#A330C9" stroke-width="2" opacity="0.9"/>
+            <!-- Rogiba — Mage blue -->
+            <polyline points="50,55 150,48 250,60 350,42 450,38 550,52 650,45 750,40" fill="none" stroke="#3FC7EB" stroke-width="2" opacity="0.9"/>
+            <!-- Lipczy — DK red -->
+            <polyline points="50,80 150,70 250,85 350,65 450,75 550,60 650,70 750,65" fill="none" stroke="#C41E3A" stroke-width="2" opacity="0.9"/>
+            <!-- Asseroth — Monk green -->
+            <polyline points="50,40 150,55 250,45 350,50 450,35 550,45 650,40 750,50" fill="none" stroke="#00FF98" stroke-width="2" opacity="0.9"/>
+            <!-- Priestington — Priest white -->
+            <polyline points="50,100 150,90 250,110 350,95 450,105 550,88 650,95 750,85" fill="none" stroke="#e0e0e0" stroke-width="2" opacity="0.9"/>
+            <!-- X axis labels -->
+            <text x="50" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-01</text>
+            <text x="150" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-06</text>
+            <text x="250" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-10</text>
+            <text x="350" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-13</text>
+            <text x="450" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-15</text>
+            <text x="550" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-17</text>
+            <text x="650" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-20</text>
+            <text x="750" y="175" fill="#7a8099" font-size="10" text-anchor="middle">04-22</text>
+          </svg>
+          <!-- Legend -->
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px">
+            <span style="font-size:10px;color:#A330C9">● Miaugusiante</span>
+            <span style="font-size:10px;color:#3FC7EB">● Rogiba</span>
+            <span style="font-size:10px;color:#C41E3A">● Lipczy</span>
+            <span style="font-size:10px;color:#00FF98">● Asseroth</span>
+            <span style="font-size:10px;color:#e0e0e0">● Priestington</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📋 Podsumowanie parsów</div>
+        <div style="padding:0">
+          <table class="parse-table">
+            <thead>
+              <tr>
+                <th>Gracz</th><th>Klasa / Spec</th><th>Boss</th>
+                <th>Śr. Parse %</th><th>Najlepszy</th><th>Najgorszy</th><th>Parsy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Miaugusiante</td><td style="color:var(--text-dim)">DH · Devourer</td><td>Vorasius</td>
+                <td><span class="parse-pct parse-legendary">94</span></td>
+                <td><span class="parse-pct parse-legendary">98</span></td>
+                <td><span class="parse-pct parse-epic">80</span></td>
+                <td style="color:var(--text-dim)">8</td>
+              </tr>
+              <tr>
+                <td>Rogiba</td><td style="color:var(--text-dim)">Mage · Frost</td><td>Vorasius</td>
+                <td><span class="parse-pct parse-epic">78</span></td>
+                <td><span class="parse-pct parse-epic">85</span></td>
+                <td><span class="parse-pct parse-rare">62</span></td>
+                <td style="color:var(--text-dim)">8</td>
+              </tr>
+              <tr>
+                <td>Lipczy</td><td style="color:var(--text-dim)">DK · Unholy</td><td>Vorasius</td>
+                <td><span class="parse-pct parse-rare">66</span></td>
+                <td><span class="parse-pct parse-epic">75</span></td>
+                <td><span class="parse-pct parse-rare">52</span></td>
+                <td style="color:var(--text-dim)">7</td>
+              </tr>
+              <tr>
+                <td>Asseroth</td><td style="color:var(--text-dim)">Monk · Mistweaver</td><td>Vorasius</td>
+                <td><span class="parse-pct parse-epic">82</span></td>
+                <td><span class="parse-pct parse-legendary">91</span></td>
+                <td><span class="parse-pct parse-rare">68</span></td>
+                <td style="color:var(--text-dim)">8</td>
+              </tr>
+              <tr>
+                <td>Priestington</td><td style="color:var(--text-dim)">Priest · Discipline</td><td>Vorasius</td>
+                <td><span class="parse-pct parse-rare">55</span></td>
+                <td><span class="parse-pct parse-epic">72</span></td>
+                <td><span class="parse-pct parse-common">38</span></td>
+                <td style="color:var(--text-dim)">6</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end app-body -->
+
+<!-- ── MODAL ──────────────────────────────────────────────────────────── -->
+<div class="modal-overlay hidden" id="modal" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-player-info">
+        <div class="class-dot" id="modal-dot"></div>
+        <div>
+          <div class="modal-player-name" id="modal-name">—</div>
+          <div class="modal-player-class" id="modal-class">—</div>
+        </div>
+      </div>
+      <div class="modal-close" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-kpis">
+        <div class="modal-kpi"><div class="modal-kpi-label">DPS</div><div class="modal-kpi-value gold" id="modal-dps">—</div></div>
+        <div class="modal-kpi"><div class="modal-kpi-label">HPS</div><div class="modal-kpi-value" id="modal-hps">—</div></div>
+        <div class="modal-kpi"><div class="modal-kpi-label">Active %</div><div class="modal-kpi-value" id="modal-active">—</div></div>
+        <div class="modal-kpi"><div class="modal-kpi-label">Zgony</div><div class="modal-kpi-value red" id="modal-deaths">—</div></div>
+        <div class="modal-kpi"><div class="modal-kpi-label">Def CDs</div><div class="modal-kpi-value" id="modal-cds">—</div></div>
+      </div>
+      <div class="modal-section-title">⏱️ Timeline gracza</div>
+      <div class="modal-timeline">
+        <div class="tl-line"></div>
+        <div class="tl-dot" style="background:#9b59b6; left:12%"></div>
+        <div class="tl-label" style="left:12%">Combat Pot</div>
+        <div class="tl-dot" style="background:#e67e22; left:28%"></div>
+        <div class="tl-label" style="left:28%">Blur</div>
+        <div class="tl-dot" style="background:#e67e22; left:55%"></div>
+        <div class="tl-label" style="left:55%">Netherwalk</div>
+        <div class="tl-dot" style="background:#e67e22; left:72%"></div>
+        <div class="tl-label" style="left:72%">Blur</div>
+        <div style="position:absolute;right:12px;font-size:9px;color:var(--text-dim);top:50%;transform:translateY(-50%)">4:52 →</div>
+      </div>
+      <div class="modal-two-col">
+        <div>
+          <div class="modal-section-title">🛡️ Defensives</div>
+          <div class="mini-table">
+            <div class="mini-table-row"><span class="mini-table-key">Blur</span><span class="mini-table-val">2×</span></div>
+            <div class="mini-table-row"><span class="mini-table-key">Netherwalk</span><span class="mini-table-val">1×</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="modal-section-title">🧪 Consumables</div>
+          <div class="mini-table">
+            <div class="mini-table-row"><span class="mini-table-key">Combat Pot</span><span class="mini-table-val green">1</span></div>
+            <div class="mini-table-row"><span class="mini-table-key">Healthstone</span><span class="mini-table-val red">0</span></div>
+            <div class="mini-table-row"><span class="mini-table-key">Health Pot</span><span class="mini-table-val red">0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Page switching ──────────────────────────────────────────────────── */
+  function showPage(page, btn) {
+    ['walki','attendance','parsy'].forEach(p => {
+      document.getElementById('page-' + p).classList.add('hidden');
+    });
+    document.getElementById('page-' + page).classList.remove('hidden');
+
+    document.querySelectorAll('.page-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const sidebar = document.getElementById('sidebar');
+    if (page === 'walki') {
+      sidebar.classList.remove('hidden');
+    } else {
+      sidebar.classList.add('hidden');
+    }
+  }
+
+  /* ── Pull list ───────────────────────────────────────────────────────── */
+  function selectPull(el) {
+    document.querySelectorAll('.pull-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ── Player modal ────────────────────────────────────────────────────── */
+  const players = {
+    'Miaugusiante': { cls: 'DemonHunter', spec: 'Devourer',     dps: '111,298', hps: '234',    active: '80.4%', deaths: '0', cds: '3' },
+    'Rogiba':       { cls: 'Mage',        spec: 'Frost',        dps: '104,763', hps: '312',    active: '82.8%', deaths: '1', cds: '1' },
+    'Lipczy':       { cls: 'DeathKnight', spec: 'Unholy',       dps: '104,047', hps: '189',    active: '96.3%', deaths: '0', cds: '4' },
+    'Jaszczurnax':  { cls: 'Evoker',      spec: 'Augmentation', dps: '99,602',  hps: '13,942', active: '82.5%', deaths: '0', cds: '2' },
+    'Brtmdk':       { cls: 'DeathKnight', spec: 'Unholy',       dps: '94,174',  hps: '145',    active: '93.4%', deaths: '1', cds: '5' },
+    'Fademonk':     { cls: 'Monk',        spec: 'Windwalker',   dps: '90,279',  hps: '867',    active: '72.7%', deaths: '0', cds: '2' },
+    'Beliaren':     { cls: 'Warlock',     spec: 'Demonology',   dps: '88,412',  hps: '234',    active: '80.3%', deaths: '0', cds: '1' },
+    'Shackles':     { cls: 'Shaman',      spec: 'Elemental',    dps: '86,670',  hps: '2,100',  active: '91.0%', deaths: '1', cds: '2' },
+    'Paladussia':   { cls: 'Paladin',     spec: 'Retribution',  dps: '86,388',  hps: '6,437',  active: '92.6%', deaths: '0', cds: '3' },
+    'Kostunioo':    { cls: 'Hunter',      spec: 'BeastMastery', dps: '84,056',  hps: '123',    active: '64.5%', deaths: '2', cds: '1' },
+    'Asseroth':     { cls: 'Monk',        spec: 'Mistweaver',   dps: '1,234',   hps: '94,602', active: '96.2%', deaths: '0', cds: '3' },
+    'Priestington': { cls: 'Priest',      spec: 'Discipline',   dps: '3,456',   hps: '88,175', active: '75.3%', deaths: '0', cds: '4' },
+    'Misericordi':  { cls: 'Paladin',     spec: 'Holy',         dps: '2,100',   hps: '74,330', active: '82.2%', deaths: '0', cds: '2' },
+    'Bartekbialy':  { cls: 'Shaman',      spec: 'Restoration',  dps: '1,890',   hps: '48,328', active: '75.1%', deaths: '1', cds: '3' },
+    'Vicard':       { cls: 'Druid',       spec: 'Guardian',     dps: '15,430',  hps: '32,088', active: '98.4%', deaths: '0', cds: '6' },
+    'Therali':      { cls: 'Monk',        spec: 'Brewmaster',   dps: '12,300',  hps: '29,740', active: '75.6%', deaths: '0', cds: '5' },
+  };
+
+  const classColors = {
+    DemonHunter: '#A330C9', Mage: '#3FC7EB', DeathKnight: '#C41E3A',
+    Evoker: '#33937F', Monk: '#00FF98', Warlock: '#8788EE',
+    Shaman: '#0070DD', Paladin: '#F48CBA', Hunter: '#AAD372',
+    Warrior: '#C69B3A', Priest: '#e0e0e0', Druid: '#FF7C0A',
+  };
+
+  function openModal(name) {
+    const p = players[name] || { cls: 'Warrior', spec: '—', dps: '—', hps: '—', active: '—', deaths: '—', cds: '—' };
+    document.getElementById('modal-name').textContent = name;
+    document.getElementById('modal-class').textContent = `${p.cls} • ${p.spec}`;
+    document.getElementById('modal-dps').textContent = p.dps;
+    document.getElementById('modal-hps').textContent = p.hps;
+    document.getElementById('modal-active').textContent = p.active;
+    document.getElementById('modal-deaths').textContent = p.deaths;
+    document.getElementById('modal-cds').textContent = p.cds;
+    const dot = document.getElementById('modal-dot');
+    dot.style.background = classColors[p.cls] || '#888';
+    document.getElementById('modal').classList.remove('hidden');
+  }
+
+  function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  /* ── Theme ───────────────────────────────────────────────────────────── */
+  function setThemeFromSelect(t) {
+    document.body.className = t === 'a' ? '' : 'theme-' + t;
+  }
+
+  /* ── Player pills ────────────────────────────────────────────────────── */
+  const pillPlayers = [
+    { name: 'Miaugusiante', cls: 'DemonHunter' },
+    { name: 'Rogiba',       cls: 'Mage' },
+    { name: 'Lipczy',       cls: 'DeathKnight' },
+    { name: 'Asseroth',     cls: 'Monk' },
+    { name: 'Priestington', cls: 'Priest' },
+    { name: 'Misericordi',  cls: 'Paladin' },
+    { name: 'Bartekbialy',  cls: 'Shaman' },
+    { name: 'Vicard',       cls: 'Druid' },
+    { name: 'Brtmdk',       cls: 'DeathKnight' },
+    { name: 'Jaszczurnax',  cls: 'Evoker' },
+    { name: 'Kostunioo',    cls: 'Hunter' },
+  ];
+
+  const pillsContainer = document.getElementById('player-pills');
+  pillPlayers.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'player-pill selected';
+    el.innerHTML = `
+      <div class="pill-dot" style="background:${classColors[p.cls]}"></div>
+      <span class="pill-name">${p.name}</span>
+      <div class="pill-check">✓</div>
+    `;
+    el.addEventListener('click', () => { el.classList.toggle('selected'); updatePillsTrigger(); });
+    pillsContainer.appendChild(el);
+  });
+
+  function updatePillsTrigger() {
+    const all = document.querySelectorAll('.player-pill');
+    const selected = document.querySelectorAll('.player-pill.selected');
+    const count = selected.length;
+    document.getElementById('pills-trigger-count').textContent = count;
+    const label = document.getElementById('pills-trigger-label');
+    label.textContent = count === all.length ? 'wszyscy' : count === 0 ? 'brak' : 'wybrani';
+    const dots = document.getElementById('pills-trigger-dots');
+    dots.innerHTML = '';
+    Array.from(selected).slice(0, 8).forEach(p => {
+      const dot = p.querySelector('.pill-dot');
+      const d = document.createElement('div');
+      d.style.cssText = `width:8px;height:8px;border-radius:50%;background:${dot.style.background};flex-shrink:0`;
+      dots.appendChild(d);
+    });
+  }
+
+  function togglePillsDropdown() {
+    const trigger = document.getElementById('pills-trigger');
+    const dropdown = document.getElementById('pills-dropdown');
+    trigger.classList.toggle('open');
+    dropdown.classList.toggle('open');
+  }
+
+  function toggleAllPills(state) {
+    document.querySelectorAll('.player-pill').forEach(p =>
+      state ? p.classList.add('selected') : p.classList.remove('selected')
+    );
+    updatePillsTrigger();
+  }
+
+  // Close on outside click
+  document.addEventListener('click', e => {
+    const wrap = document.getElementById('pills-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('pills-trigger').classList.remove('open');
+      document.getElementById('pills-dropdown').classList.remove('open');
+    }
+  });
+
+  updatePillsTrigger();
+
+  /* ── Generate heatmap ────────────────────────────────────────────────── */
+  const attPlayers = [
+    { name: 'Miaugusiante', cls: 'DemonHunter', data: [1,1,1,1,1,1,1,1,1,1,1,1] },
+    { name: 'Rogiba',       cls: 'Mage',        data: [1,1,0,1,1,1,1,1,1,0,1,1] },
+    { name: 'Lipczy',       cls: 'DeathKnight', data: [1,0,1,1,1,0,1,1,1,1,1,1] },
+    { name: 'Asseroth',     cls: 'Monk',        data: [1,1,1,1,1,1,1,0,1,1,1,1] },
+    { name: 'Priestington', cls: 'Priest',      data: [0,1,1,1,0,1,1,1,1,1,0,1] },
+    { name: 'Misericordi',  cls: 'Paladin',     data: [1,1,1,0,1,1,0,1,1,1,1,1] },
+    { name: 'Bartekbialy',  cls: 'Shaman',      data: [1,1,1,1,1,1,1,1,0,1,1,1] },
+    { name: 'Vicard',       cls: 'Druid',       data: [1,1,0,1,1,1,1,1,1,1,1,0] },
+    { name: 'Therali',      cls: 'Monk',        data: [1,0,1,1,0,1,1,1,1,0,1,1] },
+    { name: 'Brtmdk',       cls: 'DeathKnight', data: [0,1,1,1,1,1,1,0,1,1,1,1] },
+    { name: 'Jaszczurnax',  cls: 'Evoker',      data: [1,1,1,1,1,0,1,1,1,1,0,1] },
+    { name: 'Kostunioo',    cls: 'Hunter',      data: [1,1,1,0,1,1,1,1,1,1,1,0] },
+  ];
+
+  const hmBody = document.getElementById('heatmap-body');
+  attPlayers.forEach(p => {
+    const present = p.data.reduce((a, b) => a + b, 0);
+    const pct = Math.round(present / p.data.length * 100);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="hm-player" style="color:${classColors[p.cls]}">${p.name}</td>` +
+      p.data.map(v => {
+        const cls = v === 0 ? 'hm-absent' : (pct >= 90 ? 'hm-bright' : 'hm-present');
+        return `<td><div class="heatmap-cell ${cls}" title="${v ? 'Obecny' : 'Nieobecny'}"></div></td>`;
+      }).join('');
+    hmBody.appendChild(tr);
+  });
+
+  const attBody = document.getElementById('att-table-body');
+  [...attPlayers].sort((a,b) => b.data.reduce((x,y)=>x+y,0) - a.data.reduce((x,y)=>x+y,0)).forEach(p => {
+    const present = p.data.reduce((a,b) => a+b, 0);
+    const pct = Math.round(present / p.data.length * 100);
+    const pctClass = pct >= 90 ? 'high' : (pct >= 70 ? 'mid' : 'low');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:${classColors[p.cls]};font-weight:600">${p.name}</td>
+      <td style="color:var(--text-dim)">${p.cls}</td>
+      <td>${present}</td>
+      <td>${p.data.length}</td>
+      <td><span class="att-pct ${pctClass}">${pct}%</span></td>
+    `;
+    attBody.appendChild(tr);
+  });
+</script>
+</body>
+</html>
