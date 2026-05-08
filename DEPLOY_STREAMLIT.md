@@ -20,6 +20,7 @@ In Streamlit Community Cloud, open the app settings and paste:
 ```toml
 WCL_CLIENT_ID = "..."
 WCL_CLIENT_SECRET = "..."
+ADMIN_PASSWORD = "choose_a_private_refresh_password"
 
 GUILD_NAME = "Council"
 GUILD_SERVER = "burning-legion"
