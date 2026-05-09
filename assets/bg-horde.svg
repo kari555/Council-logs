@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900">
+  <defs>
+    <linearGradient id="hordeRed" x1="260" y1="80" x2="640" y2="820" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d72731"/>
+      <stop offset="0.52" stop-color="#960f18"/>
+      <stop offset="1" stop-color="#5c080d"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#130000" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+  <path filter="url(#shadow)" fill="url(#hordeRed)" d="
+    M450 68
+    L545 169
+    C582 165 616 151 650 124
+    C654 185 641 238 612 283
+    L708 330
+    C681 377 646 410 603 431
+    C638 465 661 508 672 560
+    C636 550 605 531 578 504
+    C533 560 503 646 486 762
+    C480 802 466 835 450 861
+    C434 835 420 802 414 762
+    C397 646 367 560 322 504
+    C295 531 264 550 228 560
+    C239 508 262 465 297 431
+    C254 410 219 377 192 330
+    L288 283
+    C259 238 246 185 250 124
+    C284 151 318 165 355 169
+    L450 68
+    Z
+    M450 250
+    C414 286 388 323 374 362
+    C408 351 434 355 450 376
+    C466 355 492 351 526 362
+    C512 323 486 286 450 250
+    Z
+    M450 423
+    L496 492
+    L450 579
+    L404 492
+    L450 423
+    Z
+  "/>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900">
+  <defs>
+    <radialGradient id="blueFace" cx="47%" cy="38%" r="58%">
+      <stop offset="0" stop-color="#0f4f98"/>
+      <stop offset="0.58" stop-color="#0a2e68"/>
+      <stop offset="1" stop-color="#051a3e"/>
+    </radialGradient>
+    <linearGradient id="goldTrim" x1="170" y1="55" x2="735" y2="830" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe08a"/>
+      <stop offset="0.5" stop-color="#c79023"/>
+      <stop offset="1" stop-color="#7a4c0d"/>
+    </linearGradient>
+    <filter id="crestShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000814" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+  <g filter="url(#crestShadow)">
+    <path fill="url(#goldTrim)" d="M450 35l41 88 99-46-31 103 111 2-77 78 93 60-116 26 51 101-105-26 2 118-68-88-68 88 2-118-105 26 51-101-116-26 93-60-77-78 111-2-31-103 99 46 41-88Z"/>
+    <path fill="url(#blueFace)" d="M450 101c-130 70-219 169-219 329 0 169 94 293 219 388 125-95 219-219 219-388 0-160-89-259-219-329Z"/>
+    <path fill="url(#goldTrim)" d="M450 151c-96 57-164 142-164 278 0 128 62 226 164 311 102-85 164-183 164-311 0-136-68-221-164-278Zm0 56c46 40 74 86 82 139-36-19-64-20-82-3-18-17-46-16-82 3 8-53 36-99 82-139Z"/>
+    <path fill="url(#goldTrim)" d="M297 228c54 21 93 58 115 113-64 3-107 35-136 88-6-72 1-138 21-201Z"/>
+    <path fill="url(#goldTrim)" d="M603 228c-54 21-93 58-115 113 64 3 107 35 136 88 6-72-1-138-21-201Z"/>
+    <path fill="url(#goldTrim)" d="M365 430c45-52 73-58 85-18 12-40 40-34 85 18-29-6-53 1-72 23-4 4-8 9-13 15-5-6-9-11-13-15-19-22-43-29-72-23Z"/>
+    <path fill="url(#goldTrim)" d="M390 505h120l-23 76h-74l-23-76Z"/>
+    <path fill="url(#goldTrim)" d="M407 616h86l-14 70-29 36-29-36-14-70Z"/>
+    <path fill="#04132c" d="M438 211c0-39 24-58 24-58s24 19 24 58c0 35-13 58-24 58s-24-23-24-58Z"/>
+    <path fill="#04132c" d="M364 384c48-23 78-21 90 5-52-4-83 11-114 53 2-23 10-43 24-58Z"/>
+    <path fill="#04132c" d="M536 384c-48-23-78-21-90 5 52-4 83 11 114 53-2-23-10-43-24-58Z"/>
+    <path fill="#04132c" d="M450 438l39 48h-78l39-48Z"/>
+  </g>
+</svg>
