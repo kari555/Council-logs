@@ -2252,13 +2252,31 @@ if st.session_state.current_page == "walki":
                 st.info("Brak enemy spell damage po odfiltrowaniu spelli spoza encountera.")
             else:
                 filters_left, filters_right = st.columns(2)
-                default_spell_count = len(spell_options)
-                selected_spells = spell_options
-                selected_players = [all_players_label]
                 spell_key = f"spell_damage_spells_{meta['report']}_{meta['fight_id']}"
+                player_mode_key = f"spell_damage_player_mode_{meta['report']}_{meta['fight_id']}"
                 player_key = f"spell_damage_players_{meta['report']}_{meta['fight_id']}"
+                selected_spells = st.session_state.get(spell_key, spell_options)
+                if not selected_spells:
+                    selected_spells = spell_options
+                player_mode = st.session_state.get(player_mode_key, all_players_label)
+                selected_players = st.session_state.get(player_key, [])
+                if player_mode != all_players_label and not selected_players:
+                    selected_players = player_options[:1]
+
+                if len(selected_spells) == len(spell_options):
+                    spell_button_label = f"Boss spells · {len(spell_options)}/{len(spell_options)}"
+                else:
+                    spell_button_label = f"Boss spells · {len(selected_spells)}/{len(spell_options)}"
+
+                if player_mode == all_players_label:
+                    player_button_label = f"Players hit · {all_players_label}"
+                elif len(selected_players) == 1:
+                    player_button_label = f"Players hit · {selected_players[0]}"
+                else:
+                    player_button_label = f"Players hit · {len(selected_players)}"
+
                 with filters_left:
-                    with st.popover(f"Boss spells · {default_spell_count}/{default_spell_count}", use_container_width=True):
+                    with st.popover(spell_button_label, use_container_width=True):
                         selected_spells = st.multiselect(
                             "Boss spells",
                             spell_options,
@@ -2267,41 +2285,49 @@ if st.session_state.current_page == "walki":
                             label_visibility="collapsed",
                         )
                 with filters_right:
-                    with st.popover(f"Players hit · {all_players_label}", use_container_width=True):
-                        selected_players = st.multiselect(
-                            "Players hit",
-                            [all_players_label] + player_options,
-                            default=[all_players_label],
-                            key=player_key,
+                    with st.popover(player_button_label, use_container_width=True):
+                        player_mode = st.segmented_control(
+                            "Tryb graczy",
+                            [all_players_label, "Wybrani gracze"],
+                            default=all_players_label if player_mode == all_players_label else "Wybrani gracze",
+                            key=player_mode_key,
                             label_visibility="collapsed",
-                            help="Wszyscy = suma damage dla całego raidu. Wybranie konkretnych graczy sumuje tylko ich damage taken.",
+                            selection_mode="single",
                         )
+                        if player_mode != all_players_label:
+                            selected_players = st.multiselect(
+                                "Players hit",
+                                player_options,
+                                default=selected_players or player_options[:1],
+                                key=player_key,
+                                label_visibility="collapsed",
+                                help="Wybranie kilku graczy sumuje tylko ich damage taken.",
+                            )
+                        else:
+                            st.caption("Suma damage dla całego raidu.")
 
-                if all_players_label in selected_players and len(selected_players) > 1:
-                    selected_players = [player for player in selected_players if player != all_players_label]
-                    st.session_state[player_key] = selected_players
-                if not selected_players:
-                    selected_players = [all_players_label]
-                    st.session_state[player_key] = selected_players
+                if player_mode != all_players_label and not selected_players:
+                    st.info("Wybierz co najmniej jednego gracza.")
+                    df_spell_filtered = pd.DataFrame()
+                else:
+                    df_spell_filtered = df_spell_damage.copy()
+                    if selected_spells:
+                        df_spell_filtered = df_spell_filtered[df_spell_filtered["Ability"].isin(selected_spells)]
+                    if player_mode != all_players_label:
+                        df_spell_filtered = df_spell_filtered[df_spell_filtered["Player"].isin(selected_players)]
 
                 spell_summary = (
                     "Wszystkie spelle"
                     if len(selected_spells) == len(spell_options)
                     else f"{len(selected_spells)} z {len(spell_options)} spelli"
                 )
-                if all_players_label in selected_players:
+                if player_mode == all_players_label:
                     player_summary = "Wszyscy gracze"
                 else:
                     player_summary = ", ".join(selected_players[:3])
                     if len(selected_players) > 3:
                         player_summary += f" +{len(selected_players) - 3}"
                 st.caption(f"{spell_summary} · {player_summary}")
-
-                df_spell_filtered = df_spell_damage.copy()
-                if selected_spells:
-                    df_spell_filtered = df_spell_filtered[df_spell_filtered["Ability"].isin(selected_spells)]
-                if all_players_label not in selected_players:
-                    df_spell_filtered = df_spell_filtered[df_spell_filtered["Player"].isin(selected_players)]
 
                 if df_spell_filtered.empty:
                     st.info("Brak spell damage dla wybranych filtrów.")
