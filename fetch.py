@@ -21,12 +21,16 @@ from config import (
 from data_processor import (
     build_actor_map, build_ability_map, build_config_lookup,
     process_performance, process_consumables,
+    process_target_damage,
     process_utility_table, process_defensives, process_deaths,
     process_timeline, process_damage_taken_events, process_rankings,
+    process_timed_spell_events, process_enemy_cast_events, process_player_details,
     process_attendance, get_consumable_headers,
     PERFORMANCE_HEADERS, UTILITY_HEADERS,
+    TARGET_DAMAGE_HEADERS,
     DEFENSIVES_HEADERS, DEATHS_HEADERS, TIMELINE_HEADERS, DAMAGE_TAKEN_HEADERS,
-    RANKINGS_HEADERS, ATTENDANCE_HEADERS,
+    RANKINGS_HEADERS, ATTENDANCE_HEADERS, TIMED_SPELL_HEADERS,
+    ENEMY_CAST_HEADERS, PLAYER_DETAILS_HEADERS,
     fight_boss_hp, fight_duration_seconds, fight_result,
 )
 from wcl_client import WCLClient
@@ -69,7 +73,7 @@ def merge_role_rankings(default_rows, healer_rows):
 
 
 def fetch_fight(wcl, report_code, fight, report_info, actor_map, ability_map,
-                consumable_config, defensive_config):
+                consumable_config, defensive_config, with_playground_data=False):
     """Fetch all data for a single fight. Returns dict with all sections."""
     fight_id = fight["id"]
     boss = fight["name"]
@@ -82,14 +86,17 @@ def fetch_fight(wcl, report_code, fight, report_info, actor_map, ability_map,
     defensive_ids = list(defensive_lookup[0].keys())
     consumable_headers = get_consumable_headers(consumable_config)
 
-    perf_rows, death_rows, interrupt_rows = [], [], []
+    perf_rows, target_damage_rows, death_rows, interrupt_rows = [], [], [], []
     dispel_rows, consumable_rows, defensive_rows, timeline_rows, dt_rows, ranking_rows = [], [], [], [], [], []
+    boss_ranking_rows, defensive_event_rows, consumable_event_rows = [], [], []
+    enemy_cast_rows, player_detail_rows = [], []
     death_table, consumable_events_raw, defensive_events_raw, combat_res_events_raw = {}, [], [], []
 
     # DPS
     try:
         dps_table = wcl.get_table(report_code, "DamageDone", [fight_id], t0, t1)
         perf_rows.extend(process_performance(report_info, fight, dps_table, "DPS", actor_map))
+        target_damage_rows.extend(process_target_damage(report_info, fight, dps_table, actor_map))
     except Exception as e:
         print(f"      Warning: DPS: {e}")
 
@@ -209,6 +216,61 @@ def fetch_fight(wcl, report_code, fight, report_info, actor_map, ability_map,
     except Exception as e:
         print(f"      Warning: Rankings: {e}")
 
+    if with_playground_data:
+        # Extra Playground data is kept in separate cache sections so it cannot
+        # pollute the existing Parses/Fights calculations.
+        try:
+            boss_rankings_raw = wcl.get_report_rankings(
+                report_code, fight_ids=[fight_id], player_metric="bossdps",
+            )
+            boss_ranking_rows.extend(
+                process_rankings(report_info, fight, boss_rankings_raw, metric="Boss Damage")
+            )
+        except Exception as e:
+            print(f"      Warning: Boss damage rankings: {e}")
+
+        try:
+            defensive_event_rows.extend(
+                process_timed_spell_events(
+                    report_info, fight, defensive_events_raw, actor_map,
+                    defensive_config, "Defensive",
+                )
+            )
+        except Exception as e:
+            print(f"      Warning: Defensive event rows: {e}")
+
+        try:
+            consumable_event_rows.extend(
+                process_timed_spell_events(
+                    report_info, fight, consumable_events_raw, actor_map,
+                    consumable_config, "Consumable",
+                )
+            )
+        except Exception as e:
+            print(f"      Warning: Consumable event rows: {e}")
+
+        try:
+            enemy_cast_events_raw = wcl.get_events(
+                report_code, "Casts", t0, t1,
+                fight_ids=[fight_id],
+                hostility_type="Enemies",
+                limit=10000,
+            )
+            enemy_cast_rows.extend(
+                process_enemy_cast_events(report_info, fight, enemy_cast_events_raw,
+                                          actor_map, ability_map)
+            )
+        except Exception as e:
+            print(f"      Warning: Enemy casts: {e}")
+
+        try:
+            player_details_raw = wcl.get_player_details(report_code, fight_ids=[fight_id])
+            player_detail_rows.extend(
+                process_player_details(report_info, fight, player_details_raw)
+            )
+        except Exception as e:
+            print(f"      Warning: Player details: {e}")
+
     return {
         "meta": {
             "report": report_code,
@@ -223,6 +285,7 @@ def fetch_fight(wcl, report_code, fight, report_info, actor_map, ability_map,
             "title": report_info.get("title", ""),
         },
         "performance": rows_to_dicts(PERFORMANCE_HEADERS, perf_rows),
+        "target_damage": rows_to_dicts(TARGET_DAMAGE_HEADERS, target_damage_rows),
         "deaths": rows_to_dicts(DEATHS_HEADERS, death_rows),
         "timeline": rows_to_dicts(TIMELINE_HEADERS, timeline_rows),
         "interrupts": rows_to_dicts(UTILITY_HEADERS, interrupt_rows),
@@ -231,10 +294,16 @@ def fetch_fight(wcl, report_code, fight, report_info, actor_map, ability_map,
         "defensives": rows_to_dicts(DEFENSIVES_HEADERS, defensive_rows),
         "damage_taken": rows_to_dicts(DAMAGE_TAKEN_HEADERS, dt_rows),
         "rankings": rows_to_dicts(RANKINGS_HEADERS, ranking_rows),
+        "boss_rankings": rows_to_dicts(RANKINGS_HEADERS, boss_ranking_rows),
+        "defensive_events": rows_to_dicts(TIMED_SPELL_HEADERS, defensive_event_rows),
+        "consumable_events": rows_to_dicts(TIMED_SPELL_HEADERS, consumable_event_rows),
+        "enemy_casts": rows_to_dicts(ENEMY_CAST_HEADERS, enemy_cast_rows),
+        "player_details": rows_to_dicts(PLAYER_DETAILS_HEADERS, player_detail_rows),
     }
 
 
-def fetch_report(wcl, report_code, consumable_config, defensive_config, force=False):
+def fetch_report(wcl, report_code, consumable_config, defensive_config, force=False,
+                 with_playground_data=False):
     """Fetch all Mythic fights for a report. Saves per-fight JSON files.
     Returns list of fight metadata dicts for updating the index."""
     print(f"  Fetching fights for {report_code}...")
@@ -276,18 +345,30 @@ def fetch_report(wcl, report_code, consumable_config, defensive_config, force=Fa
     for fight in mythic_fights:
         key = cache.fight_key(report_code, fight["id"])
         if cache.exists(key) and not force:
-            print(f"    Skipping {fight['name']} pull #{fight['pull_number']} (cached)")
-            # Still need meta for index
             existing = cache.get(key)
-            if existing:
-                fights_meta.append(existing["meta"])
-            continue
+            needs_playground_refresh = (
+                with_playground_data
+                and existing
+                and any(section not in existing for section in (
+                    "boss_rankings", "defensive_events", "consumable_events",
+                    "enemy_casts", "player_details",
+                ))
+            )
+            if not needs_playground_refresh:
+                print(f"    Skipping {fight['name']} pull #{fight['pull_number']} (cached)")
+                # Still need meta for index
+                if existing:
+                    fights_meta.append(existing["meta"])
+                continue
+            print(f"    Refreshing {fight['name']} pull #{fight['pull_number']} "
+                  f"(missing Playground data)...")
 
         print(f"    Fetching {fight['name']} Pull #{fight['pull_number']} "
               f"({'Kill' if fight['kill'] else 'Wipe'})...")
         try:
             fight_data = fetch_fight(wcl, report_code, fight, report_info,
-                                     actor_map, ability_map, consumable_config, defensive_config)
+                                     actor_map, ability_map, consumable_config,
+                                     defensive_config, with_playground_data=with_playground_data)
             cache.set(key, fight_data)
             fights_meta.append(fight_data["meta"])
             print(f"      Saved: {key}.json")
@@ -495,6 +576,8 @@ def main():
                         help="Re-fetch even if already cached")
     parser.add_argument("--no-attendance", action="store_true",
                         help="Skip fetching guild attendance data")
+    parser.add_argument("--with-playground-data", action="store_true",
+                        help="Fetch heavier experimental metrics for the Playground page")
     args = parser.parse_args()
 
     print("Connecting to Warcraft Logs API...")
@@ -523,7 +606,11 @@ def main():
                 "title": report_raw.get("title", ""),
                 "startTime": report_raw["startTime"],
             }
-            fights_meta = fetch_report(wcl, code, consumable_config, defensive_config, force=args.force)
+            fights_meta = fetch_report(
+                wcl, code, consumable_config, defensive_config,
+                force=args.force,
+                with_playground_data=args.with_playground_data,
+            )
             update_index(code, report_info, fights_meta)
         except Exception as e:
             print(f"  Error processing {code}: {e}")

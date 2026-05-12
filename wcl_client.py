@@ -122,25 +122,67 @@ class WCLClient:
         data = self.query(q, {"code": report_code})
         return data["reportData"]["report"]
 
+    def _enum_arg(self, name, value, allowed):
+        if value is None:
+            return None
+        if value not in allowed:
+            raise ValueError(f"Invalid {name}: {value}")
+        return f"{name}: {value}"
+
     def get_table(self, report_code, data_type, fight_ids, start_time=0,
-                  end_time=999999999, filter_expression=None):
+                  end_time=999999999, filter_expression=None, view_by="Source",
+                  hostility_type=None, source_id=None, target_id=None,
+                  encounter_id=None, difficulty=None, kill_type=None):
         """Fetch aggregated table data (DPS, HPS, Interrupts, etc.)."""
-        q = """
-        query TableData($code: String!, $dataType: TableDataType!, $fightIDs: [Int],
-                        $startTime: Float!, $endTime: Float!, $filter: String) {
-            reportData {
-                report(code: $code) {
+        args = [
+            "dataType: $dataType",
+            "fightIDs: $fightIDs",
+            "startTime: $startTime",
+            "endTime: $endTime",
+            self._enum_arg("viewBy", view_by, {"Source", "Target", "Ability", "Fight"}),
+            "filterExpression: $filter",
+        ]
+        if hostility_type:
+            args.append(self._enum_arg("hostilityType", hostility_type, {"Friendlies", "Enemies"}))
+        if kill_type:
+            args.append(self._enum_arg("killType", kill_type, {"Encounters", "Trash", "All"}))
+        if source_id is not None:
+            args.append("sourceID: $sourceID")
+        if target_id is not None:
+            args.append("targetID: $targetID")
+        if encounter_id is not None:
+            args.append("encounterID: $encounterID")
+        if difficulty is not None:
+            args.append("difficulty: $difficulty")
+        table_args = "\n                        ".join(arg for arg in args if arg)
+
+        var_defs = [
+            "$code: String!",
+            "$dataType: TableDataType!",
+            "$fightIDs: [Int]",
+            "$startTime: Float!",
+            "$endTime: Float!",
+            "$filter: String",
+        ]
+        if source_id is not None:
+            var_defs.append("$sourceID: Int")
+        if target_id is not None:
+            var_defs.append("$targetID: Int")
+        if encounter_id is not None:
+            var_defs.append("$encounterID: Int")
+        if difficulty is not None:
+            var_defs.append("$difficulty: Int")
+
+        q = f"""
+        query TableData({', '.join(var_defs)}) {{
+            reportData {{
+                report(code: $code) {{
                     table(
-                        dataType: $dataType
-                        fightIDs: $fightIDs
-                        startTime: $startTime
-                        endTime: $endTime
-                        viewBy: Source
-                        filterExpression: $filter
+                        {table_args}
                     )
-                }
-            }
-        }
+                }}
+            }}
+        }}
         """
         variables = {
             "code": report_code,
@@ -149,35 +191,68 @@ class WCLClient:
             "startTime": start_time,
             "endTime": end_time,
         }
+        if source_id is not None:
+            variables["sourceID"] = source_id
+        if target_id is not None:
+            variables["targetID"] = target_id
+        if encounter_id is not None:
+            variables["encounterID"] = encounter_id
+        if difficulty is not None:
+            variables["difficulty"] = difficulty
         if filter_expression:
             variables["filter"] = filter_expression
         data = self.query(q, variables)
         return data["reportData"]["report"]["table"]["data"]
 
     def get_events(self, report_code, data_type, start_time, end_time,
-                   fight_ids=None, filter_expression=None, ability_id=None):
+                   fight_ids=None, filter_expression=None, ability_id=None,
+                   hostility_type=None, source_id=None, target_id=None, limit=10000):
         """Fetch raw events with pagination support."""
-        q = """
-        query Events($code: String!, $dataType: EventDataType!, $startTime: Float!,
-                     $endTime: Float!, $fightIDs: [Int], $filter: String,
-                     $abilityID: Float, $limit: Int) {
-            reportData {
-                report(code: $code) {
+        args = [
+            "dataType: $dataType",
+            "startTime: $startTime",
+            "endTime: $endTime",
+            "fightIDs: $fightIDs",
+            "filterExpression: $filter",
+            "abilityID: $abilityID",
+            "limit: $limit",
+        ]
+        if hostility_type:
+            args.append(self._enum_arg("hostilityType", hostility_type, {"Friendlies", "Enemies"}))
+        if source_id is not None:
+            args.append("sourceID: $sourceID")
+        if target_id is not None:
+            args.append("targetID: $targetID")
+        event_args = "\n                        ".join(arg for arg in args if arg)
+
+        var_defs = [
+            "$code: String!",
+            "$dataType: EventDataType!",
+            "$startTime: Float!",
+            "$endTime: Float!",
+            "$fightIDs: [Int]",
+            "$filter: String",
+            "$abilityID: Float",
+            "$limit: Int",
+        ]
+        if source_id is not None:
+            var_defs.append("$sourceID: Int")
+        if target_id is not None:
+            var_defs.append("$targetID: Int")
+
+        q = f"""
+        query Events({', '.join(var_defs)}) {{
+            reportData {{
+                report(code: $code) {{
                     events(
-                        dataType: $dataType
-                        startTime: $startTime
-                        endTime: $endTime
-                        fightIDs: $fightIDs
-                        filterExpression: $filter
-                        abilityID: $abilityID
-                        limit: $limit
-                    ) {
+                        {event_args}
+                    ) {{
                         data
                         nextPageTimestamp
-                    }
-                }
-            }
-        }
+                    }}
+                }}
+            }}
+        }}
         """
         all_events = []
         current_start = start_time
@@ -188,7 +263,7 @@ class WCLClient:
                 "dataType": data_type,
                 "startTime": current_start,
                 "endTime": end_time,
-                "limit": 10000,
+                "limit": limit,
             }
             if fight_ids:
                 variables["fightIDs"] = fight_ids
@@ -196,6 +271,10 @@ class WCLClient:
                 variables["filter"] = filter_expression
             if ability_id:
                 variables["abilityID"] = ability_id
+            if source_id is not None:
+                variables["sourceID"] = source_id
+            if target_id is not None:
+                variables["targetID"] = target_id
 
             data = self.query(q, variables)
             events = data["reportData"]["report"]["events"]
@@ -206,6 +285,58 @@ class WCLClient:
             current_start = events["nextPageTimestamp"]
 
         return all_events
+
+    def get_player_details(self, report_code, fight_ids=None, encounter_id=None,
+                           difficulty=None, kill_type=None):
+        """Fetch WCL playerDetails JSON for gear/spec/talent-style metadata."""
+        args = []
+        if fight_ids is not None:
+            args.append("fightIDs: $fightIDs")
+        if encounter_id is not None:
+            args.append("encounterID: $encounterID")
+        if difficulty is not None:
+            args.append("difficulty: $difficulty")
+        if kill_type:
+            args.append(self._enum_arg("killType", kill_type, {"Encounters", "Trash", "All"}))
+        detail_args = f"({', '.join(args)})" if args else ""
+        var_defs = ["$code: String!"]
+        if fight_ids is not None:
+            var_defs.append("$fightIDs: [Int]")
+        if encounter_id is not None:
+            var_defs.append("$encounterID: Int")
+        if difficulty is not None:
+            var_defs.append("$difficulty: Int")
+        q = f"""
+        query PlayerDetails({', '.join(var_defs)}) {{
+            reportData {{
+                report(code: $code) {{
+                    playerDetails{detail_args}
+                }}
+            }}
+        }}
+        """
+        variables = {"code": report_code}
+        if fight_ids is not None:
+            variables["fightIDs"] = fight_ids
+        if encounter_id is not None:
+            variables["encounterID"] = encounter_id
+        if difficulty is not None:
+            variables["difficulty"] = difficulty
+        data = self.query(q, variables)
+        return data["reportData"]["report"]["playerDetails"]
+
+    def get_rate_limit(self):
+        """Fetch current WCL API rate limit state."""
+        q = """
+        query RateLimit {
+            rateLimitData {
+                limitPerHour
+                pointsSpentThisHour
+                pointsResetIn
+            }
+        }
+        """
+        return self.query(q)["rateLimitData"]
 
     def get_report_rankings(self, report_code, fight_ids=None, player_metric=None):
         """Fetch per-player parse percentile and item level for given fights."""

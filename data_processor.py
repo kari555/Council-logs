@@ -130,6 +130,50 @@ PERFORMANCE_HEADERS = COMMON_HEADERS + [
 ]
 
 
+def process_target_damage(report_info, fight, table_data, actor_map):
+    """Process source-view damage table into player -> target damage rows."""
+    rows = []
+    common = fight_common_cols(report_info, fight)
+
+    for entry in table_data.get("entries", []):
+        source_id = entry.get("id")
+        if source_id not in actor_map:
+            continue
+
+        player = entry.get("name", actor_map[source_id]["name"])
+        player_class = entry.get("type", actor_map[source_id].get("class", ""))
+        player_total = entry.get("total", 0) or 0
+
+        targets = {}
+        for target in entry.get("targets", []):
+            target_name = target.get("name") or "Unknown"
+            target_type = target.get("type") or ""
+            key = (target_name, target_type)
+            targets[key] = targets.get(key, 0) + (target.get("total", 0) or 0)
+
+        for (target_name, target_type), damage in sorted(
+            targets.items(), key=lambda item: item[1], reverse=True
+        ):
+            player_pct = round(damage / player_total * 100, 1) if player_total else 0
+            rows.append(common + [
+                player,
+                player_class,
+                target_name,
+                target_type,
+                round(damage),
+                round(player_total),
+                player_pct,
+            ])
+
+    return rows
+
+
+TARGET_DAMAGE_HEADERS = COMMON_HEADERS + [
+    "Player", "Class", "Target", "Target Type", "Damage",
+    "Player Total", "% Player Damage",
+]
+
+
 # ---------------------------------------------------------------------------
 # Consumables (config-driven)
 # ---------------------------------------------------------------------------
@@ -441,6 +485,167 @@ def process_timeline(report_info, fight, death_table, consumable_events,
 TIMELINE_HEADERS = COMMON_HEADERS + [
     "Event Time (s)", "Event Time", "Event Type", "Player", "Class",
     "Player Index", "Detail",
+]
+
+
+# ---------------------------------------------------------------------------
+# Playground detail events
+# ---------------------------------------------------------------------------
+
+def _event_fight_time(fight, event):
+    time_ms = event.get("timestamp", 0) - fight["startTime"]
+    if time_ms < 0:
+        time_ms = 0
+    return time_ms, round(time_ms / 1000, 1), format_duration(time_ms)
+
+
+def process_timed_spell_events(report_info, fight, events, actor_map,
+                               config_records, event_group):
+    """Process raw player cast events into timestamped rows for Playground."""
+    id_to_category, id_to_name, _ = build_config_lookup(config_records)
+    common = fight_common_cols(report_info, fight)
+    rows = []
+
+    for event in events:
+        source_id = event.get("sourceID")
+        if source_id not in actor_map:
+            continue
+        ability_id = event.get("abilityGameID")
+        event_ms, event_s, event_label = _event_fight_time(fight, event)
+        if event_ms > fight["endTime"] - fight["startTime"]:
+            continue
+        ability_name = (
+            id_to_name.get(ability_id)
+            or event.get("ability", {}).get("name")
+            or f"Spell {ability_id}"
+        )
+        rows.append(common + [
+            event_s,
+            event_label,
+            actor_map[source_id]["name"],
+            actor_map[source_id].get("class", ""),
+            event_group,
+            id_to_category.get(ability_id, "Other"),
+            ability_name,
+            ability_id,
+        ])
+
+    return rows
+
+
+TIMED_SPELL_HEADERS = COMMON_HEADERS + [
+    "Event Time (s)", "Event Time", "Player", "Class",
+    "Event Group", "Category", "Ability", "Ability ID",
+]
+
+
+def process_enemy_cast_events(report_info, fight, events, actor_map, ability_map=None):
+    """Process enemy cast events into named cast rows.
+
+    Source names are best-effort because report masterData is currently loaded for
+    players only; ability names remain reliable through masterData abilities or
+    inline event ability data.
+    """
+    common = fight_common_cols(report_info, fight)
+    fight_duration_ms = fight["endTime"] - fight["startTime"]
+    rows = []
+
+    for event in events:
+        if event.get("sourceID") in actor_map:
+            continue
+        event_ms, event_s, event_label = _event_fight_time(fight, event)
+        if event_ms > fight_duration_ms:
+            continue
+        ability_id = event.get("abilityGameID", 0)
+        ability_name = (
+            (ability_map.get(ability_id) if ability_map else None)
+            or event.get("ability", {}).get("name")
+            or f"Spell {ability_id}"
+        )
+        target_id = event.get("targetID")
+        target_name = actor_map.get(target_id, {}).get("name", f"Actor {target_id}" if target_id else "")
+        rows.append(common + [
+            event_s,
+            event_label,
+            event.get("sourceID", ""),
+            target_name,
+            ability_name,
+            ability_id,
+        ])
+
+    return rows
+
+
+ENEMY_CAST_HEADERS = COMMON_HEADERS + [
+    "Event Time (s)", "Event Time", "Source ID", "Target",
+    "Ability", "Ability ID",
+]
+
+
+def process_player_details(report_info, fight, details_raw):
+    """Flatten WCL playerDetails into stable player rows.
+
+    WCL returns a JSON scalar with a role/spec-oriented structure that can vary
+    between report types. This keeps the stable fields and stores compact talent
+    and gear summaries when they exist.
+    """
+    common = fight_common_cols(report_info, fight)
+    rows = []
+
+    def walk(value, role_hint="", spec_hint=""):
+        if isinstance(value, list):
+            for item in value:
+                walk(item, role_hint, spec_hint)
+            return
+        if not isinstance(value, dict):
+            return
+
+        if "name" in value and ("type" in value or "class" in value or "itemLevel" in value):
+            gear = value.get("gear") if isinstance(value.get("gear"), list) else []
+            talents = value.get("talents") if isinstance(value.get("talents"), list) else []
+            trinkets = [
+                str(item.get("name") or item.get("id") or "")
+                for item in gear
+                if isinstance(item, dict) and str(item.get("slot") or "").lower() in {"trinket", "trinket1", "trinket2", "12", "13"}
+            ]
+            talent_summary = ", ".join(
+                str(t.get("name") or t.get("id") or "")
+                for t in talents[:8]
+                if isinstance(t, dict)
+            )
+            rows.append(common + [
+                value.get("name", ""),
+                value.get("type") or value.get("class") or "",
+                value.get("spec") or value.get("bestSpec") or spec_hint,
+                value.get("role") or role_hint,
+                round(float(value.get("itemLevel") or value.get("ilvl") or 0), 1),
+                ", ".join([t for t in trinkets if t]),
+                talent_summary,
+            ])
+            return
+
+        for key, child in value.items():
+            next_role = role_hint
+            next_spec = spec_hint
+            if key in {"tanks", "healers", "dps", "melee", "ranged"}:
+                next_role = key
+            elif isinstance(child, (list, dict)):
+                next_spec = spec_hint or key
+            walk(child, next_role, next_spec)
+
+    walk(details_raw)
+
+    # Deduplicate in case WCL exposes the same character under several groups.
+    deduped = {}
+    for row in rows:
+        key = (row[0], row[2], row[3], row[len(common)])
+        deduped[key] = row
+    return list(deduped.values())
+
+
+PLAYER_DETAILS_HEADERS = COMMON_HEADERS + [
+    "Player", "Class", "Spec", "Role", "Item Level",
+    "Trinkets", "Talent Summary",
 ]
 
 

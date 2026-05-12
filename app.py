@@ -9,6 +9,8 @@ Run:
 from __future__ import annotations
 
 import json
+import hashlib
+import hmac
 from pathlib import Path
 from urllib.parse import quote
 
@@ -18,12 +20,14 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 
+from insights import build_playground_insights
+
 # ---------------------------------------------------------------------------
 # Page config
 # ---------------------------------------------------------------------------
 st.set_page_config(
     page_title="Council Raid Dashboard",
-    page_icon="⚔️",
+    page_icon="C",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -85,20 +89,12 @@ THEMES: dict[str, dict[str, str]] = {
     },
 }
 
-THEME_LABELS = {
-    "gold": "Council",
-    "alliance": "Alliance",
-    "horde": "Horde",
-}
-
-
 def c() -> dict[str, str]:
-    return THEMES.get(st.session_state.get("theme", "gold"), THEMES["gold"])
+    return THEMES["gold"]
 
 
 def sync_query_params() -> None:
     st.query_params["page"] = st.session_state.current_page
-    st.query_params["theme"] = st.session_state.theme
 
 
 def _asset_data_uri(path: str) -> str:
@@ -147,9 +143,15 @@ def plot_style() -> dict:
 def inject_css() -> None:
     clr = c()
     faction_bg = _theme_background_uri(clr)
+    page = st.session_state.get("current_page", "walki")
     bg_position = clr.get("bg_position", "right 2vw center")
-    if st.session_state.get("current_page") != "walki" and st.session_state.get("theme") in {"alliance", "horde"}:
+    if page != "walki" and st.session_state.get("theme") in {"alliance", "horde"}:
         bg_position = "center center"
+    bg_opacity = clr.get("bg_opacity", "0")
+    if page in {"walki", "gracze", "parsy"}:
+        bg_opacity = {"gold": "0.10", "alliance": "0.12", "horde": "0.12"}.get(st.session_state.theme, bg_opacity)
+    elif page == "attendance":
+        bg_opacity = {"gold": "0.14", "alliance": "0.16", "horde": "0.16"}.get(st.session_state.theme, bg_opacity)
     st.markdown(f"""
 <style>
 /* ── CSS Variables ─────────────────────────────────────────────────────── */
@@ -172,7 +174,7 @@ def inject_css() -> None:
 html, body, [data-testid="stApp"] {{
     background-color: var(--bg) !important;
     color: var(--text) !important;
-    font-size: 13px;
+    font-size: 15px;
 }}
 [data-testid="stAppViewContainer"] {{
     position: relative;
@@ -186,7 +188,7 @@ html, body, [data-testid="stApp"] {{
     background-repeat: no-repeat;
     background-position: {bg_position};
     background-size: {clr.get("bg_size", "min(82vw, 1120px)")};
-    opacity: {clr.get("bg_opacity", "0")};
+    opacity: {bg_opacity};
     pointer-events: none;
     z-index: 0;
 }}
@@ -217,12 +219,12 @@ section[data-testid="stMain"] {{ padding-top: 0 !important; margin-top: 0 !impor
 .main .block-container {{
     padding-top: 0 !important;
     padding-bottom: 2rem;
-    max-width: 1400px;
+    max-width: none;
 }}
 
 /* ── Sidebar ───────────────────────────────────────────────────────────── */
 [data-testid="stSidebar"] {{
-    background: linear-gradient(180deg, {clr["bg2"]} 0%, {clr["bg"]} 100%) !important;
+    background: var(--bg2) !important;
     border-right: 1px solid var(--border) !important;
 }}
 [data-testid="stSidebar"] hr {{
@@ -231,16 +233,16 @@ section[data-testid="stMain"] {{ padding-top: 0 !important; margin-top: 0 !impor
 }}
 [data-testid="stSidebar"] p {{
     color: var(--text-dim) !important;
-    font-size: 10px !important;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    font-weight: 600;
+    font-size: 11px !important;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
 }}
 [data-testid="stSidebar"] h1 {{
-    color: var(--gold) !important;
-    text-shadow: 0 0 20px rgba(200,155,60,0.4);
+    color: var(--text) !important;
+    text-shadow: none;
     font-size: 1rem !important;
-    letter-spacing: 0.5px;
+    letter-spacing: 0;
 }}
 
 /* ── Selectbox ─────────────────────────────────────────────────────────── */
@@ -249,7 +251,25 @@ section[data-testid="stMain"] {{ padding-top: 0 !important; margin-top: 0 !impor
     border-color: var(--border) !important;
     border-radius: var(--radius) !important;
     color: var(--text) !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
+    min-height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+}}
+[data-baseweb="select"] > div:first-child > div {{
+    display: flex !important;
+    align-items: center !important;
+}}
+[data-baseweb="select"] [role="button"],
+[data-baseweb="select"] span,
+[data-baseweb="select"] input {{
+    line-height: 1.2 !important;
+}}
+[data-testid="stTextInput"] input {{
+    min-height: 42px !important;
+    line-height: 42px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }}
 [data-baseweb="select"] > div:first-child:focus-within {{
     border-color: var(--gold-dim) !important;
@@ -260,7 +280,7 @@ section[data-testid="stMain"] {{ padding-top: 0 !important; margin-top: 0 !impor
 }}
 [role="option"] {{
     color: var(--text) !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
 }}
 [role="option"]:hover {{
     background: var(--bg2) !important;
@@ -270,27 +290,28 @@ section[data-testid="stMain"] {{ padding-top: 0 !important; margin-top: 0 !impor
 [data-baseweb="tab-list"] {{
     background: transparent !important;
     border-bottom: 1px solid var(--border) !important;
-    gap: 0 !important;
+    gap: 4px !important;
 }}
 [data-baseweb="tab"] {{
     color: var(--text-dim) !important;
     background: transparent !important;
     border-bottom: 2px solid transparent !important;
-    padding: 8px 16px !important;
-    font-size: 0.82rem !important;
-    font-weight: 500;
-    transition: color 0.15s;
+    border-radius: 5px 5px 0 0 !important;
+    padding: 12px 20px !important;
+    font-size: 1.06rem !important;
+    font-weight: 600;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s;
     white-space: nowrap;
 }}
 [data-baseweb="tab"]:hover {{
     color: var(--text) !important;
-    background: transparent !important;
+    background: color-mix(in srgb, var(--bg3) 42%, transparent) !important;
 }}
 [aria-selected="true"] {{
-    color: var(--gold) !important;
+    color: var(--text) !important;
     border-bottom: 2px solid var(--gold) !important;
-    background: transparent !important;
-    font-weight: 600 !important;
+    background: color-mix(in srgb, var(--bg3) 68%, transparent) !important;
+    font-weight: 700 !important;
 }}
 
 /* ── Metric cards ──────────────────────────────────────────────────────── */
@@ -307,16 +328,16 @@ section[data-testid="stMain"] {{ padding-top: 0 !important; margin-top: 0 !impor
 }}
 [data-testid="stMetricLabel"] {{
     color: var(--text-dim) !important;
-    font-size: 0.65rem !important;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-size: 0.82rem !important;
+    text-transform: none;
+    letter-spacing: 0;
 }}
 
 /* ── Multiselect ───────────────────────────────────────────────────────── */
 [data-baseweb="tag"] {{
-    background: rgba(200,155,60,0.15) !important;
+    background: var(--bg3) !important;
     border: 1px solid var(--gold-dim) !important;
-    color: var(--gold) !important;
+    color: var(--text) !important;
 }}
 
 /* ── Divider ───────────────────────────────────────────────────────────── */
@@ -335,7 +356,7 @@ div[role="dialog"] {{
     background: var(--bg2) !important;
     border: 1px solid var(--gold-dim) !important;
     border-radius: 8px !important;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 40px rgba(200,155,60,0.1) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35) !important;
 }}
 
 /* ── Alert ─────────────────────────────────────────────────────────────── */
@@ -349,76 +370,142 @@ div[role="dialog"] {{
 [data-testid="stCaptionContainer"] p,
 .stCaption {{
     color: var(--gold-dim) !important;
-    font-size: 0.68rem !important;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-size: 0.82rem !important;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
 }}
 
 /* ── KPI topbar (custom HTML elements) ────────────────────────────────── */
 .topbar-boss {{
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--gold);
-    text-shadow: 0 0 30px rgba(200,155,60,0.3);
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    padding-bottom: 0;
-}}
-.result-kill {{
-    background: #1a3d25;
-    color: #4ade80;
-    border: 1px solid #2d6040;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}}
-.result-wipe {{
-    background: #3d1a1a;
-    color: #f87171;
-    border: 1px solid #6b2828;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 700;
-}}
-.kpi-row {{
-    display: flex;
-    gap: 28px;
-    padding: 12px 0 14px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 4px;
-}}
-.kpi {{ display: flex; flex-direction: column; }}
-.kpi-label {{
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    margin-bottom: 2px;
-}}
-.kpi-value {{
     font-size: 20px;
     font-weight: 700;
     color: var(--text);
+    text-shadow: none;
+    letter-spacing: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 0;
+}}
+.result-kill {{
+    background: color-mix(in srgb, var(--green) 16%, var(--bg2));
+    color: var(--green);
+    border: 1px solid color-mix(in srgb, var(--green) 42%, var(--border));
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0;
+}}
+.result-wipe {{
+    background: color-mix(in srgb, var(--red) 16%, var(--bg2));
+    color: var(--red);
+    border: 1px solid color-mix(in srgb, var(--red) 42%, var(--border));
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+}}
+.kpi.result-card {{
+    background: color-mix(in srgb, var(--red) 12%, var(--bg2));
+    border-color: color-mix(in srgb, var(--red) 38%, var(--border));
+}}
+.kpi.result-card.kill {{
+    background: color-mix(in srgb, var(--green) 12%, var(--bg2));
+    border-color: color-mix(in srgb, var(--green) 38%, var(--border));
+}}
+.kpi.result-card .kpi-value {{
+    color: var(--red);
+}}
+.kpi.result-card.kill .kpi-value {{
+    color: var(--green);
+}}
+.kpi-row {{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: stretch;
+    margin-bottom: 10px;
+}}
+.kpi-row.primary {{
+    margin-bottom: 8px;
+}}
+.kpi-row.details {{
+    gap: 6px;
+    margin-bottom: 12px;
+}}
+.kpi {{
+    display: flex; flex-direction: column;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg2) 76%, transparent);
+    border-radius: 5px;
+    min-width: fit-content;
+    max-width: 260px;
+    flex: 0 0 auto;
+}}
+.kpi-row.primary .kpi {{
+    min-height: 68px;
+}}
+.kpi-row.details .kpi {{
+    padding: 8px 10px;
+    background: color-mix(in srgb, var(--bg2) 58%, transparent);
+}}
+.kpi-row.details .kpi-label {{
+    font-size: 11px;
+}}
+.kpi-row.details .kpi-value {{
+    font-size: 16px;
+    font-weight: 700;
+}}
+.kpi-label {{
+    font-size: 12px;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+    font-weight: 600;
+    white-space: nowrap;
+}}
+.kpi-value {{
+    font-size: 21px;
+    font-weight: 750;
+    color: var(--text);
     font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}}
+.kpi-wide {{
+    max-width: none;
+}}
+.kpi-ilvl-low {{
+    border-color: color-mix(in srgb, var(--red) 34%, var(--border));
+    background: color-mix(in srgb, var(--red) 8%, var(--bg2));
+}}
+.kpi-ilvl-high {{
+    border-color: color-mix(in srgb, var(--green) 34%, var(--border));
+    background: color-mix(in srgb, var(--green) 8%, var(--bg2));
 }}
 .kpi-value.gold  {{ color: var(--gold); }}
 .kpi-value.red   {{ color: var(--red); }}
 .kpi-value.green {{ color: var(--green); }}
-.kpi-value.dim   {{ font-size: 13px; color: var(--text-dim); }}
+.kpi-value.dim   {{ font-size: 18px; color: var(--text); }}
+.kpi-ilvl-low .kpi-value {{ color: var(--red); }}
+.kpi-ilvl-high .kpi-value {{ color: var(--green); }}
+@media (max-width: 1100px) {{
+    .kpi {{ flex: 1 1 140px; }}
+    .kpi-wide {{ min-width: 0; }}
+}}
 
 .click-hint {{
-    font-size: 11px;
+    font-size: 13px;
     color: var(--text-dim);
-    padding: 8px 0 4px;
-    opacity: 0.7;
+    padding: 2px 0 8px;
+    opacity: 0.85;
 }}
 
 /* scrollbar */
@@ -455,6 +542,56 @@ div[role="dialog"] {{
     letter-spacing: 0 !important;
     color: inherit !important;
     font-weight: inherit !important;
+}}
+
+/* ── Main pull selector ───────────────────────────────────────────────── */
+section[data-testid="stMain"] [data-testid="stRadio"] [role="radiogroup"] {{
+    gap: 6px;
+    align-items: stretch;
+    flex-wrap: wrap;
+}}
+section[data-testid="stMain"] [data-testid="stRadio"] label {{
+    background: color-mix(in srgb, var(--bg2) 72%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 11px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}}
+section[data-testid="stMain"] [data-testid="stRadio"] label:has(input:checked) {{
+    border-color: var(--gold-dim);
+    background: color-mix(in srgb, var(--bg3) 82%, transparent);
+}}
+section[data-testid="stMain"] [data-testid="stRadio"] label > div:first-child {{
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}}
+section[data-testid="stMain"] [data-testid="stRadio"] label > div:last-child {{
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}}
+section[data-testid="stMain"] [data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {{
+    font-size: 14px !important;
+    color: var(--text) !important;
+    line-height: 1.2;
+    text-align: center !important;
+    margin: 0 !important;
+}}
+.pull-nav-row {{
+    display: grid;
+    grid-template-columns: minmax(110px, 0.6fr) minmax(260px, 2fr) minmax(110px, 0.6fr);
+    gap: 8px;
+    align-items: end;
+    margin-bottom: 12px;
+}}
+@media (max-width: 760px) {{
+    .pull-nav-row {{ grid-template-columns: 1fr; }}
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -517,39 +654,39 @@ DAMAGE_PALETTE = [
 CACHE_DIR = Path("cache")
 
 
+def _file_mtime(path: Path) -> float:
+    return path.stat().st_mtime if path.exists() else 0
+
+
 @st.cache_data
+def _load_json_cached(path_str: str, mtime: float):
+    path = Path(path_str)
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def load_index() -> list:
     p = CACHE_DIR / "reports_index.json"
-    if not p.exists():
-        return []
-    return json.loads(p.read_text(encoding="utf-8"))
+    return _load_json_cached(str(p), _file_mtime(p)) or []
 
 
-@st.cache_data
 def load_fight(report_code: str, fight_id: int) -> dict | None:
     p = CACHE_DIR / f"fight_{report_code}_{fight_id}.json"
-    if not p.exists():
-        return None
-    return json.loads(p.read_text(encoding="utf-8"))
+    return _load_json_cached(str(p), _file_mtime(p))
 
 
-@st.cache_data
 def load_parses_index() -> pd.DataFrame:
     p = CACHE_DIR / "parses_index.json"
-    if not p.exists():
-        return pd.DataFrame()
-    rows = json.loads(p.read_text(encoding="utf-8"))
+    rows = _load_json_cached(str(p), _file_mtime(p))
     if not rows:
         return pd.DataFrame()
     return pd.DataFrame(rows)
 
 
-@st.cache_data
 def load_attendance() -> pd.DataFrame:
     p = CACHE_DIR / "attendance.json"
-    if not p.exists():
-        return pd.DataFrame()
-    rows = json.loads(p.read_text(encoding="utf-8"))
+    rows = _load_json_cached(str(p), _file_mtime(p))
     if not rows:
         return pd.DataFrame()
     return pd.DataFrame(rows)
@@ -577,8 +714,21 @@ def _date_filtered(df: pd.DataFrame, mode: str, date_col: str = "Date") -> pd.Da
     return out
 
 
-@st.cache_data
+def _fight_cache_signature() -> tuple:
+    index_path = CACHE_DIR / "reports_index.json"
+    fight_mtimes = tuple(
+        (path.name, path.stat().st_mtime)
+        for path in sorted(CACHE_DIR.glob("fight_*.json"))
+    )
+    return (_file_mtime(index_path), fight_mtimes)
+
+
 def load_player_fight_rows() -> pd.DataFrame:
+    return _load_player_fight_rows_cached(_fight_cache_signature())
+
+
+@st.cache_data
+def _load_player_fight_rows_cached(cache_signature: tuple) -> pd.DataFrame:
     rows = []
     for report in load_index():
         report_code = report.get("report_code")
@@ -663,7 +813,6 @@ def load_player_fight_rows() -> pd.DataFrame:
     return df
 
 
-@st.cache_data
 def load_player_profile_sources() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     fights = load_player_fight_rows()
     parses = load_parses_index()
@@ -879,13 +1028,128 @@ def fmt_duration(seconds: float) -> str:
 def pull_label(f: dict) -> str:
     dur = fmt_duration(f["duration_s"])
     if f["kill"]:
-        return f"✅ Pull #{f['pull']} — Kill ({dur})"
+        return f"Pull #{f['pull']} - Kill ({dur})"
     hp = f["boss_hp"]
     hp_str = f"{hp:.1f}%" if hp is not None else "?"
-    return f"❌ Pull #{f['pull']} — Wipe {hp_str} ({dur})"
+    return f"Pull #{f['pull']} - Wipe {hp_str} ({dur})"
 
 
-def render_topbar(meta: dict, deaths_count: int) -> None:
+def compact_pull_label(f: dict) -> str:
+    dur = fmt_duration(f["duration_s"])
+    if f["kill"]:
+        return f"#{f['pull']} Kill {dur}"
+    hp = f["boss_hp"]
+    hp_str = f"{hp:.1f}%" if hp is not None else "?"
+    return f"#{f['pull']} Wipe {hp_str} {dur}"
+
+
+def _build_spell_damage_series(
+    df_damage: pd.DataFrame,
+    bucket_seconds: int | None = None,
+) -> pd.DataFrame:
+    """Aggregate boss spell damage-taken events into a time series."""
+    if df_damage.empty:
+        return pd.DataFrame(columns=["Ability", "Time", "Damage", "Time Label"])
+
+    work = df_damage.copy()
+    work["Amount"] = pd.to_numeric(work["Amount"], errors="coerce").fillna(0)
+    work["Event Time (s)"] = pd.to_numeric(work["Event Time (s)"], errors="coerce")
+    work = work.dropna(subset=["Ability", "Event Time (s)"])
+    if work.empty:
+        return pd.DataFrame(columns=["Ability", "Time", "Damage", "Time Label"])
+
+    if bucket_seconds:
+        work["Time"] = (np.floor(work["Event Time (s)"] / bucket_seconds) * bucket_seconds).astype(float)
+        grouped = (
+            work.groupby(["Ability", "Time"], as_index=False)["Amount"]
+            .sum()
+            .rename(columns={"Amount": "Damage"})
+        )
+        grouped["Time Label"] = grouped["Time"].apply(lambda value: fmt_duration(int(value)))
+    else:
+        work["Time"] = work["Event Time (s)"].round(1)
+        grouped = (
+            work.groupby(["Ability", "Time"], as_index=False)["Amount"]
+            .sum()
+            .rename(columns={"Amount": "Damage"})
+        )
+        grouped["Time Label"] = grouped["Time"].apply(lambda value: fmt_duration(float(value)))
+
+    return grouped.sort_values(["Ability", "Time"]).reset_index(drop=True)
+
+
+def _render_spell_damage_timeline(
+    df_damage: pd.DataFrame,
+    meta: dict,
+    bucket_seconds: int | None = None,
+    chart_key_suffix: str = "",
+) -> None:
+    """Render spell-damage timeline using raw hit timestamps or fixed buckets."""
+    series = _build_spell_damage_series(df_damage, bucket_seconds=bucket_seconds)
+    if series.empty:
+        st.info("Brak danych spell damage dla aktualnych filtrów.")
+        return
+
+    mode_label = "1s buckets" if bucket_seconds else "Raw events"
+    fig = go.Figure()
+    for idx, ability in enumerate(series["Ability"].dropna().unique().tolist()):
+        cur = series[series["Ability"] == ability]
+        trace_args = dict(
+            x=cur["Time"],
+            y=cur["Damage"],
+            name=ability,
+            line=dict(width=2.5, color=DAMAGE_PALETTE[idx % len(DAMAGE_PALETTE)]),
+            hovertemplate=(
+                f"<b>{ability}</b><br>"
+                f"{mode_label}: %{{customdata}}<br>"
+                "Damage: %{y:,.0f}<extra></extra>"
+            ),
+            customdata=cur["Time Label"],
+        )
+        if bucket_seconds:
+            fig.add_trace(go.Scatter(mode="lines", **trace_args))
+        else:
+            fig.add_trace(go.Scatter(mode="lines+markers", marker=dict(size=6), **trace_args))
+
+    fig.update_layout(
+        height=440,
+        margin=dict(l=10, r=10, t=20, b=30),
+        xaxis=dict(
+            title="Czas walki (s)",
+            range=[-2, meta["duration_s"] + 5],
+            gridcolor=c()["border"],
+        ),
+        yaxis=dict(
+            title="Damage taken",
+            tickformat=",.0f",
+            gridcolor=c()["border"],
+        ),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="left",
+            x=0,
+            title_text="Boss spell",
+        ),
+        **plot_style(),
+    )
+    st.plotly_chart(fig, use_container_width=True, key=f"spell_damage_timeline_{chart_key_suffix}")
+
+
+def _fmt_compact_number(value: float | int | None) -> str:
+    if value is None or pd.isna(value):
+        return "—"
+    value = float(value)
+    if abs(value) >= 1_000_000:
+        return f"{value / 1_000_000:.1f}M"
+    if abs(value) >= 1_000:
+        return f"{value / 1_000:.0f}k"
+    return f"{value:.0f}"
+
+
+def render_topbar(fight_data: dict, deaths_count: int) -> None:
+    meta = fight_data["meta"]
     boss = meta["boss"]
     pull = meta["pull"]
     dur = fmt_duration(meta["duration_s"])
@@ -893,44 +1157,103 @@ def render_topbar(meta: dict, deaths_count: int) -> None:
     boss_hp = meta.get("boss_hp")
 
     if is_kill:
-        badge = '<span class="result-kill">KILL</span>'
-        hp_class, hp_val = "green", "0.0%"
+        hp_val = "0.0%"
     else:
         hp_str = f"{boss_hp:.1f}%" if boss_hp is not None else "?"
-        badge = f'<span class="result-wipe">WIPE {hp_str}</span>'
-        hp_class = "red"
         hp_val = hp_str if boss_hp is not None else "?"
+    result_label = "KILL" if is_kill else f"WIPE {hp_val}"
+    result_class = "result-card kill" if is_kill else "result-card"
 
-    report_short = meta["report"][:8] + "…"
+    report_code = meta["report"]
+    df_perf = pd.DataFrame(fight_data.get("performance", []))
+    df_rank = pd.DataFrame(fight_data.get("rankings", []))
+    df_def = pd.DataFrame(fight_data.get("defensives", []))
+    df_cons = pd.DataFrame(fight_data.get("consumables", []))
+    df_int = pd.DataFrame(fight_data.get("interrupts", []))
+    df_disp = pd.DataFrame(fight_data.get("dispels", []))
+
+    players = df_perf["Player"].nunique() if not df_perf.empty and "Player" in df_perf.columns else 0
+    dps_total = df_perf.loc[df_perf["Type"].eq("DPS"), "Per Second"].sum() if not df_perf.empty and "Type" in df_perf.columns else 0
+    hps_total = df_perf.loc[df_perf["Type"].eq("HPS"), "Per Second"].sum() if not df_perf.empty and "Type" in df_perf.columns else 0
+    active_avg = (
+        df_perf.loc[df_perf["Type"].eq("DPS"), "Active %"].mean()
+        if not df_perf.empty and {"Type", "Active %"}.issubset(df_perf.columns)
+        else np.nan
+    )
+    ilvl_by_player = pd.Series(dtype=float)
+    for ilvl_col in ("Item Level", "ilvl Bracket"):
+        if not df_rank.empty and {"Player", ilvl_col}.issubset(df_rank.columns):
+            rank_tmp = df_rank[["Player", ilvl_col]].copy()
+            rank_tmp[ilvl_col] = pd.to_numeric(rank_tmp[ilvl_col], errors="coerce")
+            rank_tmp = rank_tmp[rank_tmp[ilvl_col] > 0]
+            if not rank_tmp.empty:
+                ilvl_by_player = rank_tmp.groupby("Player")[ilvl_col].mean()
+                break
+    avg_ilvl = ilvl_by_player.mean() if not ilvl_by_player.empty else np.nan
+    if ilvl_by_player.empty and not df_perf.empty and "Player" in df_perf.columns:
+        try:
+            parses_idx = load_parses_index()
+        except Exception:
+            parses_idx = pd.DataFrame()
+        if not parses_idx.empty:
+            fight_players = set(df_perf["Player"].dropna().astype(str))
+            ilvl_col = "ilvl Bracket" if "ilvl Bracket" in parses_idx.columns else "Item Level" if "Item Level" in parses_idx.columns else None
+            if ilvl_col and "Player" in parses_idx.columns:
+                fallback = parses_idx[parses_idx["Player"].astype(str).isin(fight_players)].copy()
+                if "Date" in fallback.columns:
+                    fallback["Date"] = pd.to_datetime(fallback["Date"], errors="coerce")
+                    fallback = fallback.sort_values("Date")
+                fallback[ilvl_col] = pd.to_numeric(fallback[ilvl_col], errors="coerce")
+                fallback = fallback[fallback[ilvl_col] > 0]
+                if not fallback.empty:
+                    ilvl_by_player = fallback.groupby("Player")[ilvl_col].last()
+                    avg_ilvl = ilvl_by_player.mean()
+    if not ilvl_by_player.empty:
+        min_player = str(ilvl_by_player.idxmin())
+        max_player = str(ilvl_by_player.idxmax())
+        min_ilvl = ilvl_by_player.min()
+        max_ilvl = ilvl_by_player.max()
+        lowest_ilvl = f"{min_player} - {min_ilvl:.0f}"
+        highest_ilvl = f"{max_player} - {max_ilvl:.0f}"
+    else:
+        lowest_ilvl = "—"
+        highest_ilvl = "—"
+    defensives_total = pd.to_numeric(df_def.get("Count", pd.Series(dtype=float)), errors="coerce").sum()
+    interrupts_total = pd.to_numeric(df_int.get("Count", pd.Series(dtype=float)), errors="coerce").sum()
+    dispels_total = pd.to_numeric(df_disp.get("Count", pd.Series(dtype=float)), errors="coerce").sum()
+    consumables_total = 0
+    if not df_cons.empty:
+        skip_cols = {"Report", "Date", "Boss", "Pull #", "Result", "Boss HP %", "Duration (s)", "Player", "Class"}
+        cons_cols = [col for col in df_cons.columns if col not in skip_cols]
+        if cons_cols:
+            consumables_total = pd.to_numeric(df_cons[cons_cols].stack(), errors="coerce").sum()
+
+    metrics = [
+        ("Pull", f"#{pull} · {result_label}", "", result_class),
+        ("Czas", dur, "", "kpi-main"),
+        ("Gracze", str(players or "—"), "", "kpi-main"),
+        ("Śr. ilvl", f"{avg_ilvl:.0f}" if not pd.isna(avg_ilvl) else "—", "", "kpi-main"),
+        ("Lowest ilvl", lowest_ilvl, "red", "kpi-ilvl-low"),
+        ("Highest ilvl", highest_ilvl, "green", "kpi-ilvl-high"),
+        ("Zgony", str(deaths_count), "red" if deaths_count else "", "kpi-main"),
+        ("DPS", _fmt_compact_number(dps_total), "", ""),
+        ("HPS", _fmt_compact_number(hps_total), "", ""),
+        ("Active", f"{active_avg:.0f}%" if not pd.isna(active_avg) else "—", "", ""),
+        ("Defensives / Consumables", f"{int(defensives_total)} / {int(consumables_total)}", "", ""),
+        ("Interrupts / Dispels", f"{int(interrupts_total)} / {int(dispels_total)}", "", ""),
+        ("Raport", report_code, "dim", "kpi-wide"),
+    ]
+    metric_html = "".join(
+        f'<div class="kpi {width_class}"><div class="kpi-label">{label}</div><div class="kpi-value {klass}" title="{value}">{value}</div></div>'
+        for label, value, klass, width_class in metrics
+    )
 
     st.markdown(f"""
 <div class="topbar-boss">
-    <span>⚔️ {boss}</span>
-    {badge}
+    <span>{boss}</span>
 </div>
-<div class="kpi-row">
-    <div class="kpi">
-        <div class="kpi-label">Pull</div>
-        <div class="kpi-value gold">#{pull}</div>
-    </div>
-    <div class="kpi">
-        <div class="kpi-label">Czas walki</div>
-        <div class="kpi-value">{dur}</div>
-    </div>
-    <div class="kpi">
-        <div class="kpi-label">Boss HP</div>
-        <div class="kpi-value {hp_class}">{hp_val}</div>
-    </div>
-    <div class="kpi">
-        <div class="kpi-label">Zgony</div>
-        <div class="kpi-value">{deaths_count}</div>
-    </div>
-    <div class="kpi">
-        <div class="kpi-label">Raport</div>
-        <div class="kpi-value dim">{report_short}</div>
-    </div>
-</div>
-<div class="click-hint">💡 Kliknij gracza na wykresie aby otworzyć jego profil</div>
+<div class="kpi-row">{metric_html}</div>
+<div class="click-hint">Kliknij gracza na wykresie, żeby otworzyć jego profil.</div>
 """, unsafe_allow_html=True)
 
 
@@ -993,7 +1316,7 @@ def render_player_profile(fight_data: dict, player_name: str):
     xrange = [-2, meta["duration_s"] + 5]
 
     if has_events or has_damage:
-        st.caption("📍 Timeline")
+        st.caption("Timeline")
 
         if has_events and has_damage:
             fig = make_subplots(
@@ -1094,7 +1417,7 @@ def render_player_profile(fight_data: dict, player_name: str):
 
     col_d, col_c = st.columns(2)
     with col_d:
-        st.caption("🛡️ Defensives")
+        st.caption("Defensives")
         if not p_def.empty:
             disp = [col for col in ["Ability", "Count"] if col in p_def.columns]
             st.dataframe(p_def[disp].sort_values("Count", ascending=False),
@@ -1103,14 +1426,14 @@ def render_player_profile(fight_data: dict, player_name: str):
             st.info("Brak danych.")
 
     with col_c:
-        st.caption("🧪 Consumables")
+        st.caption("Consumables")
         if not p_cons.empty and cat_cols:
             st.dataframe(p_cons[cat_cols], hide_index=True, use_container_width=True)
         else:
             st.info("Brak danych.")
 
     if not p_dead.empty:
-        st.caption("💀 Zgony")
+        st.caption("Zgony")
         disp = [col for col in ["Death Time", "Killing Blow"] if col in p_dead.columns]
         st.dataframe(p_dead[disp], hide_index=True, use_container_width=True)
 
@@ -1118,7 +1441,7 @@ def render_player_profile(fight_data: dict, player_name: str):
 # ---------------------------------------------------------------------------
 # Player profile dialog
 # ---------------------------------------------------------------------------
-@st.dialog("👤 Profil gracza", width="large")
+@st.dialog("Profil gracza", width="large")
 def player_profile_dialog(index: list, player_name: str):
     st.subheader(player_name)
 
@@ -1129,7 +1452,7 @@ def player_profile_dialog(index: list, player_name: str):
                                st.session_state.get("dlg_date", dates[0]))
     _d_idx = dates.index(_d) if _d in dates else 0
     with dc1:
-        dlg_date = st.selectbox("📅 Noc", dates, index=_d_idx, key="dlg_date_sel")
+        dlg_date = st.selectbox("Noc", dates, index=_d_idx, key="dlg_date_sel")
 
     reports = reports_for_date(index, dlg_date)
     _r = st.session_state.get("dlg_report_sel",
@@ -1153,7 +1476,7 @@ def player_profile_dialog(index: list, player_name: str):
                                st.session_state.get("dlg_boss", boss_names[0]))
     _b_idx = boss_names.index(_b) if _b in boss_names else 0
     with dc3:
-        dlg_boss = st.selectbox("👹 Boss", boss_names, index=_b_idx, key="dlg_boss_sel")
+        dlg_boss = st.selectbox("Boss", boss_names, index=_b_idx, key="dlg_boss_sel")
 
     boss_fights = sorted(
         [f for f in night["fights"] if f["boss"] == dlg_boss],
@@ -1163,7 +1486,7 @@ def player_profile_dialog(index: list, player_name: str):
                                    st.session_state.get("dlg_pull_idx", 0)),
              len(boss_fights) - 1)
     with dc4:
-        dlg_pull = st.selectbox("🗡️ Pull", range(len(boss_fights)),
+        dlg_pull = st.selectbox("Pull", range(len(boss_fights)),
                                  format_func=lambda i: pull_label(boss_fights[i]),
                                  index=_p, key="dlg_pull_sel")
 
@@ -1177,21 +1500,190 @@ def player_profile_dialog(index: list, player_name: str):
     render_player_profile(fight_data, player_name)
 
 
+def _all_cache_frames_signature() -> tuple:
+    return _fight_cache_signature()
+
+
+def load_playground_frames() -> dict[str, pd.DataFrame]:
+    return _load_playground_frames_cached(_all_cache_frames_signature())
+
+
+@st.cache_data
+def _load_playground_frames_cached(cache_signature: tuple) -> dict[str, pd.DataFrame]:
+    buckets = {
+        "fights": [],
+        "performance": [],
+        "targets": [],
+        "deaths": [],
+        "defensives": [],
+        "consumables": [],
+        "damage_taken": [],
+        "interrupts": [],
+        "dispels": [],
+        "rankings": [],
+        "boss_rankings": [],
+        "defensive_events": [],
+        "consumable_events": [],
+        "enemy_casts": [],
+        "player_details": [],
+    }
+    for report in load_index():
+        report_code = report.get("report_code")
+        for fight in report.get("fights", []):
+            fight_data = load_fight(report_code, fight.get("fight_id"))
+            if not fight_data:
+                continue
+            meta = fight_data.get("meta", {})
+            base = {
+                "Report": meta.get("report", report_code),
+                "Date": meta.get("date", report.get("date")),
+                "Boss": meta.get("boss", fight.get("boss")),
+                "Pull #": meta.get("pull", fight.get("pull")),
+                "Fight ID": meta.get("fight_id", fight.get("fight_id")),
+                "Result": meta.get("result", fight.get("result")),
+                "Kill": bool(meta.get("kill", meta.get("result") == "Kill")),
+                "Duration (s)": meta.get("duration_s", fight.get("duration_s")),
+                "Boss HP %": meta.get("boss_hp", fight.get("boss_hp")),
+            }
+            buckets["fights"].append(base)
+            section_keys = {
+                "targets": "target_damage",
+            }
+            for section in buckets:
+                if section == "fights":
+                    continue
+                data_key = section_keys.get(section, section)
+                for row in fight_data.get(data_key, []):
+                    merged = {**base, **row}
+                    if "Kill" not in merged:
+                        merged["Kill"] = base["Kill"]
+                    buckets[section].append(merged)
+
+    frames = {name: pd.DataFrame(rows) for name, rows in buckets.items()}
+    for df in frames.values():
+        if df.empty:
+            continue
+        if "Date" in df.columns:
+            df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+        if "Result" in df.columns and "Kill" not in df.columns:
+            df["Kill"] = df["Result"].eq("Kill")
+    numeric_cols = {
+        "performance": ["Total", "Per Second", "Active %", "Duration (s)", "Pull #"],
+        "targets": ["Damage", "Player Total", "% Player Damage", "Duration (s)", "Pull #"],
+        "deaths": ["Death Time (s)", "Duration (s)", "Pull #"],
+        "defensives": ["Count", "Duration (s)", "Pull #"],
+        "consumables": ["Duration (s)", "Pull #"],
+        "damage_taken": ["Amount", "Event Time (s)", "Duration (s)", "Pull #"],
+        "interrupts": ["Count", "Duration (s)", "Pull #"],
+        "dispels": ["Count", "Duration (s)", "Pull #"],
+        "rankings": ["Parse %", "Median Parse %", "Amount", "Item Level", "ilvl Parse %", "ilvl Bracket"],
+        "boss_rankings": ["Parse %", "Median Parse %", "Amount", "Item Level", "ilvl Parse %", "ilvl Bracket"],
+        "defensive_events": ["Event Time (s)", "Duration (s)", "Pull #"],
+        "consumable_events": ["Event Time (s)", "Duration (s)", "Pull #"],
+        "enemy_casts": ["Event Time (s)", "Duration (s)", "Pull #"],
+        "player_details": ["Item Level", "Duration (s)", "Pull #"],
+        "fights": ["Duration (s)", "Pull #", "Boss HP %"],
+    }
+    for name, cols in numeric_cols.items():
+        if name in frames and not frames[name].empty:
+            _safe_numeric(frames[name], cols)
+    return frames
+
+
+def _filter_playground_frames(
+    frames: dict[str, pd.DataFrame],
+    date_mode: str,
+    boss_filter: str,
+    fight_filter: str,
+    player_filter: str,
+    pull_filter: int | None = None,
+) -> dict[str, pd.DataFrame]:
+    out = {}
+    for name, df in frames.items():
+        cur = _date_filtered(df, date_mode) if not df.empty else df.copy()
+        if boss_filter != "Wszystkie" and not cur.empty and "Boss" in cur.columns:
+            cur = cur[cur["Boss"] == boss_filter]
+        if fight_filter == "Kille" and not cur.empty and "Kill" in cur.columns:
+            cur = cur[cur["Kill"] == True]
+        elif fight_filter == "Wipe’y" and not cur.empty and "Kill" in cur.columns:
+            cur = cur[cur["Kill"] == False]
+        if pull_filter is not None and not cur.empty and "Fight ID" in cur.columns:
+            cur = cur[cur["Fight ID"] == pull_filter]
+        if player_filter != "Wszyscy" and not cur.empty and "Player" in cur.columns:
+            cur = cur[cur["Player"] == player_filter]
+        out[name] = cur.copy()
+    return out
+
+
+def _playground_pull_options(
+    fights_all: pd.DataFrame,
+    date_mode: str,
+    boss_filter: str,
+    fight_filter: str,
+) -> tuple[list[str], dict[str, int | None]]:
+    if fights_all.empty:
+        return ["Wszystkie"], {"Wszystkie": None}
+    cur = _date_filtered(fights_all, date_mode)
+    if boss_filter != "Wszystkie" and "Boss" in cur.columns:
+        cur = cur[cur["Boss"] == boss_filter]
+    if fight_filter == "Kille" and "Kill" in cur.columns:
+        cur = cur[cur["Kill"] == True]
+    elif fight_filter == "Wipe’y" and "Kill" in cur.columns:
+        cur = cur[cur["Kill"] == False]
+    if cur.empty:
+        return ["Wszystkie"], {"Wszystkie": None}
+
+    cur = cur.sort_values(["Date", "Boss", "Pull #", "Fight ID"], ascending=[False, True, True, True])
+    labels = ["Wszystkie"]
+    values = {"Wszystkie": None}
+    for _, row in cur.iterrows():
+        fight_id = row.get("Fight ID")
+        if pd.isna(fight_id):
+            continue
+        label = (
+            f"{row.get('Date').strftime('%Y-%m-%d') if hasattr(row.get('Date'), 'strftime') else row.get('Date')} · "
+            f"{row.get('Boss')} · #{int(row.get('Pull #', 0))} · {row.get('Result')} · {row.get('Report')}"
+        )
+        labels.append(label)
+        values[label] = int(fight_id)
+    return labels, values
+
+
+def _plot_bar(df: pd.DataFrame, x: str, y: str, title: str = "", color: str | None = None, height: int = 420):
+    fig = go.Figure(go.Bar(
+        x=df[x],
+        y=df[y],
+        orientation="h",
+        marker_color=color or c()["gold"],
+        hovertemplate="<b>%{y}</b><br>%{x:,.0f}<extra></extra>",
+    ))
+    fig.update_layout(
+        height=height,
+        margin=dict(l=0, r=10, t=26 if title else 10, b=30),
+        title=dict(text=title, font_color=c()["text_dim"]) if title else None,
+        xaxis=dict(gridcolor=c()["border"]),
+        yaxis=dict(autorange="reversed"),
+        **plot_style(),
+    )
+    return fig
+
+
 # ---------------------------------------------------------------------------
 # Page navigation
 # ---------------------------------------------------------------------------
 PAGES = [
-    ("walki",      "⚔️ Walki"),
-    ("attendance", "📅 Attendance"),
-    ("gracze", "👤 Gracze"),
-    ("parsy",      "📈 Parsy"),
+    ("walki", "Fights"),
+    ("attendance", "Attendance"),
+    ("parsy", "Parses"),
+    ("gracze", "Players"),
+    ("playground", "Playground"),
+    ("admin", "Admin"),
 ]
 
 
 def render_nav_bar() -> None:
     clr = c()
     current = st.session_state.current_page
-    theme = st.session_state.theme
 
     items_html = ""
     for key, label in PAGES:
@@ -1199,95 +1691,50 @@ def render_nav_bar() -> None:
         player_param = ""
         if key == "gracze" and current == "gracze" and st.query_params.get("player"):
             player_param = f'&player={quote(str(st.query_params.get("player")))}'
-        items_html += f'<a href="?page={key}&theme={theme}{player_param}" target="_self"{active}>{label}</a>'
-
-    theme_html = ""
-    for key, label in THEME_LABELS.items():
-        active = " theme-active" if key == theme else ""
-        player_param = ""
-        if current == "gracze" and st.query_params.get("player"):
-            player_param = f'&player={quote(str(st.query_params.get("player")))}'
-        theme_html += (
-            f'<a class="theme-pill{active}" href="?page={current}&theme={key}{player_param}" '
-            f'target="_self">{label}</a>'
-        )
+        items_html += f'<a href="?page={key}{player_param}" target="_self"{active}>{label}</a>'
 
     st.markdown(f"""
 <style>
 #prz-nav {{
     position: fixed !important;
     top: 0 !important; left: 0 !important; right: 0 !important;
-    height: 48px !important;
+    height: 46px !important;
     display: flex !important; align-items: stretch !important;
-    background: linear-gradient(180deg, #1c1f2b 0%, {clr["bg2"]} 100%) !important;
+    background: color-mix(in srgb, {clr["bg2"]} 94%, #000 6%) !important;
     border-bottom: 1px solid {clr["border"]} !important;
     z-index: 999999 !important;
-    font-family: "Source Sans Pro", "Segoe UI", system-ui, sans-serif;
+    font-family: ui-sans-serif, system-ui, sans-serif;
     box-sizing: border-box;
 }}
 #prz-nav .nav-logo {{
     display: flex; align-items: center;
-    padding: 0 20px; border-right: 1px solid {clr["border"]};
-    font-weight: 700; font-size: 14px;
-    color: {clr["gold"]}; white-space: nowrap; flex-shrink: 0;
+    padding: 0 18px; border-right: 1px solid {clr["border"]};
+    font-weight: 700; font-size: 15px;
+    color: {clr["text"]}; white-space: nowrap; flex-shrink: 0;
 }}
 #prz-nav a {{
     display: flex; align-items: center; justify-content: center;
-    padding: 0 28px; font-size: 12.5px; font-weight: 500;
+    padding: 0 20px; font-size: 15px; font-weight: 500;
     color: {clr["text_dim"]}; text-decoration: none;
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s, border-color 0.15s;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s;
     white-space: nowrap;
 }}
-#prz-nav a:hover {{ color: {clr["text"]}; border-bottom-color: {clr["border"]}; }}
+#prz-nav a:hover {{ color: {clr["text"]}; background: color-mix(in srgb, {clr["bg3"]} 58%, transparent); }}
 #prz-nav a.nav-active {{
-    color: {clr["gold"]} !important;
-    border-bottom-color: {clr["gold"]} !important;
-    font-weight: 700 !important;
-}}
-.theme-switcher {{
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0 14px;
-    border-left: 1px solid {clr["border"]};
-}}
-#prz-nav .theme-switcher a.theme-pill {{
-    height: 28px;
-    padding: 0 10px;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    color: {clr["text_dim"]};
-    font-size: 11.5px;
-    font-weight: 700;
-    line-height: 26px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}}
-#prz-nav .theme-switcher a.theme-pill:hover {{
     color: {clr["text"]} !important;
-    border-color: {clr["border"]};
-    background: {clr["bg3"]};
+    border-bottom-color: {clr["gold"]} !important;
+    background: color-mix(in srgb, {clr["bg3"]} 54%, transparent);
+    font-weight: 650 !important;
 }}
-#prz-nav .theme-switcher a.theme-active {{
-    color: {clr["gold"]} !important;
-    border-color: {clr["gold_dim"]};
-    background: color-mix(in srgb, {clr["gold"]} 14%, transparent);
-}}
-.main .block-container {{ padding-top: 60px !important; }}
-[data-testid="stSidebar"] > div:first-child {{ padding-top: 60px !important; }}
+.main .block-container {{ padding-top: 58px !important; }}
+[data-testid="stSidebar"] > div:first-child {{ padding-top: 58px !important; }}
 </style>
 <div id="prz-nav">
-    <div class="nav-logo">⚔️ Council</div>
+    <div class="nav-logo">Council</div>
     {items_html}
-    <div class="theme-switcher">{theme_html}</div>
 </div>
 """, unsafe_allow_html=True)
-
-
-def render_theme_picker() -> None:
-    return None
 
 
 def _secret_value(name: str, default: str = "") -> str:
@@ -1297,7 +1744,71 @@ def _secret_value(name: str, default: str = "") -> str:
         return default
 
 
-def refresh_wcl_cache(reports: int = 20, force: bool = False) -> None:
+def _sha256(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _secret_section(name: str):
+    try:
+        return st.secrets.get(name, {})
+    except Exception:
+        return {}
+
+
+def auth_users() -> dict:
+    auth = _secret_section("auth")
+    users = auth.get("users", {}) if hasattr(auth, "get") else {}
+    if users:
+        return users
+
+    legacy_password = _secret_value("ADMIN_PASSWORD")
+    if legacy_password:
+        return {
+            "admin": {
+                "password_hash": _sha256(legacy_password),
+                "role": "admin",
+            }
+        }
+    return {}
+
+
+def verify_user(username: str, password: str) -> dict | None:
+    user = auth_users().get(username)
+    if not user:
+        return None
+    expected = str(user.get("password_hash", "")).lower().replace("sha256:", "")
+    if expected and hmac.compare_digest(_sha256(password), expected):
+        return {"username": username, "role": user.get("role", "viewer")}
+    return None
+
+
+def require_admin_login() -> dict | None:
+    if st.session_state.get("auth_user"):
+        return st.session_state.auth_user
+
+    st.markdown('<div class="player-side-title">Admin login</div>', unsafe_allow_html=True)
+    if not auth_users():
+        st.info(
+            "Brak skonfigurowanych kont. Dodaj `[auth.users.<login>]` w Streamlit Secrets "
+            "albo tymczasowo ustaw `ADMIN_PASSWORD`."
+        )
+        return None
+
+    with st.form("admin_login_form"):
+        username = st.text_input("Login")
+        password = st.text_input("Hasło", type="password")
+        submitted = st.form_submit_button("Zaloguj")
+    if submitted:
+        user = verify_user(username.strip(), password)
+        if user:
+            st.session_state.auth_user = user
+            st.rerun()
+        st.error("Nieprawidłowy login albo hasło.")
+    return None
+
+
+def refresh_wcl_cache(reports: int = 20, force: bool = False,
+                      with_playground_data: bool = False) -> None:
     from fetch import (
         build_config,
         fetch_attendance,
@@ -1318,46 +1829,49 @@ def refresh_wcl_cache(reports: int = 20, force: bool = False) -> None:
             "startTime": report_raw["startTime"],
         }
         fights_meta = fetch_report(
-            wcl, code, consumable_config, defensive_config, force=force
+            wcl, code, consumable_config, defensive_config, force=force,
+            with_playground_data=with_playground_data,
         )
         update_index(code, report_info, fights_meta)
     fetch_attendance(wcl)
 
 
-def render_admin_panel() -> None:
-    admin_password = _secret_value("ADMIN_PASSWORD")
-    with st.expander("Admin"):
-        if not admin_password:
-            st.caption("Ustaw `ADMIN_PASSWORD` w Streamlit Secrets, żeby włączyć odświeżanie danych.")
-            return
+def render_admin_controls() -> None:
+    user = require_admin_login()
+    if not user:
+        return
+    if user.get("role") != "admin":
+        st.warning("To konto nie ma uprawnień admina.")
+        if st.button("Wyloguj", key="admin_logout_viewer"):
+            st.session_state.pop("auth_user", None)
+            st.rerun()
+        return
 
-        password = st.text_input("Hasło admina", type="password", key="admin_password")
-        if password != admin_password:
-            st.caption("Panel odświeżania pojawi się po wpisaniu hasła.")
-            return
-
-        col_a, col_b, col_c = st.columns([1, 1, 2])
-        reports = col_a.number_input("Raporty", min_value=1, max_value=50, value=20, step=1)
-        force = col_b.checkbox("Force", value=False)
-        if col_c.button("Odśwież dane z WCL", type="primary"):
-            with st.spinner("Pobieram dane z Warcraft Logs. To może potrwać kilka minut..."):
-                try:
-                    refresh_wcl_cache(reports=int(reports), force=force)
-                    st.cache_data.clear()
-                    st.success("Dane odświeżone. Przeładowuję widok.")
-                    st.rerun()
-                except Exception as exc:
-                    st.error(f"Nie udało się odświeżyć danych: {exc}")
-
-
-def render_pull_list(boss_fights: list, boss_name: str) -> int:
-    """Sidebar pull selector as a radio list. Returns selected index."""
-    return st.sidebar.radio(
-        "🗡️ Pull",
-        range(len(boss_fights)),
-        format_func=lambda i: pull_label(boss_fights[i]),
-        key=f"pull_radio_{boss_name}",
+    st.markdown(
+        f'<div class="player-identity"><div><div class="player-name">Admin</div>'
+        f'<div class="player-sub">Zalogowano jako {user["username"]}</div></div></div>',
+        unsafe_allow_html=True,
     )
+    col_a, col_b, col_c, col_d, col_e = st.columns([1, 1, 1.4, 1.6, 1])
+    reports = col_a.number_input("Raporty", min_value=1, max_value=50, value=20, step=1)
+    force = col_b.checkbox("Force", value=False)
+    playground_data = col_c.checkbox("Playground data", value=False)
+    if col_d.button("Odśwież dane z WCL", type="primary", use_container_width=True):
+        with st.spinner("Pobieram dane z Warcraft Logs. To może potrwać kilka minut..."):
+            try:
+                refresh_wcl_cache(
+                    reports=int(reports),
+                    force=force,
+                    with_playground_data=playground_data,
+                )
+                st.cache_data.clear()
+                st.success("Dane odświeżone. Przeładowuję widok.")
+                st.rerun()
+            except Exception as exc:
+                st.error(f"Nie udało się odświeżyć danych: {exc}")
+    if col_e.button("Wyloguj", use_container_width=True):
+        st.session_state.pop("auth_user", None)
+        st.rerun()
 
 
 # ---------------------------------------------------------------------------
@@ -1367,11 +1881,9 @@ _valid_pages = {k for k, _ in PAGES}
 _page_param = st.query_params.get("page", "walki")
 if _page_param in _valid_pages and _page_param != st.session_state.current_page:
     st.session_state.current_page = _page_param
-_theme_param = st.query_params.get("theme", st.session_state.theme)
-if _theme_param in THEMES and _theme_param != st.session_state.theme:
-    st.session_state.theme = _theme_param
-elif st.query_params.get("theme") not in THEMES:
-    st.query_params["theme"] = st.session_state.theme
+st.session_state.theme = "gold"
+if st.query_params.get("theme") is not None:
+    del st.query_params["theme"]
 if st.session_state.current_page != "gracze" and st.query_params.get("player"):
     del st.query_params["player"]
 
@@ -1384,8 +1896,6 @@ inject_css()
 # Nav bar + index load (both needed on every page)
 # ---------------------------------------------------------------------------
 render_nav_bar()
-render_theme_picker()
-render_admin_panel()
 
 index = load_index()
 
@@ -1395,10 +1905,9 @@ if not index:
     st.stop()
 
 # ---------------------------------------------------------------------------
-# Hide sidebar on non-walki pages
+# Hide native sidebar; page controls live in the main layout
 # ---------------------------------------------------------------------------
-if st.session_state.current_page != "walki":
-    st.markdown("""<style>
+st.markdown("""<style>
 [data-testid="stSidebar"] { display: none !important; }
 [data-testid="stSidebarCollapsedControl"] { display: none !important; }
 .main .block-container { padding-left: 2rem !important; max-width: 100% !important; }
@@ -1409,30 +1918,60 @@ if st.session_state.current_page != "walki":
 # ===========================================================================
 if st.session_state.current_page == "walki":
 
-    st.sidebar.title("⚔️ Council")
-    st.sidebar.caption("Raid Dashboard")
-
     dates = unique_dates(index)
-    selected_date = st.sidebar.selectbox("📅 Noc raidowa", dates)
+    st.markdown('<div class="player-side-title">Filtry</div>', unsafe_allow_html=True)
+    f_date, f_report, f_boss = st.columns([1, 1.8, 1.4])
+    with f_date:
+        selected_date = st.selectbox("Noc raidowa", dates, key="walki_date")
     reports = reports_for_date(index, selected_date)
     if len(reports) > 1:
-        selected_report_code = st.sidebar.selectbox(
-            "📄 Raport / grupa",
-            [r["report_code"] for r in reports],
-            format_func=lambda code: report_label(next(r for r in reports if r["report_code"] == code)),
-        )
+        with f_report:
+            selected_report_code = st.selectbox(
+                "Raport / grupa",
+                [r["report_code"] for r in reports],
+                format_func=lambda code: report_label(next(r for r in reports if r["report_code"] == code)),
+                key=f"walki_report_{selected_date}",
+            )
         night = next(e for e in reports if e["report_code"] == selected_report_code)
     else:
         night = reports[0]
+        with f_report:
+            st.selectbox(
+                "Raport / grupa",
+                [night["report_code"]],
+                format_func=lambda code: report_label(night),
+                disabled=True,
+                key=f"walki_report_single_{selected_date}",
+            )
 
     boss_names = sorted(set(f["boss"] for f in night["fights"]))
-    selected_boss = st.sidebar.selectbox("👹 Boss", boss_names)
+    with f_boss:
+        selected_boss = st.selectbox("Boss", boss_names, key=f"walki_boss_{night['report_code']}")
 
     boss_fights = sorted(
         [f for f in night["fights"] if f["boss"] == selected_boss],
         key=lambda f: f["pull"],
     )
-    selected_pull_idx = render_pull_list(boss_fights, selected_boss)
+    pull_key = f"walki_pull_select_{night['report_code']}_{selected_boss}"
+    if pull_key not in st.session_state or st.session_state[pull_key] >= len(boss_fights):
+        st.session_state[pull_key] = 0
+
+    prev_col, select_col, next_col = st.columns([0.7, 2.6, 0.7], vertical_alignment="bottom")
+    with prev_col:
+        if st.button("Previous", disabled=st.session_state[pull_key] <= 0, use_container_width=True, key=f"{pull_key}_prev"):
+            st.session_state[pull_key] = max(0, st.session_state[pull_key] - 1)
+            st.rerun()
+    with select_col:
+        selected_pull_idx = st.selectbox(
+            "Pull",
+            range(len(boss_fights)),
+            format_func=lambda i: compact_pull_label(boss_fights[i]),
+            key=pull_key,
+        )
+    with next_col:
+        if st.button("Next", disabled=st.session_state[pull_key] >= len(boss_fights) - 1, use_container_width=True, key=f"{pull_key}_next"):
+            st.session_state[pull_key] = min(len(boss_fights) - 1, st.session_state[pull_key] + 1)
+            st.rerun()
     selected_fight_meta = boss_fights[selected_pull_idx]
 
     fight_data = load_fight(night["report_code"], selected_fight_meta["fight_id"])
@@ -1444,13 +1983,13 @@ if st.session_state.current_page == "walki":
 
     # ── Header ───────────────────────────────────────────────────────────
     deaths_count = len(fight_data.get("deaths", []))
-    render_topbar(meta, deaths_count)
+    render_topbar(fight_data, deaths_count)
 
-    # ── Tabs (7 — Attendance i Parsy przeniesione na osobne strony) ───────
-    (tab_perf, tab_timeline, tab_deaths,
+    # ── Tabs (Attendance i Parsy przeniesione na osobne strony) ───────────
+    (tab_perf, tab_targets, tab_timeline, tab_deaths,
      tab_interrupts, tab_dispels, tab_consumables, tab_defensives) = st.tabs([
-        "📊 Performance", "⏱️ Timeline", "💀 Deaths",
-        "⚡ Interrupts", "🧹 Dispels", "🧪 Consumables", "🛡️ Defensives",
+        "Performance", "Targets", "Timeline", "Deaths",
+        "Interrupts", "Dispels", "Consumables", "Defensives",
     ])
 
 
@@ -1462,8 +2001,8 @@ if st.session_state.current_page == "walki":
         else:
             col_dps, col_hps = st.columns(2)
             for col_ui, data_type, label in [
-                (col_dps, "DPS", "⚔️ DPS"),
-                (col_hps, "HPS", "💚 HPS"),
+                (col_dps, "DPS", "DPS"),
+                (col_hps, "HPS", "HPS"),
             ]:
                 df = df_perf[df_perf["Type"] == data_type].copy()
                 df = df.sort_values("Per Second", ascending=True)
@@ -1530,6 +2069,96 @@ if st.session_state.current_page == "walki":
                     display_df.columns = ["Gracz", "Klasa", "Spec", data_type, "Total", "Active %"]
                     st.dataframe(display_df, hide_index=True, use_container_width=True)
 
+    # ── Targets ──────────────────────────────────────────────────────────
+    with tab_targets:
+        df_targets = pd.DataFrame(fight_data.get("target_damage", []))
+        if df_targets.empty:
+            st.info("Brak target breakdown w cache. Odśwież dane z WCL, żeby zapisać podział damage po targetach.")
+        else:
+            df_targets = df_targets.copy()
+            df_targets["Damage"] = pd.to_numeric(df_targets["Damage"], errors="coerce").fillna(0)
+            df_targets["Player Total"] = pd.to_numeric(df_targets.get("Player Total", 0), errors="coerce").fillna(0)
+            df_targets["% Player Damage"] = pd.to_numeric(
+                df_targets.get("% Player Damage", 0), errors="coerce"
+            ).fillna(0)
+            targets = sorted(df_targets["Target"].dropna().unique())
+            c_target, c_sort = st.columns([1.4, 1])
+            with c_target:
+                selected_target = st.selectbox("Target", ["All"] + targets, key=f"targets_target_{meta['report']}_{meta['fight_id']}")
+            with c_sort:
+                sort_options = ["Total damage"] + targets
+                sort_mode = st.selectbox("Sort", sort_options, key=f"targets_sort_{meta['report']}_{meta['fight_id']}")
+
+            df_view = df_targets.copy()
+            if selected_target != "All":
+                df_view = df_view[df_view["Target"] == selected_target]
+
+            if df_view.empty:
+                st.info("Brak danych dla wybranego targetu.")
+            else:
+                by_player = (
+                    df_view.pivot_table(
+                        index=["Player", "Class"],
+                        columns="Target",
+                        values="Damage",
+                        aggfunc="sum",
+                        fill_value=0,
+                    )
+                    .reset_index()
+                    .rename_axis(None, axis=1)
+                )
+                target_cols = [target for target in targets if target in by_player.columns]
+                if selected_target != "All":
+                    target_cols = [selected_target] if selected_target in by_player.columns else []
+                by_player["Total"] = by_player[target_cols].sum(axis=1) if target_cols else 0
+
+                if sort_mode != "Total damage" and sort_mode in by_player.columns:
+                    by_player = by_player.sort_values(sort_mode, ascending=True)
+                else:
+                    by_player = by_player.sort_values("Total", ascending=True)
+
+                target_totals = df_view.groupby("Target")["Damage"].sum().sort_values(ascending=False)
+                total_damage = target_totals.sum()
+                top_target = target_totals.index[0] if not target_totals.empty else "—"
+                top_share = target_totals.iloc[0] / total_damage * 100 if total_damage else 0
+                metric_cols = st.columns(3)
+                metric_cols[0].metric("Total damage", _fmt_compact_number(total_damage))
+                metric_cols[1].metric("Targets", str(len(target_totals)))
+                metric_cols[2].metric("Top target", f"{top_target} · {top_share:.1f}%" if total_damage else "—")
+
+                fig = go.Figure()
+                ordered_targets = [target for target in target_totals.index if target in target_cols]
+                for idx, target in enumerate(ordered_targets):
+                    target_type = df_view.loc[df_view["Target"].eq(target), "Target Type"].dropna()
+                    color = c()["gold"] if not target_type.empty and target_type.iloc[0] == "Boss" else DAMAGE_PALETTE[idx % len(DAMAGE_PALETTE)]
+                    fig.add_trace(go.Bar(
+                        x=by_player[target],
+                        y=by_player["Player"],
+                        orientation="h",
+                        name=target,
+                        marker_color=color,
+                        hovertemplate=f"<b>%{{y}}</b><br>{target}: %{{x:,.0f}}<extra></extra>",
+                    ))
+                fig.update_layout(
+                    barmode="stack",
+                    height=max(360, 48 + 30 * len(by_player)),
+                    margin=dict(l=0, r=10, t=10, b=30),
+                    xaxis=dict(title="Damage", tickformat=",.0f", gridcolor=c()["border"]),
+                    yaxis=dict(title="", autorange="reversed"),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, title_text="Target"),
+                    **plot_style(),
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+                target_table = df_view.sort_values("Damage", ascending=False)[[
+                    "Player", "Class", "Target", "Target Type", "Damage",
+                    "% Player Damage",
+                ]].copy()
+                target_table["Damage"] = target_table["Damage"].apply(lambda value: f"{value:,.0f}")
+                target_table["% Player Damage"] = target_table["% Player Damage"].apply(lambda value: f"{value:.1f}%")
+                target_table.columns = ["Player", "Class", "Target", "Type", "Damage", "% of player damage"]
+                st.dataframe(target_table, hide_index=True, use_container_width=True)
+
     # ── Timeline ─────────────────────────────────────────────────────────
     with tab_timeline:
         df_tl = pd.DataFrame(fight_data["timeline"])
@@ -1587,6 +2216,118 @@ if st.session_state.current_page == "walki":
                 **plot_style(),
             )
             st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("### Boss spell damage")
+        st.caption(
+            "Dwa warianty tego samego widoku: surowe eventy per hit oraz agregacja do bucketów 1s. "
+            "Filtr graczy sumuje damage tylko dla wybranych targetów."
+        )
+
+        df_spell_damage = pd.DataFrame(fight_data.get("damage_taken", []))
+        df_enemy_casts = pd.DataFrame(fight_data.get("enemy_casts", []))
+        if df_spell_damage.empty:
+            st.info("Brak spell damage w cache dla tego pulla.")
+        else:
+            df_spell_damage = df_spell_damage.copy()
+            df_spell_damage["Amount"] = pd.to_numeric(df_spell_damage["Amount"], errors="coerce").fillna(0)
+            df_spell_damage["Event Time (s)"] = pd.to_numeric(df_spell_damage["Event Time (s)"], errors="coerce")
+            df_spell_damage = df_spell_damage.dropna(subset=["Ability", "Player", "Event Time (s)"])
+            df_spell_damage = df_spell_damage[df_spell_damage["Amount"] > 0]
+
+            enemy_spell_set: set[str] = set()
+            if not df_enemy_casts.empty and "Ability" in df_enemy_casts.columns:
+                enemy_spell_set = {
+                    str(value)
+                    for value in df_enemy_casts["Ability"].dropna().astype(str).tolist()
+                    if str(value).strip()
+                }
+            if enemy_spell_set:
+                df_spell_damage = df_spell_damage[df_spell_damage["Ability"].isin(enemy_spell_set)]
+
+            spell_options = sorted(df_spell_damage["Ability"].dropna().astype(str).unique().tolist())
+            player_options = sorted(df_spell_damage["Player"].dropna().astype(str).unique().tolist())
+            all_players_label = "Wszyscy"
+
+            if not spell_options:
+                st.info("Brak enemy spell damage po odfiltrowaniu spelli spoza encountera.")
+            else:
+                filters_left, filters_right = st.columns(2)
+                default_spell_count = len(spell_options)
+                selected_spells = spell_options
+                selected_players = [all_players_label]
+                spell_key = f"spell_damage_spells_{meta['report']}_{meta['fight_id']}"
+                player_key = f"spell_damage_players_{meta['report']}_{meta['fight_id']}"
+                with filters_left:
+                    with st.popover(f"Boss spells · {default_spell_count}/{default_spell_count}", use_container_width=True):
+                        selected_spells = st.multiselect(
+                            "Boss spells",
+                            spell_options,
+                            default=spell_options,
+                            key=spell_key,
+                            label_visibility="collapsed",
+                        )
+                with filters_right:
+                    with st.popover(f"Players hit · {all_players_label}", use_container_width=True):
+                        selected_players = st.multiselect(
+                            "Players hit",
+                            [all_players_label] + player_options,
+                            default=[all_players_label],
+                            key=player_key,
+                            label_visibility="collapsed",
+                            help="Wszyscy = suma damage dla całego raidu. Wybranie konkretnych graczy sumuje tylko ich damage taken.",
+                        )
+
+                if all_players_label in selected_players and len(selected_players) > 1:
+                    selected_players = [player for player in selected_players if player != all_players_label]
+                    st.session_state[player_key] = selected_players
+                if not selected_players:
+                    selected_players = [all_players_label]
+                    st.session_state[player_key] = selected_players
+
+                spell_summary = (
+                    "Wszystkie spelle"
+                    if len(selected_spells) == len(spell_options)
+                    else f"{len(selected_spells)} z {len(spell_options)} spelli"
+                )
+                if all_players_label in selected_players:
+                    player_summary = "Wszyscy gracze"
+                else:
+                    player_summary = ", ".join(selected_players[:3])
+                    if len(selected_players) > 3:
+                        player_summary += f" +{len(selected_players) - 3}"
+                st.caption(f"{spell_summary} · {player_summary}")
+
+                df_spell_filtered = df_spell_damage.copy()
+                if selected_spells:
+                    df_spell_filtered = df_spell_filtered[df_spell_filtered["Ability"].isin(selected_spells)]
+                if all_players_label not in selected_players:
+                    df_spell_filtered = df_spell_filtered[df_spell_filtered["Player"].isin(selected_players)]
+
+                if df_spell_filtered.empty:
+                    st.info("Brak spell damage dla wybranych filtrów.")
+                else:
+                    metrics = st.columns(4)
+                    total_spell_damage = df_spell_filtered["Amount"].sum()
+                    metrics[0].metric("Spell hits", f"{len(df_spell_filtered):,}")
+                    metrics[1].metric("Total damage", _fmt_compact_number(total_spell_damage))
+                    metrics[2].metric("Spells", str(df_spell_filtered["Ability"].nunique()))
+                    metrics[3].metric("Players", str(df_spell_filtered["Player"].nunique()))
+
+                    raw_tab, bucket_tab = st.tabs(["Raw events", "1s buckets"])
+                    with raw_tab:
+                        _render_spell_damage_timeline(
+                            df_spell_filtered,
+                            meta,
+                            bucket_seconds=None,
+                            chart_key_suffix=f"raw_{meta['report']}_{meta['fight_id']}",
+                        )
+                    with bucket_tab:
+                        _render_spell_damage_timeline(
+                            df_spell_filtered,
+                            meta,
+                            bucket_seconds=1,
+                            chart_key_suffix=f"bucket_{meta['report']}_{meta['fight_id']}",
+                        )
 
     # ── Deaths ───────────────────────────────────────────────────────────
     with tab_deaths:
@@ -1736,6 +2477,364 @@ if st.session_state.current_page == "walki":
 
 
 # ===========================================================================
+# PAGE: playground
+# ===========================================================================
+elif st.session_state.current_page == "playground":
+    clr = c()
+    st.markdown(f"""
+<style>
+.play-header {{ margin:0 0 14px; }}
+.play-title {{ color:{clr["text"]}; font-size:22px; font-weight:750; }}
+.play-sub {{ color:{clr["text_dim"]}; font-size:14px; margin-top:4px; }}
+.play-grid {{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap:8px; margin:12px 0;
+}}
+.play-card {{
+    border:1px solid {clr["border"]}; border-radius:6px;
+    background: color-mix(in srgb, {clr["bg2"]} 74%, transparent);
+    padding:11px 12px;
+}}
+.play-card .label {{ color:{clr["text_dim"]}; font-size:13px; font-weight:600; }}
+.play-card .value {{ color:{clr["text"]}; font-size:24px; font-weight:750; margin-top:4px; }}
+.play-section {{
+    border:1px solid {clr["border"]}; border-radius:6px;
+    background: color-mix(in srgb, {clr["bg2"]} 70%, transparent);
+    padding:12px 14px; margin:12px 0;
+}}
+.play-section .chart-hdr {{ color:{clr["text"]}; font-size:16px; font-weight:700; margin-bottom:8px; }}
+.play-note {{
+    border:1px solid {clr["gold_dim"]}; border-radius:6px;
+    background: color-mix(in srgb, {clr["gold"]} 8%, transparent);
+    color:{clr["text_dim"]}; padding:10px 12px; font-size:14px; margin:10px 0;
+}}
+</style>
+<div class="play-header">
+  <div class="play-title">Playground</div>
+  <div class="play-sub">Eksperymentalne raporty performance z obecnego cache WCL.</div>
+</div>
+""", unsafe_allow_html=True)
+
+    frames_raw = load_playground_frames()
+    fights_all = frames_raw.get("fights", pd.DataFrame())
+    perf_all = frames_raw.get("performance", pd.DataFrame())
+    if fights_all.empty or perf_all.empty:
+        st.info("Brak danych do raportów eksperymentalnych.")
+        st.stop()
+
+    boss_options = sorted(fights_all["Boss"].dropna().astype(str).unique()) if "Boss" in fights_all.columns else []
+    player_options = sorted(perf_all["Player"].dropna().astype(str).unique(), key=str.casefold) if "Player" in perf_all.columns else []
+
+    f1, f2, f3 = st.columns([1, 1.35, 1])
+    with f1:
+        date_mode = st.selectbox("Zakres", ["Ostatnie 30 dni", "Ostatnia noc", "Cała historia"], key="play_date")
+    with f2:
+        boss_filter = st.selectbox("Boss", ["Wszystkie"] + boss_options, key="play_boss")
+    with f3:
+        fight_filter = st.selectbox("Typ walk", ["Wszystkie", "Kille", "Wipe’y"], key="play_fight_type")
+
+    pull_labels, pull_values = _playground_pull_options(
+        fights_all, date_mode, boss_filter, fight_filter,
+    )
+    f4, f5 = st.columns([1.8, 1.2])
+    with f4:
+        pull_label = st.selectbox("Pull", pull_labels, key="play_pull")
+        pull_filter = pull_values.get(pull_label)
+    with f5:
+        player_filter = st.selectbox("Gracz", ["Wszyscy"] + player_options, key="play_player")
+
+    frames = _filter_playground_frames(
+        frames_raw, date_mode, boss_filter, fight_filter, player_filter,
+        pull_filter=pull_filter,
+    )
+    fights = frames["fights"]
+    perf = frames["performance"]
+    targets = frames["targets"]
+    deaths = frames["deaths"]
+    defensives = frames["defensives"]
+    consumables = frames["consumables"]
+    damage_taken = frames["damage_taken"]
+    interrupts = frames["interrupts"]
+    dispels = frames["dispels"]
+    rankings = frames["rankings"]
+    boss_rankings = frames["boss_rankings"]
+    defensive_events = frames["defensive_events"]
+    consumable_events = frames["consumable_events"]
+    enemy_casts = frames["enemy_casts"]
+    player_details = frames["player_details"]
+    insights = build_playground_insights(frames)
+
+    total_pulls = len(fights)
+    total_kills = int(fights["Kill"].sum()) if not fights.empty and "Kill" in fights.columns else 0
+    total_players = perf["Player"].nunique() if not perf.empty and "Player" in perf.columns else 0
+    total_deaths = len(deaths)
+    total_taken = damage_taken["Amount"].sum() if not damage_taken.empty and "Amount" in damage_taken.columns else 0
+    cards = [
+        ("Pulls", total_pulls),
+        ("Kills", total_kills),
+        ("Players", total_players),
+        ("Deaths", total_deaths),
+        ("Damage taken", _fmt_compact_number(total_taken)),
+    ]
+    st.markdown(
+        '<div class="play-grid">' +
+        ''.join(f'<div class="play-card"><div class="label">{label}</div><div class="value">{value}</div></div>' for label, value in cards) +
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+    (
+        tab_priority,
+        tab_deaths,
+        tab_def,
+        tab_cons,
+        tab_active,
+        tab_utility,
+        tab_gear,
+        tab_comp,
+    ) = st.tabs([
+        "Priority Targets", "Death Quality", "Defensives", "Consumables",
+        "Active Time", "Interrupts / Dispels", "Gear / Parses", "Raid Comp",
+    ])
+
+    with tab_priority:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> podział damage gracza na konkretne cele. '
+            '<b>Boss Share %</b> ma skalę 0-100%: 100% oznacza, że cały damage z wybranych pulli poszedł w target typu Boss; '
+            'niższa wartość oznacza większy udział addów/innych celów. Wykres słupkowy jest stackowany: złoto = boss, czerwony = pozostałe cele. '
+            '<b>Target totals</b> pokazuje sumę damage w każdy nazwany cel, więc można sprawdzić kto realnie bił konkretne addy.</div>',
+            unsafe_allow_html=True,
+        )
+        if targets.empty:
+            st.info("Brak target damage w cache dla aktualnych filtrów.")
+        else:
+            per_player, target_totals = insights["target_priority"]
+            if per_player.empty:
+                st.info("Brak nazwanych targetów dla aktualnych filtrów.")
+                st.stop()
+
+            c1, c2 = st.columns([1, 1])
+            with c1:
+                show = per_player.sort_values("Boss Damage", ascending=True).tail(20)
+                fig = go.Figure()
+                fig.add_trace(go.Bar(x=show["Boss Damage"], y=show["Player"], orientation="h", name="Boss", marker_color=clr["gold"]))
+                fig.add_trace(go.Bar(x=show["Non Boss Damage"], y=show["Player"], orientation="h", name="Other targets", marker_color=clr["red"]))
+                fig.update_layout(
+                    barmode="stack",
+                    height=max(360, 60 + 24 * len(show)),
+                    margin=dict(l=0, r=10, t=10, b=30),
+                    xaxis=dict(title="Damage", tickformat=",.0f", gridcolor=clr["border"]),
+                    yaxis=dict(autorange="reversed"),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02),
+                    **plot_style(),
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            with c2:
+                st.plotly_chart(
+                    _plot_bar(target_totals.tail(15), "Damage", "Target", color=clr["gold"], height=420),
+                    use_container_width=True,
+                )
+            st.dataframe(
+                per_player.sort_values("Boss Share %", ascending=False),
+                hide_index=True,
+                width="stretch",
+                column_config={
+                    "Boss Share %": st.column_config.ProgressColumn("Boss Share", min_value=0, max_value=100, format="%.1f%%"),
+                    "Total": st.column_config.NumberColumn(format="%.0f"),
+                    "Boss Damage": st.column_config.NumberColumn(format="%.0f"),
+                    "Non Boss Damage": st.column_config.NumberColumn(format="%.0f"),
+                },
+            )
+            if boss_rankings.empty:
+                st.markdown('<div class="play-note">Boss Damage parse pojawi się po odświeżeniu cache z opcją Playground data. To percentile 0-100 z WCL `playerMetric=bossdps`; wyżej oznacza lepszy boss-only DPS względem rankingów WCL.</div>', unsafe_allow_html=True)
+
+    with tab_deaths:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> jakość śmierci w pullach. '
+            '<b>Deaths</b> to liczba śmierci. <b>Early Death &lt;= 90s</b> oznacza śmierć do 90 sekundy walki; skala jest liczbowa, nie procentowa. '
+            '<b>Avg_Time</b> to średni czas śmierci w sekundach od startu pulla. Drugi wykres pokazuje killing blow, czyli ostatnią zdolność przypisaną przez WCL jako zabójczą.</div>',
+            unsafe_allow_html=True,
+        )
+        if deaths.empty:
+            st.info("Brak śmierci w aktualnych filtrach.")
+        else:
+            by_player, by_ability, d = insights["death_quality"]
+            c1, c2 = st.columns([1, 1])
+            with c1:
+                st.plotly_chart(_plot_bar(by_player.sort_values("Deaths", ascending=True).tail(20), "Deaths", "Player", color=clr["red"]), use_container_width=True)
+            with c2:
+                st.plotly_chart(_plot_bar(by_ability.tail(15), "Deaths", "Killing Blow", color=clr["red"]), use_container_width=True)
+            d_view = d[["Date", "Report", "Boss", "Pull #", "Result", "Player", "Class", "Death Time", "Death Time (s)", "Killing Blow", "Early Death"]].sort_values("Death Time (s)").copy()
+            d_view["Early Death <= 90s"] = np.where(d_view["Early Death"], "Tak", "Nie")
+            d_view = d_view.drop(columns=["Early Death"])
+            st.dataframe(
+                d_view,
+                hide_index=True,
+                width="stretch",
+                height=420,
+                column_config={
+                    "Death Time (s)": st.column_config.NumberColumn(format="%.1f"),
+                    "Early Death <= 90s": st.column_config.TextColumn(
+                        help="Tak = gracz zginął do 90 sekundy pulla. Nie = śmierć później."
+                    ),
+                },
+            )
+
+    with tab_def:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> użycie defensyw w relacji do liczby pulli i śmierci. '
+            '<b>Defensives / Pull</b> = liczba zarejestrowanych defensyw / liczba pulli gracza. '
+            '<b>Defensives / Death</b> = liczba defensyw / liczba śmierci. '
+            '<b>Defensive Before Death %</b>, jeśli cache ma timestampy eventów, pokazuje procent śmierci poprzedzonych defensywą w ostatnich 15 sekundach; skala 0-100%, wyżej zwykle lepiej.</div>',
+            unsafe_allow_html=True,
+        )
+        if defensives.empty and deaths.empty:
+            st.info("Brak danych defensyw i śmierci dla aktualnych filtrów.")
+        else:
+            def_quality = insights["defensive_quality"]
+            st.dataframe(
+                def_quality,
+                hide_index=True,
+                width="stretch",
+                height=420,
+                column_config={
+                    "Defensives / Pull": st.column_config.NumberColumn(format="%.2f"),
+                    "Defensives / Death": st.column_config.NumberColumn(format="%.2f"),
+                    "Defensive Before Death %": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.0f%%"),
+                },
+            )
+            if defensive_events.empty:
+                st.markdown('<div class="play-note">Kolumna Defensive Before Death % pojawi się po odświeżeniu cache z opcją Playground data.</div>', unsafe_allow_html=True)
+
+    with tab_cons:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> użycie consumables zdefiniowanych w konfiguracji spell ID. '
+            '<b>Compliance %</b> ma skalę 0-100% i oznacza procent pulli, w których gracz użył przynajmniej jednego śledzonego consumable. '
+            '<b>Avg_Consumables</b> to średnia liczba użyć na pull. Wynik nie obejmuje flask/food/rune, jeśli ich ID nie ma w konfiguracji.</div>',
+            unsafe_allow_html=True,
+        )
+        if consumables.empty:
+            st.info("Brak danych consumables.")
+        else:
+            compliance = insights["consumable_compliance"]
+            if compliance.empty:
+                st.info("Brak kolumn consumables w cache.")
+            else:
+                st.plotly_chart(_plot_bar(compliance.tail(25), "Compliance %", "Player", color=clr["green"]), use_container_width=True)
+                st.dataframe(
+                    compliance,
+                    hide_index=True,
+                    width="stretch",
+                    column_config={
+                        "Compliance %": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.1f%%"),
+                        "Avg_Consumables": st.column_config.NumberColumn(format="%.2f"),
+                    },
+                )
+                if consumable_events.empty:
+                    st.markdown('<div class="play-note">Timestampy konkretnych użyć pojawią się po odświeżeniu cache z opcją Playground data.</div>', unsafe_allow_html=True)
+
+    with tab_active:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> aktywny czas z tabeli WCL. '
+            '<b>Avg Active</b> ma skalę 0-100% i oznacza średni udział czasu, w którym gracz wykonywał akcje liczone przez WCL. '
+            '<b>Low_Active</b> to liczba pulli poniżej 80%. Niska wartość może oznaczać downtime, mechanikę albo śmierć, więc wymaga interpretacji z kontekstem walki.</div>',
+            unsafe_allow_html=True,
+        )
+        active = insights["active_time"]
+        if active.empty:
+            st.info("Brak danych active time.")
+        else:
+            st.plotly_chart(_plot_bar(active.head(25).sort_values("Avg_Active", ascending=True), "Avg_Active", "Player", color=clr["gold"]), use_container_width=True)
+            st.dataframe(
+                active,
+                hide_index=True,
+                width="stretch",
+                column_config={
+                    "Avg_Active": st.column_config.ProgressColumn("Avg Active", min_value=0, max_value=100, format="%.1f%%"),
+                },
+            )
+
+    with tab_utility:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> wykonane utility oraz, po rozszerzonym fetchu, casty przeciwników. '
+            '<b>Interrupts</b> i <b>Dispels</b> to liczby wykonanych akcji. '
+            '<b>Enemy Casts</b> pokazuje ile razy dana zdolność przeciwnika została rozpoczęta; to baza do późniejszego liczenia missed opportunities i coverage. '
+            'Skala wykresu castów jest liczbowa: im większy słupek, tym częściej cast pojawiał się w wybranych pullach.</div>',
+            unsafe_allow_html=True,
+        )
+        utility, cast_summary = insights["utility_coverage"]
+        if utility.empty:
+            st.info("Brak interruptów/dispelli dla aktualnych filtrów.")
+        else:
+            st.dataframe(utility, hide_index=True, width="stretch", height=420)
+        if not cast_summary.empty:
+            st.plotly_chart(_plot_bar(cast_summary.head(20).sort_values("Casts", ascending=True), "Casts", "Ability", color=clr["red"], height=420), use_container_width=True)
+        else:
+            st.markdown('<div class="play-note">Enemy Casts pojawią się po odświeżeniu cache z opcją Playground data.</div>', unsafe_allow_html=True)
+
+    with tab_gear:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> parse i gear metadata z WCL. '
+            '<b>Avg Parse</b>, <b>Best Parse</b>, <b>Avg ilvl Parse</b> i <b>Boss Damage parse</b> są percentylami 0-100: wyżej oznacza lepszy wynik względem porównywalnych logów WCL. '
+            '<b>Avg_Ilvl</b> to średni item level z rankingów WCL. Talenty/trinkety są opisowe i pojawiają się, gdy fetch pobierze `playerDetails`.</div>',
+            unsafe_allow_html=True,
+        )
+        if rankings.empty:
+            st.info("Brak rankings/gear dla aktualnych filtrów. Rankingi WCL są dostępne głównie dla killi.")
+        else:
+            gear = insights["gear_parse_summary"]
+            st.dataframe(
+                gear,
+                hide_index=True,
+                width="stretch",
+                height=460,
+                column_config={
+                    "Avg_Parse": st.column_config.ProgressColumn("Avg Parse", min_value=0, max_value=100, format="%.0f"),
+                    "Best_Parse": st.column_config.NumberColumn(format="%.0f"),
+                    "Avg_Ilvl": st.column_config.NumberColumn(format="%.1f"),
+                    "Avg_Ilvl_Parse": st.column_config.ProgressColumn("Avg ilvl Parse", min_value=0, max_value=100, format="%.0f"),
+                    "Avg_Boss_Parse": st.column_config.ProgressColumn("Avg Boss Parse", min_value=0, max_value=100, format="%.0f"),
+                    "Best_Boss_Parse": st.column_config.NumberColumn(format="%.0f"),
+                },
+            )
+            if boss_rankings.empty or player_details.empty:
+                st.markdown('<div class="play-note">Boss Damage parse i playerDetails pojawią się po odświeżeniu cache z opcją Playground data.</div>', unsafe_allow_html=True)
+
+    with tab_comp:
+        st.markdown(
+            '<div class="play-note"><b>Co pokazuje:</b> strukturę raidu w wybranych pullach. '
+            '<b>Class totals</b> zlicza wystąpienia klas w pullach, więc jedna osoba może liczyć się kilka razy, jeśli jest w wielu pullach. '
+            '<b>Fight size</b> pokazuje liczbę unikalnych graczy i klas w konkretnym pullu. Role tank/healer/dps pojawiają się, jeśli cache ma `playerDetails`.</div>',
+            unsafe_allow_html=True,
+        )
+        class_totals, fight_size = insights["raid_composition"]
+        if class_totals.empty:
+            st.info("Brak danych kompozycji.")
+        else:
+            st.plotly_chart(_plot_bar(class_totals, "Players", "Class", color=clr["gold"]), use_container_width=True)
+            st.dataframe(fight_size, hide_index=True, width="stretch", height=420)
+            if player_details.empty:
+                st.markdown('<div class="play-note">Podział ról pojawi się po odświeżeniu cache z opcją Playground data.</div>', unsafe_allow_html=True)
+
+
+# ===========================================================================
+# PAGE: admin
+# ===========================================================================
+elif st.session_state.current_page == "admin":
+    clr = c()
+    st.markdown(f"""
+<style>
+.admin-header {{ margin: 0 0 14px; }}
+.admin-header .page-title {{ font-size: 20px; font-weight: 700; color:{clr["text"]}; }}
+</style>
+<div class="admin-header">
+  <div class="page-title">Admin</div>
+</div>
+""", unsafe_allow_html=True)
+    render_admin_controls()
+
+
+# ===========================================================================
 # PAGE: attendance
 # ===========================================================================
 elif st.session_state.current_page == "attendance":
@@ -1752,36 +2851,41 @@ elif st.session_state.current_page == "attendance":
 
     st.markdown(f"""
 <style>
-.att-header {{
-    border-bottom: 1px solid {clr["border"]};
-    padding-bottom: 10px; margin-bottom: 18px;
-}}
+.att-header {{ margin: 0 0 14px; }}
 .att-header h2 {{
-    color: {clr["gold"]}; margin: 0 0 2px; font-size: 1.4rem;
+    color: {clr["text"]}; margin: 0; font-size: 20px; font-weight: 700;
 }}
-.att-header p {{ color: {clr["text_dim"]}; font-size: 0.78rem; margin: 0; }}
-.stat-cards {{ display: flex; gap: 12px; margin-bottom: 20px; }}
+.stat-cards {{
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid {clr["border"]};
+    background: color-mix(in srgb, {clr["bg2"]} 78%, transparent);
+    border-radius: 6px; overflow: hidden; margin-bottom: 14px;
+}}
 .stat-card {{
-    flex: 1; background: {clr["bg2"]};
-    border: 1px solid {clr["border"]}; border-radius: 6px;
-    padding: 14px 18px;
+    padding: 10px 12px; border-right: 1px solid {clr["border"]};
+}}
+.stat-card:last-child {{
+    border-right: 0;
 }}
 .stat-card .sc-label {{
-    font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
-    color: {clr["text_dim"]}; margin-bottom: 6px;
+    font-size: 13px; color: {clr["text_dim"]}; margin-bottom: 5px; font-weight: 600;
 }}
 .stat-card .sc-value {{
-    font-size: 1.6rem; font-weight: 700; color: {clr["gold"]}; line-height: 1;
+    font-size: 24px; font-weight: 750; color: {clr["text"]}; line-height: 1.1;
 }}
 .sc-green {{ color: {clr["green"]} !important; }}
 .hm-wrap {{
-    background: {clr["bg2"]}; border: 1px solid {clr["border"]};
-    border-radius: 6px; overflow: hidden; margin-bottom: 20px;
+    background: color-mix(in srgb, {clr["bg2"]} 72%, transparent);
+    border: 1px solid {clr["border"]};
+    border-radius: 6px; overflow: hidden; margin: 16px 0 14px;
+}}
+.attendance-map {{
+    margin-top: 12px;
+    margin-bottom: 16px;
 }}
 .hm-header {{
-    padding: 10px 14px; border-bottom: 1px solid {clr["border"]};
-    font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1px; color: {clr["text_dim"]};
+    padding: 10px 12px; border-bottom: 1px solid {clr["border"]};
+    font-size: 15px; font-weight: 700; color: {clr["text"]};
 }}
     .hm-scroll {{ padding: 14px; overflow-x: auto; overflow-y: auto; max-height: 340px; }}
     .hm-table {{ border-collapse: collapse; font-size: 11px; white-space: nowrap; }}
@@ -1799,29 +2903,30 @@ elif st.session_state.current_page == "attendance":
     .hm-bright  {{ background: #c89b3c; border: 1px solid #f0c060; }}
     .session-grid {{
         display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 10px; margin-bottom: 16px;
+        gap: 8px; margin: 10px 0 12px;
     }}
     .session-card {{
-        background: {clr["bg2"]}; border: 1px solid {clr["border"]};
-        border-radius: 6px; padding: 12px 14px;
+        background: color-mix(in srgb, {clr["bg2"]} 72%, transparent);
+        border: 1px solid {clr["border"]};
+        border-radius: 5px; padding: 10px 12px;
     }}
-    .session-card.active {{ border-color: {clr["gold_dim"]}; }}
-    .session-card .date {{ color: {clr["gold"]}; font-weight: 700; font-size: 13px; }}
-    .session-card .code {{ color: {clr["text_dim"]}; font-size: 11px; margin-top: 2px; }}
-    .session-card .count {{ color: {clr["text"]}; font-size: 20px; font-weight: 800; margin-top: 8px; }}
-    .session-card .guests {{ color: {clr["red"]}; font-size: 12px; font-weight: 700; margin-top: 4px; }}
+    .session-card.active {{ border-color: {clr["gold_dim"]}; background: color-mix(in srgb, {clr["bg3"]} 72%, transparent); }}
+    .session-card .date {{ color: {clr["text"]}; font-weight: 700; font-size: 15px; }}
+    .session-card .code {{ color: {clr["text_dim"]}; font-size: 13px; margin-top: 2px; }}
+    .session-card .count {{ color: {clr["text"]}; font-size: 22px; font-weight: 750; margin-top: 8px; }}
+    .session-card .guests {{ color: {clr["red"]}; font-size: 13px; font-weight: 700; margin-top: 4px; }}
     .mini-roster {{
         display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 6px; margin-top: 8px;
+        gap: 6px; padding: 10px;
     }}
     .roster-pill {{
         background: {clr["bg3"]}; border: 1px solid {clr["border"]};
-        border-radius: 4px; padding: 6px 8px; font-size: 12px;
+        border-radius: 4px; padding: 7px 9px; font-size: 14px;
         display: flex; justify-content: space-between; gap: 8px;
     }}
-    .roster-pill .cls {{ color: {clr["text_dim"]}; font-size: 10px; }}
+    .roster-pill .cls {{ color: {clr["text_dim"]}; font-size: 12px; }}
     .compact-matrix {{
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
         gap: 6px;
     }}
     .player-strip {{
@@ -1829,7 +2934,7 @@ elif st.session_state.current_page == "attendance":
         border-radius: 4px; padding: 7px 8px;
     }}
     .player-strip .name {{
-        font-size: 12px; font-weight: 700; overflow: hidden;
+        font-size: 14px; font-weight: 700; overflow: hidden;
         white-space: nowrap; text-overflow: ellipsis;
     }}
     .player-strip .dots {{ display: flex; gap: 3px; margin-top: 6px; }}
@@ -1837,15 +2942,16 @@ elif st.session_state.current_page == "attendance":
     .dot.on {{ background: {clr["gold"]}; border: 1px solid {clr["gold_light"]}; }}
     .dot.off {{ background: #1a1d26; border: 1px solid {clr["border"]}; }}
     .att-wrap {{
-        background: {clr["bg2"]}; border: 1px solid {clr["border"]};
-        border-radius: 6px; overflow: hidden;
+        background: color-mix(in srgb, {clr["bg2"]} 72%, transparent);
+        border: 1px solid {clr["border"]};
+        border-radius: 6px; overflow: hidden; margin-bottom: 12px;
 }}
-.att-tbl {{ width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }}
+.att-tbl {{ width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }}
 .att-tbl thead {{ position: sticky; top: 0; z-index: 1; background: {clr["bg2"]}; }}
 .att-tbl th {{
     padding: 9px 14px; text-align: left;
-    font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
-    color: {clr["text_dim"]}; border-bottom: 1px solid {clr["border"]};
+    font-size: 13px; color: {clr["text_dim"]}; border-bottom: 1px solid {clr["border"]};
+    font-weight: 600;
 }}
 .att-tbl td {{ padding: 9px 14px; border-bottom: 1px solid {clr["border"]}33; }}
 .att-tbl tr:hover td {{ background: {clr["bg3"]}; }}
@@ -1855,8 +2961,7 @@ elif st.session_state.current_page == "attendance":
 .pct-low  {{ color: {clr["red"]}; }}
 </style>
 <div class="att-header">
-  <h2>📅 Attendance</h2>
-  <p>Frekwencja — dane z całej historii raidów gildi</p>
+  <h2>Attendance</h2>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1977,33 +3082,6 @@ elif st.session_state.current_page == "attendance":
 
         class_map = df_att.groupby("Player")["Class"].first().to_dict()
 
-        night_df = df_att[df_att["Night"] == selected_night]
-        night_sessions = (
-            night_df[["Session", "Report"]]
-            .drop_duplicates()
-            .sort_values("Report")
-            .to_dict("records")
-        )
-        split_cols = st.columns(max(1, len(night_sessions)))
-        for col, session in zip(split_cols, night_sessions):
-            session_players = sorted(
-                night_df[(night_df["Session"] == session["Session"]) & (night_df["Present"] == 1)]["Player"]
-            )
-            pills = ""
-            for player in session_players:
-                cls = class_map.get(player, "")
-                color = CLASS_CLR.get(cls, clr["text"])
-                pills += (
-                    f'<div class="roster-pill"><span style="color:{color};font-weight:700">{player}</span>'
-                    f'<span class="cls">{cls}</span></div>'
-                )
-            with col:
-                st.markdown(
-                    f'<div class="att-wrap"><div class="hm-header">Grupa · {session["Report"]} · {len(session_players)}</div>'
-                    f'<div class="mini-roster">{pills}</div></div>',
-                    unsafe_allow_html=True,
-                )
-
         # ── Compact matrix ───────────────────────────────────────────────
         pivot = {}
         for _, row in player_nights.iterrows():
@@ -2031,13 +3109,40 @@ elif st.session_state.current_page == "attendance":
             )
 
         st.markdown(f"""
-<div class="hm-wrap">
+<div class="hm-wrap attendance-map">
   <div class="hm-header">Kompaktowa mapa obecności</div>
   <div style="padding:14px">
     <div class="compact-matrix">{compact_html}</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
+
+        night_df = df_att[df_att["Night"] == selected_night]
+        night_sessions = (
+            night_df[["Session", "Report"]]
+            .drop_duplicates()
+            .sort_values("Report")
+            .to_dict("records")
+        )
+        split_cols = st.columns(max(1, len(night_sessions)))
+        for col, session in zip(split_cols, night_sessions):
+            session_players = sorted(
+                night_df[(night_df["Session"] == session["Session"]) & (night_df["Present"] == 1)]["Player"]
+            )
+            pills = ""
+            for player in session_players:
+                cls = class_map.get(player, "")
+                color = CLASS_CLR.get(cls, clr["text"])
+                pills += (
+                    f'<div class="roster-pill"><span style="color:{color};font-weight:700">{player}</span>'
+                    f'<span class="cls">{cls}</span></div>'
+                )
+            with col:
+                st.markdown(
+                    f'<div class="att-wrap"><div class="hm-header">Grupa · {session["Report"]} · {len(session_players)}</div>'
+                    f'<div class="mini-roster">{pills}</div></div>',
+                    unsafe_allow_html=True,
+                )
 
         # ── Summary table ─────────────────────────────────────────────────
         tbl_rows = ""
@@ -2061,7 +3166,7 @@ elif st.session_state.current_page == "attendance":
 
         st.markdown(f"""
 <div class="att-wrap">
-  <div class="hm-header">📊 Podsumowanie graczy</div>
+  <div class="hm-header">Podsumowanie graczy</div>
   <div style="max-height:420px;overflow-y:auto">
     <table class="att-tbl">
       <thead><tr>
@@ -2126,60 +3231,59 @@ elif st.session_state.current_page == "gracze":
 
     st.markdown(f"""
 <style>
-.players-header {{ margin-bottom: 18px; }}
-.players-header .page-title {{
-    font-size: 22px; font-weight: 800; color:{clr["gold"]};
-    margin-bottom: 4px;
-}}
-.players-header .page-subtitle {{ color:{clr["text_dim"]}; font-size:12px; }}
-.players-shell {{
-    display: grid; grid-template-columns: 300px minmax(0, 1fr);
-    gap: 14px; align-items: start;
-}}
-.players-side, .players-card {{
-    background:{clr["bg2"]}; border:1px solid {clr["border"]};
-    border-radius:6px; padding:14px 16px; margin-bottom:14px;
-}}
-.players-side {{ position: sticky; top: 62px; max-height: calc(100vh - 78px); overflow-y: auto; }}
+.players-header {{ margin: 0 0 14px; }}
+.players-header .page-title {{ font-size: 20px; font-weight: 700; color:{clr["text"]}; }}
 .player-side-title {{
-    font-size:11px; text-transform:uppercase; letter-spacing:1px;
-    color:{clr["text_dim"]}; font-weight:800; margin-bottom:8px;
+    font-size:15px; color:{clr["text"]}; font-weight:700; margin:0 0 10px;
 }}
 .player-identity {{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    border-bottom:1px solid {clr["border"]}; padding-bottom:12px; margin-bottom:12px;
+    display:grid; grid-template-columns: minmax(220px, 1fr) auto; align-items:center; gap:16px;
+    border:1px solid {clr["border"]};
+    border-left:3px solid {clr["gold_dim"]};
+    background: color-mix(in srgb, {clr["bg2"]} 78%, transparent);
+    border-radius:6px;
+    padding:14px 16px;
+    margin-bottom:12px;
 }}
-.player-name {{ font-size:24px; color:{clr["text"]}; font-weight:900; }}
-.player-sub {{ color:{clr["text_dim"]}; font-size:12px; margin-top:3px; }}
-.players-kpis {{ display:grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap:10px; margin-bottom:14px; }}
+.player-name {{ font-size:24px; color:{clr["text"]}; font-weight:750; line-height:1.15; }}
+.player-sub {{ color:{clr["text_dim"]}; font-size:14px; margin-top:3px; }}
+.player-context {{
+    color:{clr["text_dim"]}; font-size:14px; text-align:right;
+    max-width:520px; line-height:1.35;
+}}
+.players-kpis {{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    border:1px solid {clr["border"]};
+    background: color-mix(in srgb, {clr["bg2"]} 78%, transparent);
+    border-radius:6px; overflow:hidden; margin-bottom:12px;
+}}
 .player-kpi {{
-    background:{clr["bg2"]}; border:1px solid {clr["border"]}; border-radius:6px;
     padding:12px 14px; min-height:76px;
+    border-right:1px solid {clr["border"]};
+    border-bottom:1px solid {clr["border"]};
 }}
 .player-kpi .label {{
-    color:{clr["text_dim"]}; font-size:10px; font-weight:800;
-    letter-spacing:1px; text-transform:uppercase;
+    color:{clr["text_dim"]}; font-size:13px; font-weight:600;
 }}
-.player-kpi .value {{ color:{clr["gold"]}; font-size:23px; font-weight:900; margin-top:5px; }}
-.player-kpi .sub {{ color:{clr["text_dim"]}; font-size:11px; margin-top:2px; }}
-.players-card .chart-hdr {{
-    color:{clr["text_dim"]}; font-size:11px; font-weight:800;
-    text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;
+.player-kpi .value {{ color:{clr["text"]}; font-size:24px; font-weight:750; margin-top:4px; }}
+.player-kpi .sub {{ color:{clr["text_dim"]}; font-size:13px; margin-top:2px; }}
+.players-section {{
+    border:1px solid {clr["border"]};
+    background: color-mix(in srgb, {clr["bg2"]} 72%, transparent);
+    border-radius:6px;
+    padding:12px 14px;
+    margin-bottom:12px;
 }}
-.players-note {{
-    color:{clr["text_dim"]}; font-size:12px;
-    border:1px solid {clr["border"]}; background:{clr["bg3"]};
-    border-radius:6px; padding:10px 12px; margin-bottom:14px;
+.players-section .chart-hdr {{
+    color:{clr["text"]}; font-size:16px; font-weight:700; margin-bottom:8px;
 }}
 @media (max-width: 1100px) {{
-    .players-shell {{ grid-template-columns: 1fr; }}
-    .players-side {{ position: static; max-height:none; }}
-    .players-kpis {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+    .player-identity {{ grid-template-columns: 1fr; }}
+    .player-context {{ text-align:left; }}
 }}
 </style>
 <div class="players-header">
-  <div class="page-title">👤 Gracze</div>
-  <div class="page-subtitle">Profil gracza: trendy, parse’y, output, attendance i sygnały do sprawdzenia</div>
+  <div class="page-title">Players</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -2199,20 +3303,20 @@ elif st.session_state.current_page == "gracze":
     if not all_players:
         st.info("Brak danych graczy w cache.")
     else:
-        left, right = st.columns([0.26, 0.74], gap="large")
-
-        with left:
-            st.markdown('<div class="players-side">', unsafe_allow_html=True)
-            st.markdown('<div class="player-side-title">Lista graczy</div>', unsafe_allow_html=True)
+        st.markdown('<div class="player-side-title">Filtry</div>', unsafe_allow_html=True)
+        f_search, f_date, f_type = st.columns([1.4, 1, 1])
+        with f_search:
             search = st.text_input("Szukaj", value="", key="players_search")
+        with f_date:
             date_mode = st.selectbox(
                 "Zakres",
                 ["Ostatnie 30 dni", "Ostatnia noc", "Cała historia"],
                 index=0,
                 key="players_date_mode",
             )
-            if not st.session_state.get("players_defaults_v2_applied") and st.session_state.get("players_fight_type", "Wszystkie") == "Wszystkie":
-                st.session_state.players_fight_type = "Kille"
+        if not st.session_state.get("players_defaults_v2_applied") and st.session_state.get("players_fight_type", "Wszystkie") == "Wszystkie":
+            st.session_state.players_fight_type = "Kille"
+        with f_type:
             fight_filter = st.selectbox(
                 "Typ walk",
                 ["Wszystkie", "Kille", "Wipe’y"],
@@ -2220,97 +3324,99 @@ elif st.session_state.current_page == "gracze":
                 key="players_fight_type",
             )
 
-            fights_scope = _date_filtered(fights_all, date_mode)
-            parses_scope = _date_filtered(parses_all, date_mode)
-            boss_options = sorted(set(
-                ([] if fights_scope.empty else fights_scope["Boss"].dropna().astype(str).tolist()) +
-                ([] if parses_scope.empty else parses_scope["Boss"].dropna().astype(str).tolist())
-            ))
-            if (
-                not st.session_state.get("players_defaults_v2_applied")
-                and boss_options
-                and st.session_state.get("players_boss", "Wszystkie") == "Wszystkie"
-            ):
-                st.session_state.players_boss = boss_options[0]
+        fights_scope = _date_filtered(fights_all, date_mode)
+        parses_scope = _date_filtered(parses_all, date_mode)
+        boss_options = sorted(set(
+            ([] if fights_scope.empty else fights_scope["Boss"].dropna().astype(str).tolist()) +
+            ([] if parses_scope.empty else parses_scope["Boss"].dropna().astype(str).tolist())
+        ))
+        if (
+            not st.session_state.get("players_defaults_v2_applied")
+            and boss_options
+            and st.session_state.get("players_boss", "Wszystkie") == "Wszystkie"
+        ):
+            st.session_state.players_boss = boss_options[0]
+        f_boss, f_sort, f_player = st.columns([1.4, 1, 1.6])
+        with f_boss:
             boss_filter = st.selectbox("Boss", ["Wszystkie"] + boss_options, index=1 if boss_options else 0, key="players_boss")
 
-            summary_rows = []
-            attendance_scope = _date_filtered(attendance_all, date_mode)
-            for player in all_players:
-                pf = fights_scope[fights_scope["Player"] == player] if not fights_scope.empty else pd.DataFrame()
-                pp = parses_scope[parses_scope["Player"] == player] if not parses_scope.empty else pd.DataFrame()
-                pa = attendance_scope[attendance_scope["Player"] == player] if not attendance_scope.empty else pd.DataFrame()
-                cls = ""
-                spec = ""
-                for src in (pp, pf, pa):
-                    if not src.empty:
-                        if not cls and "Class" in src.columns:
-                            vals = src["Class"].dropna().astype(str)
-                            cls = vals.mode().iloc[0] if not vals.empty else ""
-                        if not spec and "Spec" in src.columns:
-                            vals = src["Spec"].dropna().astype(str)
-                            spec = vals.mode().iloc[0] if not vals.empty else ""
-                total_nights = attendance_scope["Night"].nunique() if not attendance_scope.empty and "Night" in attendance_scope.columns else 0
-                present = pa.groupby("Night")["Present"].max().sum() if not pa.empty and "Night" in pa.columns else 0
-                avg_parse = pp["Parse %"].mean() if not pp.empty and "Parse %" in pp.columns else np.nan
-                latest = pf["Date"].max() if not pf.empty and "Date" in pf.columns else pd.NaT
-                if cls in CLASS_COLORS:
-                    summary_rows.append({
-                        "Player": player,
-                        "Class": cls,
-                        "Spec": spec,
-                        "Attendance": present / total_nights * 100 if total_nights else np.nan,
-                        "Avg Parse": avg_parse,
-                        "Latest": latest,
-                    })
-            players_summary = pd.DataFrame(summary_rows)
-            if players_summary.empty:
-                st.warning("Brak prawdziwych graczy dla aktualnych danych.")
-                st.markdown("</div>", unsafe_allow_html=True)
-                st.stop()
-            players_summary["Spec"] = players_summary["Spec"].fillna("")
-            players_summary["Class"] = players_summary["Class"].fillna("")
+        summary_rows = []
+        attendance_scope = _date_filtered(attendance_all, date_mode)
+        for player in all_players:
+            pf = fights_scope[fights_scope["Player"] == player] if not fights_scope.empty else pd.DataFrame()
+            pp = parses_scope[parses_scope["Player"] == player] if not parses_scope.empty else pd.DataFrame()
+            pa = attendance_scope[attendance_scope["Player"] == player] if not attendance_scope.empty else pd.DataFrame()
+            cls = ""
+            spec = ""
+            for src in (pp, pf, pa):
+                if not src.empty:
+                    if not cls and "Class" in src.columns:
+                        vals = src["Class"].dropna().astype(str)
+                        cls = vals.mode().iloc[0] if not vals.empty else ""
+                    if not spec and "Spec" in src.columns:
+                        vals = src["Spec"].dropna().astype(str)
+                        spec = vals.mode().iloc[0] if not vals.empty else ""
+            total_nights = attendance_scope["Night"].nunique() if not attendance_scope.empty and "Night" in attendance_scope.columns else 0
+            present = pa.groupby("Night")["Present"].max().sum() if not pa.empty and "Night" in pa.columns else 0
+            avg_parse = pp["Parse %"].mean() if not pp.empty and "Parse %" in pp.columns else np.nan
+            latest = pf["Date"].max() if not pf.empty and "Date" in pf.columns else pd.NaT
+            if cls in CLASS_COLORS:
+                summary_rows.append({
+                    "Player": player,
+                    "Class": cls,
+                    "Spec": spec,
+                    "Attendance": present / total_nights * 100 if total_nights else np.nan,
+                    "Avg Parse": avg_parse,
+                    "Latest": latest,
+                })
+        players_summary = pd.DataFrame(summary_rows)
+        if players_summary.empty:
+            st.warning("Brak prawdziwych graczy dla aktualnych danych.")
+            st.stop()
+        players_summary["Spec"] = players_summary["Spec"].fillna("")
+        players_summary["Class"] = players_summary["Class"].fillna("")
 
+        with f_sort:
             sort_mode = st.selectbox(
                 "Sortuj",
                 ["Alfabetycznie", "Avg parse", "Attendance", "Ostatnia aktywność"],
                 key="players_sort",
             )
-            filtered_players = players_summary.copy()
-            if search:
-                filtered_players = filtered_players[
-                    filtered_players["Player"].str.contains(search, case=False, na=False)
-                ]
-            if sort_mode == "Avg parse":
-                filtered_players = filtered_players.sort_values("Avg Parse", ascending=False, na_position="last")
-            elif sort_mode == "Attendance":
-                filtered_players = filtered_players.sort_values("Attendance", ascending=False, na_position="last")
-            elif sort_mode == "Ostatnia aktywność":
-                filtered_players = filtered_players.sort_values("Latest", ascending=False, na_position="last")
-            else:
-                filtered_players = filtered_players.sort_values("Player", key=lambda s: s.str.casefold())
+        filtered_players = players_summary.copy()
+        if search:
+            filtered_players = filtered_players[
+                filtered_players["Player"].str.contains(search, case=False, na=False)
+            ]
+        if sort_mode == "Avg parse":
+            filtered_players = filtered_players.sort_values("Avg Parse", ascending=False, na_position="last")
+        elif sort_mode == "Attendance":
+            filtered_players = filtered_players.sort_values("Attendance", ascending=False, na_position="last")
+        elif sort_mode == "Ostatnia aktywność":
+            filtered_players = filtered_players.sort_values("Latest", ascending=False, na_position="last")
+        else:
+            filtered_players = filtered_players.sort_values("Player", key=lambda s: s.str.casefold())
 
-            if filtered_players.empty:
-                st.warning("Brak graczy dla tej wyszukiwarki.")
-                st.markdown("</div>", unsafe_allow_html=True)
-                st.stop()
+        if filtered_players.empty:
+            st.warning("Brak graczy dla tej wyszukiwarki.")
+            st.stop()
 
-            player_options = filtered_players["Player"].tolist()
-            player_param = st.query_params.get("player", "")
-            current_player = st.session_state.get("players_current")
-            if player_param in player_options:
-                default_player = player_param
-            elif (
-                not st.session_state.get("players_defaults_v2_applied")
-                and not player_param
-                and player_options
-            ):
-                default_player = player_options[0]
-            elif current_player in player_options:
-                default_player = current_player
-            else:
-                default_player = player_options[0]
+        player_options = filtered_players["Player"].tolist()
+        player_param = st.query_params.get("player", "")
+        current_player = st.session_state.get("players_current")
+        if player_param in player_options:
+            default_player = player_param
+        elif (
+            not st.session_state.get("players_defaults_v2_applied")
+            and not player_param
+            and player_options
+        ):
+            default_player = player_options[0]
+        elif current_player in player_options:
+            default_player = current_player
+        else:
+            default_player = player_options[0]
 
+        with f_player:
             selected_player = st.selectbox(
                 "Gracz",
                 player_options,
@@ -2322,140 +3428,135 @@ elif st.session_state.current_page == "gracze":
                     f"{(' · ' + str(filtered_players.loc[filtered_players['Player'].eq(name), 'Spec'].iloc[0])) if str(filtered_players.loc[filtered_players['Player'].eq(name), 'Spec'].iloc[0]) else ''}"
                 ),
             )
-            st.session_state.players_current = selected_player
-            st.session_state.players_defaults_v2_applied = True
-            st.query_params["player"] = selected_player
+        st.session_state.players_current = selected_player
+        st.session_state.players_defaults_v2_applied = True
+        st.query_params["player"] = selected_player
 
-            selected_row = filtered_players[filtered_players["Player"] == selected_player].iloc[0]
-            st.caption(
-                f"{len(player_options)} graczy w filtrze · "
-                f"{selected_row['Class']} {selected_row['Spec'] or ''} · "
-                f"Att {_fmt_value(selected_row['Attendance'], '%')} · "
-                f"Avg parse {_fmt_value(selected_row['Avg Parse'])}"
-            )
-            st.markdown("</div>", unsafe_allow_html=True)
+        selected_row = filtered_players[filtered_players["Player"] == selected_player].iloc[0]
+        st.caption(
+            f"{len(player_options)} graczy w filtrze · "
+            f"{selected_row['Class']} {selected_row['Spec'] or ''} · "
+            f"Att {_fmt_value(selected_row['Attendance'], '%')} · "
+            f"Avg parse {_fmt_value(selected_row['Avg Parse'])}"
+        )
 
-        with right:
-            profile = build_player_profile_data(selected_player, date_mode, boss_filter, fight_filter)
-            meta = profile["meta"]
-            p_fights = profile["player_fights"]
-            p_parses = profile["player_parses"]
-            color = CLASS_COLORS.get(meta["class"], clr["text"])
-            metric = meta["metric"]
+        profile = build_player_profile_data(selected_player, date_mode, boss_filter, fight_filter)
+        meta = profile["meta"]
+        p_fights = profile["player_fights"]
+        p_parses = profile["player_parses"]
+        color = CLASS_COLORS.get(meta["class"], clr["text"])
+        metric = meta["metric"]
 
-            st.markdown(
-                f"""
+        st.markdown(
+            f"""
 <div class="player-identity">
   <div>
-    <div class="player-name" style="color:{color}">{selected_player}</div>
-    <div class="player-sub">{meta["class"] or "—"} · {meta["spec"] or "—"} · {meta["role"] or "rola z logów"}</div>
+<div class="player-name" style="color:{color}">{selected_player}</div>
+<div class="player-sub">{meta["class"] or "—"} · {meta["spec"] or "—"} · {meta["role"] or "rola z logów"}</div>
   </div>
-  <div class="player-sub">{date_mode} · {fight_filter} · {boss_filter}</div>
+  <div class="player-context">{date_mode} · {fight_filter} · {boss_filter}</div>
 </div>
 """,
-                unsafe_allow_html=True,
-            )
+            unsafe_allow_html=True,
+        )
 
-            kpis = [
-                ("Attendance", _fmt_value(meta["attendance_pct"], "%"), f'{meta["player_nights"]}/{meta["total_nights"]} nocy'),
-                ("Avg parse", _fmt_value(meta["avg_parse"]), f'{meta["parse_rows"]} kill wpisów'),
-                ("Best parse", _fmt_value(meta["best_parse"]), "najlepszy kill"),
-                (f"Avg {metric}", _fmt_value(meta["avg_output"]), f'{meta["pulls"]} pulli'),
-                ("Zgony / pull", _fmt_value(meta["deaths_per_pull"], digits=2), "średnio"),
-                ("Def / Cons", f'{_fmt_value(meta["defensives_per_pull"], digits=1)} / {_fmt_value(meta["consumables_per_pull"], digits=1)}', "na pull"),
-            ]
-            kpi_html = "".join(
-                f'<div class="player-kpi"><div class="label">{label}</div><div class="value">{value}</div><div class="sub">{sub}</div></div>'
-                for label, value, sub in kpis
-            )
-            st.markdown(f'<div class="players-kpis">{kpi_html}</div>', unsafe_allow_html=True)
+        kpis = [
+            ("Attendance", _fmt_value(meta["attendance_pct"], "%"), f'{meta["player_nights"]}/{meta["total_nights"]} nocy'),
+            ("Avg parse", _fmt_value(meta["avg_parse"]), f'{meta["parse_rows"]} kill wpisów'),
+            ("Best parse", _fmt_value(meta["best_parse"]), "najlepszy kill"),
+            (f"Avg {metric}", _fmt_value(meta["avg_output"]), f'{meta["pulls"]} pulli'),
+            ("Zgony / pull", _fmt_value(meta["deaths_per_pull"], digits=2), "średnio"),
+            ("Def / Cons", f'{_fmt_value(meta["defensives_per_pull"], digits=1)} / {_fmt_value(meta["consumables_per_pull"], digits=1)}', "na pull"),
+        ]
+        kpi_html = "".join(
+            f'<div class="player-kpi"><div class="label">{label}</div><div class="value">{value}</div><div class="sub">{sub}</div></div>'
+            for label, value, sub in kpis
+        )
+        st.markdown(f'<div class="players-kpis">{kpi_html}</div>', unsafe_allow_html=True)
 
-            if meta["role"] == "Healers" or metric == "HPS":
-                st.markdown('<div class="players-note">Healerzy są oceniani głównie po HPS oraz healing parse, nie po Damage Done.</div>', unsafe_allow_html=True)
-
-            t1, t2 = st.columns(2)
-            with t1:
-                st.markdown('<div class="players-card"><div class="chart-hdr">Trend parse / ilvl parse</div>', unsafe_allow_html=True)
-                if p_parses.empty:
-                    st.info("Brak parse’ów z killi dla aktualnych filtrów.")
-                else:
-                    parse_chart_rows = p_parses.copy()
-                    parse_chart_rows["Pull #"] = parse_chart_rows.get("Pull #", "")
-                    y_cols = [("Parse %", "Parse", None)]
-                    if "ilvl Parse %" in parse_chart_rows.columns and parse_chart_rows["ilvl Parse %"].gt(0).any():
-                        y_cols.append(("ilvl Parse %", "ilvl Parse", clr["gold_light"]))
-                    st.plotly_chart(_player_line_chart(parse_chart_rows, y_cols, "Parse"), use_container_width=True)
-                st.markdown("</div>", unsafe_allow_html=True)
-
-            with t2:
-                st.markdown(f'<div class="players-card"><div class="chart-hdr">Trend {metric} po pullach</div>', unsafe_allow_html=True)
-                if p_fights.empty:
-                    st.info("Brak pulli dla aktualnych filtrów.")
-                else:
-                    st.plotly_chart(_player_line_chart(p_fights, [(metric, metric, clr["green"])], metric), use_container_width=True)
-                st.markdown("</div>", unsafe_allow_html=True)
-
-            c_left, c_right = st.columns([1.15, 0.85])
-            with c_left:
-                st.markdown('<div class="players-card"><div class="chart-hdr">Boss breakdown</div>', unsafe_allow_html=True)
-                boss_summary = profile["boss_summary"]
-                if boss_summary.empty:
-                    st.info("Brak danych bossów dla aktualnych filtrów.")
-                else:
-                    display_cols = [
-                        "Boss", "Avg Parse", "Best Parse", "Pulls", "Kills",
-                        "Avg Output", "Deaths", "Deaths / Pull", "Def / Pull", "Cons / Pull",
-                    ]
-                    display_cols = [col for col in display_cols if col in boss_summary.columns]
-                    st.dataframe(
-                        boss_summary[display_cols],
-                        hide_index=True,
-                        width="stretch",
-                        height=380,
-                        column_config={
-                            "Avg Parse": st.column_config.ProgressColumn("Avg", min_value=0, max_value=100, format="%.0f"),
-                            "Best Parse": st.column_config.NumberColumn("Best", format="%.0f"),
-                            "Avg Output": st.column_config.NumberColumn(f"Avg {metric}", format="%.0f"),
-                            "Deaths / Pull": st.column_config.NumberColumn(format="%.2f"),
-                            "Def / Pull": st.column_config.NumberColumn(format="%.1f"),
-                            "Cons / Pull": st.column_config.NumberColumn(format="%.1f"),
-                        },
-                    )
-                st.markdown("</div>", unsafe_allow_html=True)
-
-            with c_right:
-                st.markdown('<div class="players-card"><div class="chart-hdr">Problemy do sprawdzenia</div>', unsafe_allow_html=True)
-                issues = profile["issues"]
-                if issues.empty:
-                    st.success("Brak mocnych sygnałów problemowych w aktualnym zakresie.")
-                else:
-                    issues_view = issues.copy()
-                    if "Date" in issues_view.columns:
-                        issues_view["Date"] = pd.to_datetime(issues_view["Date"], errors="coerce").dt.strftime("%Y-%m-%d")
-                    st.dataframe(issues_view, hide_index=True, width="stretch", height=380)
-                st.markdown("</div>", unsafe_allow_html=True)
-
-            st.markdown('<div class="players-card"><div class="chart-hdr">Porównanie do roli / speca</div>', unsafe_allow_html=True)
-            peers = profile["peers"]
-            if peers.empty:
-                st.info("Brak porównywalnych graczy dla aktualnych filtrów.")
+        t1, t2 = st.columns(2)
+        with t1:
+            st.markdown('<div class="players-section"><div class="chart-hdr">Trend parse / ilvl parse</div>', unsafe_allow_html=True)
+            if p_parses.empty:
+                st.info("Brak parse’ów z killi dla aktualnych filtrów.")
             else:
-                cols = ["Player", "Class", "Spec", "Avg_Parse", "Avg_Output", "Death_Rate", "Avg_Active", "Pulls"]
-                cols = [col for col in cols if col in peers.columns]
-                peers_view = peers[cols].copy()
+                parse_chart_rows = p_parses.copy()
+                parse_chart_rows["Pull #"] = parse_chart_rows.get("Pull #", "")
+                y_cols = [("Parse %", "Parse", None)]
+                if "ilvl Parse %" in parse_chart_rows.columns and parse_chart_rows["ilvl Parse %"].gt(0).any():
+                    y_cols.append(("ilvl Parse %", "ilvl Parse", clr["gold_light"]))
+                st.plotly_chart(_player_line_chart(parse_chart_rows, y_cols, "Parse"), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with t2:
+            st.markdown(f'<div class="players-section"><div class="chart-hdr">Trend {metric} po pullach</div>', unsafe_allow_html=True)
+            if p_fights.empty:
+                st.info("Brak pulli dla aktualnych filtrów.")
+            else:
+                st.plotly_chart(_player_line_chart(p_fights, [(metric, metric, clr["green"])], metric), use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        c_left, c_right = st.columns([1.15, 0.85])
+        with c_left:
+            st.markdown('<div class="players-section"><div class="chart-hdr">Boss breakdown</div>', unsafe_allow_html=True)
+            boss_summary = profile["boss_summary"]
+            if boss_summary.empty:
+                st.info("Brak danych bossów dla aktualnych filtrów.")
+            else:
+                display_cols = [
+                    "Boss", "Avg Parse", "Best Parse", "Pulls", "Kills",
+                    "Avg Output", "Deaths", "Deaths / Pull", "Def / Pull", "Cons / Pull",
+                ]
+                display_cols = [col for col in display_cols if col in boss_summary.columns]
                 st.dataframe(
-                    peers_view,
+                    boss_summary[display_cols],
                     hide_index=True,
                     width="stretch",
-                    height=360,
+                    height=380,
                     column_config={
-                        "Avg_Parse": st.column_config.ProgressColumn("Avg Parse", min_value=0, max_value=100, format="%.0f"),
-                        "Avg_Output": st.column_config.NumberColumn(f"Avg {metric}", format="%.0f"),
-                        "Death_Rate": st.column_config.NumberColumn("Deaths / Pull", format="%.2f"),
-                        "Avg_Active": st.column_config.NumberColumn("Active %", format="%.1f"),
+                        "Avg Parse": st.column_config.ProgressColumn("Avg", min_value=0, max_value=100, format="%.0f"),
+                        "Best Parse": st.column_config.NumberColumn("Best", format="%.0f"),
+                        "Avg Output": st.column_config.NumberColumn(f"Avg {metric}", format="%.0f"),
+                        "Deaths / Pull": st.column_config.NumberColumn(format="%.2f"),
+                        "Def / Pull": st.column_config.NumberColumn(format="%.1f"),
+                        "Cons / Pull": st.column_config.NumberColumn(format="%.1f"),
                     },
                 )
             st.markdown("</div>", unsafe_allow_html=True)
+
+        with c_right:
+            st.markdown('<div class="players-section"><div class="chart-hdr">Problemy do sprawdzenia</div>', unsafe_allow_html=True)
+            issues = profile["issues"]
+            if issues.empty:
+                st.success("Brak mocnych sygnałów problemowych w aktualnym zakresie.")
+            else:
+                issues_view = issues.copy()
+                if "Date" in issues_view.columns:
+                    issues_view["Date"] = pd.to_datetime(issues_view["Date"], errors="coerce").dt.strftime("%Y-%m-%d")
+                st.dataframe(issues_view, hide_index=True, width="stretch", height=380)
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown('<div class="players-section"><div class="chart-hdr">Porównanie do roli / speca</div>', unsafe_allow_html=True)
+        peers = profile["peers"]
+        if peers.empty:
+            st.info("Brak porównywalnych graczy dla aktualnych filtrów.")
+        else:
+            cols = ["Player", "Class", "Spec", "Avg_Parse", "Avg_Output", "Death_Rate", "Avg_Active", "Pulls"]
+            cols = [col for col in cols if col in peers.columns]
+            peers_view = peers[cols].copy()
+            st.dataframe(
+                peers_view,
+                hide_index=True,
+                width="stretch",
+                height=360,
+                column_config={
+                    "Avg_Parse": st.column_config.ProgressColumn("Avg Parse", min_value=0, max_value=100, format="%.0f"),
+                    "Avg_Output": st.column_config.NumberColumn(f"Avg {metric}", format="%.0f"),
+                    "Death_Rate": st.column_config.NumberColumn("Deaths / Pull", format="%.2f"),
+                    "Avg_Active": st.column_config.NumberColumn("Active %", format="%.1f"),
+                },
+            )
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ===========================================================================
@@ -2541,16 +3642,16 @@ elif st.session_state.current_page == "parsy":
     margin-bottom: 18px;
 }}
 .parsy-header .page-title {{
-    font-size: 22px; font-weight: 700; color:{clr["gold"]};
+    font-size: 24px; font-weight: 700; color:{clr["gold"]};
     margin-bottom: 4px; text-shadow: 0 0 30px rgba(200,155,60,0.2);
 }}
-.parsy-header .page-subtitle {{ color:{clr["text_dim"]}; font-size:12px; margin:0; }}
+.parsy-header .page-subtitle {{ color:{clr["text_dim"]}; font-size:14px; margin:0; }}
 .parse-note {{
-    color:{clr["text_dim"]}; font-size:12px; margin: -6px 0 14px;
+    color:{clr["text_dim"]}; font-size:14px; margin: -6px 0 14px;
 }}
 .chart-hdr {{
-    font-size:11px; font-weight:700; text-transform:uppercase;
-    letter-spacing:1px; color:{clr["text_dim"]};
+    font-size:14px; font-weight:700; text-transform:none;
+    letter-spacing:0; color:{clr["text"]};
     border-bottom:1px solid {clr["border"]}; padding-bottom:8px;
     margin-bottom:10px;
 }}
@@ -2563,16 +3664,16 @@ elif st.session_state.current_page == "parsy":
     border-radius:6px; padding:12px 14px; min-height:78px;
 }}
 .parse-kpi .label {{
-    font-size:10px; color:{clr["text_dim"]}; text-transform:uppercase;
-    letter-spacing:1px; font-weight:700;
+    font-size:13px; color:{clr["text_dim"]}; text-transform:none;
+    letter-spacing:0; font-weight:700;
 }}
 .parse-kpi .value {{
-    font-size:25px; color:{clr["gold"]}; font-weight:800; margin-top:6px;
+    font-size:28px; color:{clr["gold"]}; font-weight:800; margin-top:6px;
 }}
-.parse-kpi .sub {{ font-size:11px; color:{clr["text_dim"]}; margin-top:2px; }}
+.parse-kpi .sub {{ font-size:13px; color:{clr["text_dim"]}; margin-top:2px; }}
 .parse-pct {{
     font-weight:700; padding:2px 7px; border-radius:3px;
-    font-size:11px; display:inline-block; min-width:34px; text-align:center;
+    font-size:13px; display:inline-block; min-width:38px; text-align:center;
 }}
 .parse-legendary {{ background:#332200; color:#ff8000; border:1px solid #ff800040; }}
 .parse-epic      {{ background:#1a0a2e; color:#a335ee; border:1px solid #a335ee40; }}
@@ -2580,7 +3681,7 @@ elif st.session_state.current_page == "parsy":
 .parse-common    {{ background:#1e2130; color:#9d9d9d; border:1px solid #9d9d9d40; }}
 </style>
 <div class="parsy-header">
-  <div class="page-title">📈 Parsy</div>
+  <div class="page-title">Parses</div>
   <div class="page-subtitle">Oficjalne rankingi Warcraft Logs tylko dla killów</div>
 </div>
 """, unsafe_allow_html=True)
